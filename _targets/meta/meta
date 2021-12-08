@@ -1,0 +1,11 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|iteration|parent|children|seconds|warnings|error
+data_SCANSIII_air_file|stem|60e2e78af6831792|961812fd23e60568|ef46db3751d8e999|1132471983|data/abundance_surveys/SCANSIII/aerial_sightings_by_block.xlsx|t18732.3052592685s|3c42b4b3e7c147b5|33279|file|vector|||0||
+data_ASI_file|stem|f068f2578210df7e|f3fe6937d67eaac4|ef46db3751d8e999|-333506314|data/abundance_surveys/ASI/ASI_Total_Sighting_Exchange_data.xlsx|t18730.6203561688s|dc3df5f991673a85|2158369|file|vector|||0||
+data_ASI|stem|02055d8fd996677f|049de175944ab741|43d6c494d8145adf|1732094092||t18969.7404480279s|29f012be68cb56de|506858|rds|vector|||0.67||
+load_SCANSIII_ship|function|1cf4d6990ba23c4c||||||||||||||
+compute_ratio_ASI|function|5923af3600a2b786||||||||||||||
+load_SCANSIII_air|function|66bbbdb6aa52c7d6||||||||||||||
+load_ASI|function|fb9ab64b82fe1109||||||||||||||
+load_REMMOA_Ind|function|95fd3e2854017246||||||||||||||
+load_REMMOA_ANT|function|dd5b5ba00ce6b329||||||||||||||
+ratio_ASI|stem|5ae91200fd9f57fc|ac8df01199e25493|f9cb00971f5e542e|-1944800939||t18969.7419998322s|a5127ff02efbacb6|454|rds|vector|||0.19||

@@ -29,12 +29,21 @@ dir.create("data")
 dir.create("output")
 dir.create("manuscript")
 
+# install packages 
+renv::install("targets")
+renv::install("readxl")
+renv::install("dplyr")
+
 ############################### renv update
 # check renv status
 renv::status()
 
 # update renv lock file
 renv::snapshot()
+
+############################### targets
+# to call target 
+targets::tar_make()
 
 # restore or activate renv 
 renv::activate()
