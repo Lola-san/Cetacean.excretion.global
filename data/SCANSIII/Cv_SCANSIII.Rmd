@@ -1,0 +1,125 @@
+---
+title: "CV computations SCANS III & a few requests"
+author: "Lola Gilbert, Matthieu Authier"
+date: "25/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<font size="3">
+
+In a broadscale survey aiming to estimate the quantities of nutrients released by cetaceans community in the northeast Atlantic, we use abundances estimates from SCANS III. In this regard, we have a few requests concerning results (the computation of coefficients of variations) and details of observations that are not mentioned in the report. 
+
+
+1. CV computation
+
+Our goal was to compute abundances and CVs for specific sets of blocks of SCANS III. We used result tables from SCANS III report : Hammond et al. (2017), *Estimates of cetacean abundance in European Atlantic waters in summer 2016 from the SCANS-III aerial and shipboard survey*, and from these we needed to compute the total abundances and CVs for our blocks of interest. For instance, we want to consider one block "A" including sub-blocks from SCANS III AA, AB and AC. 
+
+Our calculations were the followings: 
+
+- for block i, we have $A_i$ the abundance and $CV_i$ the coefficient of variation, from which we can compute the variance $\sigma_i^2$ : 
+                                                              $$ \sigma_i^2 = (A_i\times CV_i)^2 $$
+- for all blocks, the total abundance is the sum of abundances :  $$ A_{tot} = \sum_i A_i $$
+  And the total variance is the sum of variances : 
+                  $$ \sigma_{tot}^2 = \sum_i \sigma_i^2$$ 
+  From this, we can compute the total coefficient of variation : 
+                  $$ CV_{tot} = \frac{\sigma_{tot}} {A_{tot}}$$ 
+
+Before doing this on our blocks of interest, we wanted to verify our calculations by checking we were getting the same total CVs for all blocks as those indicated in the result tables of SCANS III. However, it does not work, and we can not identify the cause of the differences we have. For a few species, we get very different values (e.g. harbour porpoise for aerial survey, we find CV = 0.0788 where in the report it is 0.172) ; for others, we get quite close values, but still different (e.g. Risso's dolphins we find 0.506 where it is 0.513). Here is a summary of differences we get (biggest differences are in red) : 
+
+| Survey         | Species                        | Our total CV value                      |  total CV value from SCANS III report  |
+| :------------- | :----------------:             | :-------------------------------------: | -------------------------------------: |
+|  aerial        | harbour porpoise               | <span style="color: red;">0.0788</span> |       0.172                            |
+|  aerial        | bottlenose dolphin             |     0.217                               |       0.242                            |
+|  aerial        | Risso's dolphin                |     0.506                               |       0.513                            |
+|  aerial        | white-beaked dolphin           |     0.262                               |       0.288                            |
+|  aerial        | white-sided dolphin            |     0.685                               |       0.704                            |
+|  aerial        | common dolphin                 |     0.150                               |       0.188                            |
+|  aerial        | striped dolphin                |     0.396                               |       0.403                            |
+|  aerial        | Und common or striped dolphin  |     0.174                               |       0.201                            |
+|  aerial        | pilot whale                    |     0.597                               |       0.605                            |
+|  aerial        | beaked whales                  |     0.305                               |       0.376                            |
+|  aerial        | minke whale                    | <span style="color: red;">0.217</span>  |       0.345                            |
+|  ship          | bottlenose dolphin             |     0.409                               |       0.505                            |
+|  ship          | common dolphin                 |     0.540                               |       0.549                            |
+|  ship          | striped dolphin                |     0.291                               |       0.319                            |
+|  ship          | Und common or striped dolphin  |     0.386                               |       0.404                            |
+|  ship          | pilot whale                    |     0.319                               |       0.389                            |
+|  ship          | beaked whales                  | <span style="color: red;">0.346</span>  |       0.545                            |
+|  ship          | fin whale                      | <span style="color: red;">0.142</span>  |       0.384                            |
+|  ship          | sperm whale                    |     0.327                               |       0.402                            |
+
+And here is an example of how we conducted the calculation, for the harbour porpoise with only the aerial survey : 
+
+```{r include = FALSE }
+# clean up
+rm(list = ls())
+
+# libraries 
+lapply(c("tidyverse"), library, character.only=TRUE)
+``` 
+
+``` {r}
+# copy data from report 
+original_df_Pp <- tribble(~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                       "AA", 12015, 0, 0, 0,
+                       "AB", 26668, 2715, 0.102, 0.308,
+                       "AC", 35180, 183, 0.005, 1.020,
+                       "B", 118471, 3374, 0.028, 0.586,
+                       "C", 81297, 17323, 0.213, 0.303,
+                       "D", 48590, 5734, 0.118, 0.489,
+                       "E", 34890, 8320, 0.239, 0.281, 
+                       "F", 12322, 1056, 0.086, 0.383,
+                       "G", 15122, 5087, 0.336, 0.428, 
+                       "H", 18634, 1682, 0.09, 0.741, 
+                       "I", 13979, 5556, 0.397, 0.347, 
+                       "J", 35099, 2045, 0.058, 0.716, 
+                       "K", 32505, 9999, 0.308, 0.273,
+                       "L", 31404, 19064, 0.607, 0.383,
+                       "M", 56469, 15655, 0.277, 0.342, 
+                       "N", 69386, 58066, 0.837, 0.257,
+                       "O", 60198, 53485, 0.888, 0.209,
+                       "P", 63655, 52406, 0.823, 0.315, 
+                       "P1", 23557, 25367, 1.077, 0.302, 
+                       "Q", 49746, 16569, 0.333, 0.347, 
+                       "R", 64464, 38646, 0.599, 0.287, 
+                       "S", 40383, 6147, 0.152, 0.279, 
+                       "T", 65417, 26309, 0.402, 0.295, 
+                       "U", 60046, 19269, 0.321, 0.298,
+                       "V", 38306, 5240, 0.137, 0.367, 
+                       "W", 49778, 8978, 0.180, 0.568,
+                       "X", 19496, 6713, 0.344, 0.305, 
+                       "Y", 18779, 4006, 0.213, 0.400,
+                       "Z", 11228, 4556, 0.406, 0.275,
+                       "SVG", 714, 423, 0.593, 0.386, 
+                       "TRD", 966, 273, 0.282, 0.476)
+
+# computation of total abundance and CV for checking 
+original_df_Pp %>%
+  mutate(Var_abund = Abund*CV*Abund*CV) %>% 
+  summarise(Abund_tot = sum(Abund), 
+            Surf_tot = sum(Surf), 
+            Dens_tot = Abund_tot/Surf_tot,
+            Var_tot = sum(Var_abund), 
+            CV_tot = sqrt(Var_tot)/Abund_tot)
+```
+We're not sure what we're doing wrong in our formula here as for some species, the difference can be explained away by rounding, whereas the difference is too big for others. **Do you have any idea of what we are missing here ? **
+
+2. Requests about details of observations 
+
+We want to apply ratio coefficient to estimates including several species, e.g. undetermined common or striped dolphins and beaked whales. 
+
+- On the one hand, we would like to split the abundance of undetermined common or striped dolphins between common and striped dolphin to add them to estimations computed from confirmed observations, using the ratio of observations of common and striped dolphins with confirmed identification. The ratio would be different depending on the area considered, so our request is : **could you provide details of the number of confirmed and unconfirmed observations of these two species in each survey block? **
+
+- Similarly, on the other hand, we would like to be able to split the abundance of beaked whales between the main species identified (mesoplodon, hyperoodon and ziphius) depending on areas, to account that in the Bay of Biscay for instance, it is very unlikely to spot a northern bottlenose whale. We can see on a map provided in the report (fig.4) that on most observations the species was identified, but it is rather tedious to count all dots and attribute them to each survey block. **Could you please provide details of observations for these species in survey blocks? **
+
+Thanking you in advance for any advice, 
+
+Regards, 
+
+Lola & Matthieu 
+
+</font>

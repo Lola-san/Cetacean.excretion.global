@@ -1,0 +1,145 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={CV computations SCANS III},
+  pdfauthor={Lola Gilbert},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{CV computations SCANS III}
+\author{Lola Gilbert}
+\date{25/03/2021}
+
+\begin{document}
+\maketitle
+
+Our goal was to use abundances and CVs for specific sets of blocks of
+SCANS III. We used result tables from SCANS III report : Hammond et
+al.~(2017), Estimates of cetacean abundance in European Atlantic waters
+in summer 2016 from the SCANS-III aerial and shipboard survey, and from
+these we needed to compute the total abundances and CVs for our blocks
+of interest. For instance, we want to consider one block ``A'' including
+sub-blocks from SCANS III AA, AB and AC.
+
+Our calculations were the followings:
+
+\begin{itemize}
+\tightlist
+\item
+  for block i, we have \(A_i\) the abundance and \(CV_i\) the
+  coefficient of variation, from which we can compute the variance
+  \(\sigma_i^2\) : \[ \sigma_i^2 = (A_i\times CV_i)^2 \]
+\item
+  for all blocks, the total abundance is the sum of abundances :
+  \[ A_{tot} = \sum_i A_i \] And the total variance is the sum of
+  variances : \[ \sigma_{tot}^2 = \sum_i \sigma_i^2\] From this, we can
+  compute the total coefficient of variation :
+  \[ CV_{tot} = \frac{\sigma_{tot}} {A_{tot}}\]
+\end{itemize}
+
+Before doing this on our blocks of interest, we wanted to verify our
+calculations by checking we were getting the same total CVs for all
+blocks as those indicated in the result tables of SCANS III. However, it
+does not work for all species. For a few, we get very different values
+(e.g.~harbour porpoise for aerial survey, we find CV = 0.0787 where in
+the report it is 0.172) ; for others, we get close values, but still
+different (e.g.~Risso's dolphins we find 0.505 where it is 0.513) and
+finally, for a few other, we get values so close that it could be a
+matter of significant numbers and rounding (e.g.~pilot whales for aerial
+surveys, we get 0.606 where it is 0.605 in the report and undetermined
+common or striped dolphins where we get 0.400 for 0.404 in the report.
+Here is a summary of differences we get :
+
+\begin{longtable}[]{@{}lccc@{}}
+\toprule
+Survey & Species & Our total CV value & total CV value from SCANS III
+report\tabularnewline
+\midrule
+\endhead
+aerial & harbour porpoise & \textcolor{red}{0.0787} &
+0.172\tabularnewline
+aerial & bottlenose dolphin & 0.217 & 0.242\tabularnewline
+aerial & Risso's dolphin & 0.505 & 0.513\tabularnewline
+aerial & white-beaked dolphin & 0.261 & 0.288\tabularnewline
+aerial & white-sided dolphin & 0.683 & 0.704\tabularnewline
+aerial & common dolphin & 0.150 & 0.188\tabularnewline
+aerial & striped dolphin & 0.399 & 0.403\tabularnewline
+aerial & Und common or striped dolphin & 0.170 & 0.201\tabularnewline
+aerial & pilot whale & 0.606 & 0.605\tabularnewline
+aerial & beaked whales & 0.305 & 0.376\tabularnewline
+aerial & minke whale & 0.217 & 0.345\tabularnewline
+ship & bottlenose dolphin & 0.463 & 0.505\tabularnewline
+ship & common dolphin & 0.555 & 0.549\tabularnewline
+ship & striped dolphin & 0.324 & 0.319\tabularnewline
+ship & Und common or striped dolphin & 0.400 & 0.404\tabularnewline
+ship & pilot whale & 0.347 & 0.389\tabularnewline
+ship & beaked whales & 0.392 & 0.545\tabularnewline
+ship & fin whale & 0.178 & 0.384\tabularnewline
+ship & sperm whale & 0.776 & 0.402\tabularnewline
+\bottomrule
+\end{longtable}
+
+\end{document}
