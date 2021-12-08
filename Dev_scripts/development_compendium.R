@@ -21,6 +21,14 @@ renv::install("benmarwick/rrtools")
 rrtools::use_compendium(path = "../Excretion.global.compendium/",
                         open = FALSE)
 
+# create folder that will contain all R function scripts
+dir.create("R")
+
+# create data and output folders
+dir.create("data")
+dir.create("output")
+dir.create("manuscript")
+
 ############################### renv update
 # check renv status
 renv::status()
