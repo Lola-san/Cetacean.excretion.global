@@ -12,7 +12,7 @@
 
 
 ########################### Survey data ########################################
-########################## load or create data #################################
+############################# load data ########################################
 
 # load ASI sighting data 
 load_ASI <- function(pathASI) {
@@ -39,10 +39,12 @@ load_REMMOA_Ind <- function(pathREMMOA_Ind) {
   readr::read_csv(pathREMMOA_Ind)
 }
 
-######################### compute ratios ########################################
+
+######################### compute ratios #######################################
 
 # ASI
 compute_ratio_ASI <- function(ASI_tib) {
+  # ASI_tib is the tibble resulting from the call of load_ASI()
   # delete unwanted variables 
   ASI_Dd_Sc <- ASI_tib |>
     dplyr::select(region, survey, strate, taxon, group, family, species, speciesNam, speciesLat, podSize) |>
@@ -98,4 +100,88 @@ compute_ratio_ASI <- function(ASI_tib) {
     dplyr::rename(Species = speciesNam)
 
   rbind(ASI_Dd_Sc, ASI_BW)
+}
+
+
+# SCANS III: include aerial sightings, ship sightings and Observe (Ireland) sightings
+compute_SCANSIII_ratio <- function(SCANS_air_tib, SCANS_ship_tib) {
+  # SCANS_air_tib is the tibble resulting from the call of load_SCANSIII_air()
+  # SCANS_ship_tib is the tibble resulting from the call of load_SCANSIII_ship()
+  
+  # SCANS_air sighting tibble 
+  SCANS_air_sightings <- rbind(
+    # first Dd and Sc
+    SCANS_air_tib |>
+    dplyr::filter(species %in% c("ddel", "ddsc", "scoe"), !(block %in% c("W", "X", "Y", "Z", 
+                                                                  "DKA", "P1", "SVG", "TRD"))) |> # delete unwanted blocks
+    dplyr::mutate(Eco_area = "shelf", 
+                  Geo_area = "NEAtlantic") |>
+    dplyr::group_by(Geo_area, Eco_area, species) |>
+    dplyr::filter(species != "ddsc") |>
+    dplyr::mutate(species = dplyr::case_when(species == "scoe" ~ "Stenella coeruleoalba",   # format name of species 
+                                      species == "ddel" ~ "Delphinus delphis")) |>
+    dplyr::summarise(nobs = sum(n)) |>
+    dplyr::ungroup() |>
+    dplyr::group_by(Geo_area, Eco_area) |>
+    dplyr::mutate(sumnobs = sum(nobs)) |>
+    dplyr::rename(Species = species), 
+    # then beaked whales 
+    SCANS_air_tib |>
+      dplyr::filter(species %in% c("hamp", "mbid", "zcav", "zisp"), !(block %in% c("W", "X", "Y", "Z", 
+                                                                            "DKA", "P1", "SVG", "TRD"))) |>
+      dplyr::mutate(Eco_area = "shelf", 
+                    Geo_area = "NEAtlantic") |>
+      dplyr::group_by(Geo_area, Eco_area, species) |>
+      dplyr::filter(species != "zisp") |>
+      dplyr::mutate(species = dplyr::case_when(species == "hamp" ~ "Hyperoodon ampullatus", 
+                                        species == "mbid" ~ "Mesoplodon spp", 
+                                        species == "zcav" ~ "Ziphius cavirostris")) |>
+      dplyr::summarise(nobs = sum(n)) |>
+      dplyr::ungroup() |>
+      dplyr::group_by(Geo_area, Eco_area) |>
+      dplyr::mutate(sumnobs = sum(nobs)) |>
+      dplyr::rename(Species = species)
+    )
+  
+  # SCANS ship sighting tibble
+  SCANS_ship_sightings <- rbind(
+    # first Dd and Sc 
+    SCANS_ship_tib |>
+    dplyr::filter(Species %in% c("Common dolphin", "Striped dolphin", "Unidentified common/striped")) |>
+    dplyr::mutate(Eco_area = "oceanic", 
+                  Geo_area = "NEAtlantic") |>
+    dplyr::group_by(Geo_area, Eco_area, Species) |>
+    dplyr::filter(Species != "Unidentified common/striped") |>
+    dplyr::mutate(Species = dplyr::case_when(Species == "Striped dolphin" ~ "Stenella coeruleoalba", 
+                                      Species == "Common dolphin" ~ "Delphinus delphis")) |>
+    dplyr::summarise(nobs = sum(n)) |>
+    dplyr::ungroup() |>
+    dplyr::group_by(Geo_area, Eco_area) |>
+    dplyr::mutate(sumnobs = sum(nobs)), 
+    # then beaked whales 
+    SCANS_ship_tib |>
+      dplyr::filter(Species %in% c("Cuvier's", "Sowerby's", "Gervais'", "Mesoplodon spp", "Unid beaked")) |>
+      dplyr::mutate(Eco_area = "oceanic", 
+                    Geo_area = "NEAtlantic") |>
+      dplyr::group_by(Geo_area, Eco_area, Species) |>
+      dplyr::filter(Species != "Unid beaked") |>
+      dplyr::mutate(Species = dplyr::case_when(Species == "Sowerby's" ~ "Mesoplodon spp", 
+                                        Species == "Gervais'" ~ "Mesoplodon spp", 
+                                        Species == "Cuvier's" ~ "Ziphius cavirostris", 
+                                        TRUE ~ Species)) |>
+      dplyr::summarise(nobs = sum(n)) |>
+      dplyr::ungroup() |>
+      dplyr::group_by(Geo_area, Eco_area) |>
+      dplyr::mutate(sumnobs = sum(nobs))
+  )
+  
+  # Observe sighting tibble
+  Observe_sighting_tib <- tribble(~ Geo_area, ~ Eco_area, ~ Species, ~ n,  
+                             "NEAtlantic", "oceanic", "Mesoplodon spp", 8,
+                             "NEAtlantic", "oceanic", "Ziphius cavirostris", 2) |>
+    dplyr::group_by(Geo_area, Eco_area, Species) |>
+    dplyr::summarise(nobs = sum(n)) |>
+    dplyr::ungroup() |>
+    dplyr::group_by(Geo_area, Eco_area) |>
+    dplyr::mutate(sumnobs = sum(nobs))
 }
