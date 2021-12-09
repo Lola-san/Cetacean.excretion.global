@@ -1033,6 +1033,101 @@ data_from_data_Pseu_cra <- function() {
 }
 
 
+
+## Sotalia guianensis - Sotalia dolphin
+data_from_data_Sota_gui <- function() {
+  original_df_Sota_gui <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### Antilles-Guyana
+                                          "Guyana", "GUY_P5", 61465, 1764, 0.029, 0.53 
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Sota_gui)
+  
+  original_df_Sota_gui
+  
+}
+
+## Stenella attenuata - Pantropical spotted dolphin
+data_from_data_Sten_att <- function() {
+  original_df_Sten_att <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 37195, NA, 0.244, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 39798, 0.01663, 0.51, 
+                                          ######################################### REMMOA Wallis & Futuna : 
+                                          #small delph are only Sten_att (no Sten_lon identified to species so no ratio)
+                                          "Pacific_WFu", "WFu", 233600, 15283, 0.049, 0.28
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Sten_att)
+  
+  original_df_Sten_att
+  
+}
+
+## Stenella clymene - Clymene dolphin
+data_from_data_Sten_cly <- function() {
+  original_df_Sten_cly <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 513, NA, 1.033
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Sten_cly)
+  
+  original_df_Sten_cly
+  
+}
+
+## Stenella frontalis - Atlantic spotted dolphin
+data_from_data_Sten_fro <- function() {
+  original_df_Sten_fro <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 5577, NA, 0.414,
+                                          ######################################### NWAtl2011
+                                          "NWAtlantic", "NWAtl_slope", 54376, 1677, NA, 0.6,
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 25121, NA, 0.7
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Sten_fro)
+  
+  original_df_Sten_fro
+  
+}
+
+
+## Stenella longirostris - Spinner dolphin
+data_from_data_Sten_lon <- function() {
+  original_df_Sten_lon <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 2911, NA, 0.540
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Sten_lon)
+  
+  original_df_Sten_lon
+  
+}
+
+
+## Steno bredanensis - Rough-toothed dolphin
+data_from_data_Sten_bre <- function() {
+  original_df_Sten_bre <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 76375, 0.0312, 0.41
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Sten_bre)
+  
+  original_df_Sten_bre
+  
+}
+
 ## Tursiops truncatus - Common bottlenose dolphin
 data_from_data_Turs_tru <- function() {
   original_df_Turs_tru <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
@@ -1091,26 +1186,783 @@ data_from_data_Turs_tru <- function() {
   
   original_df_Turs_tru
   
+
 }
 
 
-## Stenella attenuata - Pantropical spotted dolphin
-data_from_data_Sten_att <- function() {
-  original_df_Sten_att <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
-                                          ######################################### goMexico mean 2017-2018
-                                          "GoMexico", "GoMexico", 380432, 37195, NA, 0.244, 
-                                          ######################################### Hawai2017
-                                          "Pacific_Hawai", "Hawai", 2447635, 39798, 0.01663, 0.51, 
-                                          ######################################### REMMOA Wallis & Futuna : 
-                                          #small delph are only Sten_att (no Sten_lon identified to species so no ratio)
-                                          "Pacific_WFu", "WFu", 233600, 15283, 0.049, 0.28
+######### cases involving ratio of species (mixed-species groups) ##############
+
+
+############## long-beaked and short-beaked common dolphins and striped dolphins #############
+build_sp_tib_Dd_Dc_Sc <- function(ratio_others_tib) {
+  # ratio_others_tib is the tibble with ratio of observations for all surveys 
+  # but REMMOAs 
+  
+  ####  1 - we start by building original df for each sp and for
+  ########## the mixed species categories
+  ## Delphinus delphis - short-beaked common dolphin
+  original_df_Delp_del <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ################################################## NEAtlantic
+                                          "NEAtlantic", "AA", 12015, 18458, 1.5362, 0.644,
+                                          "NEAtlantic", "AB", 26668, 63243, 2.3715, 0.273,
+                                          "NEAtlantic", "AC", 35180, 71082, 2.0205, 0.306,
+                                          "NEAtlantic", "B", 118471, 92893, 0.7841, 0.269,
+                                          "NEAtlantic", "D", 48590, 18187, 0.3743, 0.413, 
+                                          "NEAtlantic", "J", 35099, 4679, 0.1333, 0.946,
+                                          "NEAtlantic", "8", 159669, 10601, 0.066, 0.940, 
+                                          "NEAtlantic", "9", 144352, 150208, 1.041, 0.718, 
+                                          "NEAtlantic", "11", 68759, 34570, 0.503, 0.633, 
+                                          "NEAtlantic", "12", 111115, 6432, 0.058, 0.543, 
+                                          "NEAtlantic", "13", 59340, 3110, 0.052, 0.653, 
+                                          ####################################### NEAtlantic - Observe (Season 3 - S5 excluded as in SCANS III) 
+                                          # no confirmed sighting of Sscoe so all obs are considered Ddel + model-based estimates available only 
+                                          "NEAtlantic", "S3_N", 100482, 26467, 0.257, 0.504,
+                                          "NEAtlantic", "S3_O", 100482, 26467, 0.257, 0.504,
+                                          "NEAtlantic", "S7", 17261, 5429, 0.322, 0.9055,
+                                          "NEAtlantic", "S8", 9707, 1319, 0.139, 0.4547, 
+                                          ############################################## MED
+                                          "Med", "Atlantic", 33720, 35293, 1.0467, 0.5412,
+                                          "Med", "Alboran", 28071, 25855, 0.9211, 0.6874,  
+                                          "Med", "SWMed", 279415, 0, 0, 0,
+                                          "Med", "NWMed", 134760, 0, 0, 0, 
+                                          "Med", "PelagosW", 56756, 0, 0, 0, 
+                                          "Med", "PelagosE", 31076, 0, 0, 0,
+                                          "Med", "Tyrrhenian", 231298, 521, 0.0023, 1.0088,
+                                          "Med","SCMed", 152961, 286, 0.0019, 0.8587,
+                                          "Med", "Adriatic", 135783, 0, 0, 0, 
+                                          "Med", "Ionian", 358402, 404, 0.0011, 1.0030,
+                                          "Med", "Aegean", 191150, 2759, 0.0144, 0.9089,
+                                          "Med", "NEMed", 161669, 1230, 0.0076, 0.9862,
+                                          "Med", "EMed", 107687, 0, 0, 0,
+                                          ######################################### NWAtl2011 
+                                          "NWAtlantic", "GOM/BOF", 199656, 2855, NA, 0.33,
+                                          "NWAtlantic", "NWAtl_slope", 54376, 54507, NA, 0.3,
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 9829, NA, 0.71,
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 411211, NA, 0.21
   )
   
   # check totals from report with verify_totals
-  #verify_totals(original_df_Sten_att)
+  #verify_totals(original_df_Delp_del)
   
-  original_df_Sten_att
+  # focus on blocks of interest and computations
+  Abund_df_Delp_del <- build_sp_tib(original_df_Delp_del, "Delphinus delphis", "Delp_del")
+  
+  
+  ## Delphinus capensis - long-beaked common dolphin
+  # data from report 
+  original_df_Delp_cap <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 27046, NA, 0.59
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Delp_cap)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Delp_cap <- build_sp_tib(original_df_Delp_cap, "Delphinus capensis", "Delp_cap")
+  
+  
+  ## Stenella coeruleoalba  - striped dolphin
+  # data from report 
+  original_df_Sten_coe <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ################################################## NEAtlantic
+                                          "NEAtlantic", "AB", 26668, 3039, 0.1140, 0.903,
+                                          "NEAtlantic", "AC", 35180, 15581, 0.4429, 0.456,
+                                          "NEAtlantic", "B", 118471, 228, 0.0019, 0.978,
+                                          "NEAtlantic", "D", 48590, 262, 0.0054, 0.915,
+                                          "NEAtlantic", "K", 32505, 142, 0.0044, 0.915,
+                                          "NEAtlantic", "9", 144352, 164023, 1.136, 0.593, 
+                                          "NEAtlantic", "11", 68759, 128559, 1.870, 0.408, 
+                                          "NEAtlantic", "12", 111115, 76796, 0.691, 0.588, 
+                                          "NEAtlantic", "13", 59340, 52823, 0.890, 0.565, 
+                                          ############################################## MED
+                                          "Med", "Atlantic", 33720, 6268, 0.1859, 0.9836,
+                                          "Med", "Alboran", 28071, 37848, 1.3483, 0.4935,
+                                          "Med", "SWMed", 279415, 164079, 0.5872, 0.2443,
+                                          "Med", "NWMed", 134760, 86386, 0.6410, 0.2868,
+                                          "Med", "PelagosW", 56756, 29154, 0.5137, 0.4049,
+                                          "Med", "PelagosE", 31076, 394, 0.0127, 0.9877,
+                                          "Med", "Tyrrhenian", 231298, 44367, 0.1918, 0.2339,
+                                          "Med","SCMed", 152961, 199, 0.0013, 0.9848,
+                                          "Med", "Adriatic", 135783, 10264, 0.0756, 0.5427,
+                                          "Med", "Ionian", 358402, 37819, 0.1055, 0.3438,
+                                          "Med", "Aegean", 191150, 8205, 0.0429, 0.5810,
+                                          "Med", "NEMed", 161669, 1673, 0.0103, 1.0014,
+                                          "Med", "EMed", 107687, 0, 0, 0, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 1817, NA, 0.558,
+                                          ######################################### NWAtl2011 
+                                          "NWAtlantic", "NWAtl_slope", 54376, 3822, NA, 0.28,
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 43060, NA, 0.36, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 34271, 0.014, 0.32, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 10908, NA, 0.34
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Sten_coe)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Sten_coe <- build_sp_tib(original_df_Sten_coe, "Stenella coeruleoalba", "Sten_coe")
+  
+  
+  ## Unidentified Sc or Dd
+  # data from report 
+  original_df_Dd_Dc_Sc <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~ CV, 
+                                          ################################################## NEAtlantic MED Delp_del & Sten_coe
+                                          "NEAtlantic", "AB", 26668, 6239, 0.2339, 0.773,
+                                          "NEAtlantic", "AC", 35180, 5504, 0.1564, 0.835,
+                                          "NEAtlantic", "B", 118471, 61741, 0.5211, 0.217,
+                                          "NEAtlantic", "C", 81297, 1765, 0.0217, 0.819,
+                                          "NEAtlantic", "D", 48590, 31800, 0.6545, 0.349, 
+                                          "NEAtlantic", "I", 13979, 206, 0.0148, 1.016,
+                                          "NEAtlantic", "9", 144352, 3377, 0.023, 0.665, 
+                                          "NEAtlantic", "11", 68759, 31298, 0.455, 0.619,
+                                          "NEAtlantic", "12", 111115, 28214, 0.254, 0.758, 
+                                          "NEAtlantic", "13", 59340, 13414, 0.226, 0.403, 
+                                          ############################################## MED Delp_del & Sten_coe
+                                          "Med", "Atlantic", 33720, 6699, 0.1987, 0.6194,
+                                          "Med", "Alboran", 28071, 69412, 2.4727, 0.6199,
+                                          "Med", "SWMed", 279415, 81284, 0.2909, 0.4153,
+                                          "Med", "NWMed", 134760, 29382, 0.2180, 0.3205, 
+                                          "Med", "PelagosW", 56756, 6333, 0.1116, 0.4572, 
+                                          "Med", "PelagosE", 31076, 342, 0.0110, 0.9860, 
+                                          "Med", "Tyrrhenian", 231298, 5934, 0.0257, 0.6053, 
+                                          "Med","SCMed", 152961, 0, 0, 0,
+                                          "Med", "Adriatic", 135783, 0, 0, 0,
+                                          "Med", "Ionian", 358402, 5296, 0.0148, 0.5117,
+                                          "Med", "Aegean", 191150, 8064, 0.0422, 0.4660,
+                                          "Med", "NEMed", 161669, 0, 0, 0,
+                                          "Med", "EMed", 107687, 0, 0, 0, 
+                                          ######################################### California current mean 2005-2008 Delp_del & Delp_cap
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 6117, NA, 0.61
+  ) 
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Dd_Dc_Sc)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Dd_Dc_Sc <- build_sp_tib(original_df_Dd_Dc_Sc, "Und Dd/Dc/Sc", "Und Dd/Dc/Sc") 
+  
+  
+  ####  2 - concatenate everything with ratio of observation and 
+  ########## compute total abundances 
+  
+  rbind(Abund_df_Sten_coe, Abund_df_Delp_del, Abund_df_Delp_cap) |>
+    dplyr::left_join(Abund_df_Dd_Dc_Sc |>
+                       dplyr::rename(Code_sp_und = Code_sp,
+                                     Species_und = Species,
+                                     Abund_und = Abund, 
+                                     Abund_CV_und = Abund_CV, 
+                                     Surf_und = Surf_tot), 
+                     by = c("Geo_area", "Eco_area")) |>
+    dplyr::select("Code_sp", "Species", "Geo_area", "Eco_area", "Surf_tot", 
+                  "Abund", "Abund_CV", "Abund_und", "Abund_CV_und") |>
+    dplyr::mutate(Abund_und = dplyr::case_when(is.na(Abund_und) ~ 0, 
+                                               TRUE ~ Abund_und), 
+                  Abund_CV_und = dplyr::case_when(is.na(Abund_CV_und) ~ 0, 
+                                                  TRUE ~ Abund_CV_und)) |>
+    dplyr::left_join(ratio_others_tib, by = c("Geo_area", "Eco_area", "Species")) |>
+    dplyr::mutate(ratio = dplyr::case_when(is.na(ratio) ~ 0, 
+                                           TRUE ~ ratio),
+                  Abund_tot = Abund + ratio*Abund_und, 
+                  Var_tot = (Abund*Abund_CV*Abund*Abund_CV) + ratio*(Abund_und*Abund_CV_und*Abund_und*Abund_CV_und),
+                  Abund_CV_tot = sqrt(Var_tot)/Abund_tot) |>
+    dplyr::select(c("Code_sp", "Species", "Geo_area", "Eco_area", "Surf_tot", 
+                    "Abund_tot", "Abund_CV_tot")) |>
+    dplyr::rename(Abund = Abund_tot, 
+                  Abund_CV = Abund_CV_tot)
   
 }
 
 
+############################### BEAKED WHALES #################################
+build_sp_tib_BW <- function(ratio_REMMOAs_tib, ratio_others_tib) {
+  ########## 1 - when there was on estimate for all beaked whales 
+  # data from report 
+  original_df_BW <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                    ################################################## NEAtlantic - SCANS III 
+                                    "NEAtlantic", "AC", 35180, 581, 0.0165, 0.530,
+                                    "NEAtlantic", "B", 118471, 101, 0.0009, 0.774,
+                                    "NEAtlantic", "H", 18634, 100, 0.0054, 1.106,
+                                    "NEAtlantic", "J", 35099, 325, 0.0092, 0.621,
+                                    "NEAtlantic", "K", 32505, 211, 0.0065, 0.904, 
+                                    "NEAtlantic", "U", 60046, 75, 0.0012, 1.040,
+                                    "NEAtlantic", "V", 38306, 97, 0.0025, 1.020,
+                                    "NEAtlantic", "8", 159669, 1530, 0.0096, 0.700, 
+                                    "NEAtlantic", "9", 144352, 461, 0.0032, 0.915, 
+                                    "NEAtlantic", "11", 68759, 408, 0.0059, 0.867, 
+                                    "NEAtlantic", "12", 111115, 1156, 0.0104, 0.763, 
+                                    "NEAtlantic", "13", 59340, 1755, 0.0296, 0.611, 
+                                    ####################################### NEAtlantic - Observe (Season 3 - S5 excluded as in SCANS III)
+                                    "NEAtlantic", "S1_N", 62052, 1579, 0.0254, 0.9230,
+                                    "NEAtlantic", "S1_O", 62052, 1579, 0.0254, 0.9230,
+                                    "NEAtlantic", "S2_N", 60167, 698, 0.0116, 0.5388,
+                                    "NEAtlantic", "S2_O", 60167, 698, 0.0116, 0.5388,
+                                    "NEAtlantic", "S3_N", 100482, 866, 0.0086, 0.4687,
+                                    "NEAtlantic", "S3_O", 100482, 866, 0.0086, 0.4687,
+                                    ############################################## MED
+                                    "Med", "Atlantic", 33720, 498, 0.0148, 0.6598,
+                                    "Med", "Alboran", 28071, 271, 0.096, 1.0196,
+                                    "Med", "SWMed", 279415, 75, 0.0003, 1.0062,
+                                    "Med", "NWMed", 134760, 944, 0.0070, 0.8433,
+                                    "Med", "PelagosW", 56756, 0, 0, 0,
+                                    "Med", "PelagosE", 31076, 0, 0, 0,
+                                    "Med", "Tyrrhenian", 231298, 181, 0.0008, 0.7671,
+                                    "Med","SCMed", 152961, 246, 0.0016, 0.7996,
+                                    "Med", "Adriatic", 135783, 66, 0.0005, 1.0120,
+                                    "Med", "Ionian", 358402, 504, 0.0014, 0.5266,
+                                    "Med", "Aegean", 191150, 193, 0.0010, 0.7679,
+                                    "Med", "NEMed", 161669, 0, 0, 0,
+                                    "Med", "EMed", 107687, 420, 0.0039, 0.9793,
+                                    ######################################### French Poly 
+                                    "Pacific_FPoly", "AUS_C", 11693, 68, 0.00579, 0.76,
+                                    "Pacific_FPoly", "AUS_P", 75131, 25, 0.00291, 0.51,
+                                    "Pacific_FPoly", "AUS_O", 186545, 20, 0.00165, 0.56,
+                                    "Pacific_FPoly", "GAM_P", 150930, 30, 0.00518, 0.48,
+                                    "Pacific_FPoly", "GAM_O", 185976, 5, 0.0007, 1.03,
+                                    "Pacific_FPoly", "SOC_C", 19372, 20, 0.01287, 0.55,
+                                    "Pacific_FPoly", "SOC_P", 81650, 5, 0.00085, 1.03,  
+                                    "Pacific_FPoly", "SOC_O", 174253, 25, 0.00284, 0.51, 
+                                    "Pacific_FPoly", "TUN_P", 148366, 25, 0.00306, 0.51,  
+                                    "Pacific_FPoly", "TUN_O", 138368, 20, 0.00284, 0.56,
+                                    "Pacific_FPoly", "TUS_P", 146201, 20, 0.00312, 0.54, 
+                                    "Pacific_FPoly", "TUS_O", 151913, 5, 0.00069, 1.03, 
+                                    "Pacific_FPoly", "MAR_C", 24868, 10, 0.00445, 0.75, 
+                                    "Pacific_FPoly", "MAR_P", 64731, 15, 0.00354, 0.63, 
+                                    "Pacific_FPoly", "MAR_O", 243531, 56, 0.005, 0.38, 
+                                    ######################################### New Caledonia 
+                                    "Pacific_NCal", "NCal", 542300, 2442, 0.0045, 0.28,  
+                                    ######################################### Wallis & Futuna 
+                                    "Pacific_WFu", "WFu", 233600, 468, 0.002, 0.43, 
+                                    ######################################### Indian : for beaked whale only one estimation but only obs in slope and oceanic strata so considered all oceanic in the end
+                                    "Indian", "CMGM_O", 259491, 1422, 0.00516, 0.43,
+                                    "Indian", "JMN_O", 101452, 827, 0.00669, 0.38,
+                                    "Indian", "EBM_O", 155226, 831, 0.00544, 0.53,
+                                    "Indian", "TM_O", 124218, 553, 0.00361, 68.22, 
+                                    "Indian", "RM", 404884, 659, 0.00162, 723.83,  
+                                    "Indian", "SE_O", 264990, 766, 0.00261, 0.41, 
+                                    ######################################### Antilles-Guyana
+                                    "Antilles", "ANT_P2", 36006, 21, 0.001, 1.01,
+                                    "Antilles", "ANT_P3", 52687, 58, 0.001, 0.57,
+                                    "Antilles", "ANT_O1", 56841, 225, 0.004, 0.41,
+                                    "Guyana", "GUY_P5", 61465, 43, 0.001, 0.72,
+                                    "Guyana", "GUY_O5", 49129, 275, 0.006, 0.64
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_BW)
+  # For French Polynesia there is nothing to check as there is no totals in the table of report...
+  # except : we see there is a tiny tiny CV where it is very high individually... 
+  
+  # focus on blocks of interest and computations
+  Abund_df_BW <- build_sp_tib(original_df_BW, "All beaked whales","BW")
+  
+  Abund_Zc_Ha_Meso_Indo_pac <- Abund_df_BW |>
+    dplyr::left_join(rbind(ratio_others_tib, 
+                           ratio_REMMOAs_tib |> 
+                             dplyr::ungroup() |>
+                             dplyr::select(-"Group_sp")) |>
+                       dplyr::filter(Species %in% c("Hyperoodon ampullatus", 
+                                                    "Ziphius cavirostris", 
+                                                    "Mesoplodon spp", 
+                                                    "Indopacetus pacificus")), by = c("Geo_area", "Eco_area")) |>
+    dplyr::mutate(ratio = dplyr::case_when(is.na(ratio) ~ 0, 
+                                           TRUE ~ ratio), 
+                  Code_sp = dplyr::case_when(Species.y == "Mesoplodon spp" ~ "Meso_spp", 
+                                             Species.y == "Hyperoodon ampullatus" ~ "Hype_amp",
+                                             Species.y == "Ziphius cavirostris" ~ "Ziph_cav", 
+                                             Species.y == "Indopacetus pacificus" ~ "Indo_pac"),
+                  Abund_sp = round(ratio*Abund, 0), 
+                  Var_sp = ratio*(Abund*Abund_CV*Abund*Abund_CV),
+                  Abund_CV_sp = sqrt(Var_sp)/Abund_sp) |>
+    dplyr::select(c("Code_sp", "Species.y", "Geo_area", "Eco_area", "Surf_tot", 
+                    "Abund_sp", "Var_sp", "Abund_CV_sp")) |>
+    dplyr::rename(Species = Species.y, 
+                  Abund = Abund_sp, 
+                  Abund_CV = Abund_CV_sp) |> 
+    dplyr::group_by(Code_sp, Species, Geo_area, Eco_area, Surf_tot) |>
+    dplyr::summarise(Abund = sum(Abund), 
+                     Var = sum(Var_sp), 
+                     Abund_CV = sqrt(Var)/Abund) |> 
+    dplyr::select(- Var) |>
+    dplyr::filter(!is.na(Species), !(Abund == 0)) # Block where there was no observations
+  
+  # clean up 
+  rm(original_df_BW, Abund_df_BW)
+  
+  
+  ######### 2 - For when there were both abundance estimates for species and for all beaked whales
+  # GoMexico, California Current, Hawai
+  
+  ## Mesoplodont species 
+  # data from report 
+  original_df_Meso_spp <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV,
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 20, NA, 0.977, # M. densirostris
+                                          "GoMexico", "GoMexico", 380432, 98, NA, 0.464, # Meso_spp
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 1132, 0.00046, 0.99, # Mesoplodon densirostris
+                                          "Pacific_Hawai", "Hawai", 2447635, 2923, 0.00119, 0.61, # Mesoplopon spp.
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 841, NA, 0.88, # Mesoplopon spp.
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 603, NA, 1.16 # Mesoplopon densirostris
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_Meso_spp)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Meso_spp <- build_sp_tib(original_df_Meso_spp, "Mesoplodon spp", "Meso_spp")
+  
+  
+  ## Ziphius cavirostris - Cuvier's beaked whale
+  # data from report 
+  original_df_Ziph_cav <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV,
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 18, NA, 0.749, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 4431, 0.00181, 0.41, # Ziphius cavirostris
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 2143, NA, 0.65 # Ziphius cavirostris
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_Ziph_cav)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Ziph_cav <- build_sp_tib(original_df_Ziph_cav, "Ziphius cavirostris", "Ziph_cav")
+  
+  
+  ## Indopacetus pacificus - Longman's beaked whale
+  # data from report 
+  original_df_Indo_pac <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV,
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 2550, 0.00104, 0.67, # Indopacetus pacificus
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Indo_pac)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Indo_pac <- build_sp_tib(original_df_Indo_pac, "Indopacetus pacificus", "Indo_pac")
+  
+  
+  ## Berardius bairdii - Baird's beaked whale
+  # data from report 
+  original_df_Bera_bai <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV,
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 907, NA, 0.49, # Berardius bairdii
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_Bera_bai)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Bera_bai <- build_sp_tib(original_df_Bera_bai, "Berardius bairdii", "Bera_bai")
+  
+  
+  ## Unidentified Ziphiid
+  # data from report
+  original_df_Ziphiid <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~ CV,
+                                         ######################################### goMexico mean 2017-2018
+                                         "GoMexico", "GoMexico", 380432, 181, NA, 0.308,
+                                         ######################################### Hawai2017
+                                         "Pacific_Hawai", "Hawai", 2447635, 1826, 0.00075, 0.46, # Und. Ziphiid
+                                         ######################################### California current mean 2005-2008
+                                         "Pacific_Calif_current", "Calif_current", 1141807, 1505, NA, 0.63 # Und. Ziphiid
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_Ziphiid)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Ziphiid <- build_sp_tib(original_df_Ziphiid, "Und Ziphiid", "Und Ziphiid")
+  
+  # concatenate everything with ratio of observation and compute total abundances 
+  Abund_Meso_spp_Ziph_cav_Indo_pac_Bera_bai_final <- rbind(Abund_df_Meso_spp, Abund_df_Ziph_cav, 
+                                                           Abund_df_Indo_pac, Abund_df_Bera_bai) |>
+    dplyr::left_join(Abund_df_Ziphiid |>
+                       dplyr::rename(Code_sp_und = Code_sp,
+                                     Species_und = Species,
+                                     Abund_und = Abund, 
+                                     Abund_CV_und = Abund_CV, 
+                                     Surf_und = Surf_tot), by = c("Geo_area", "Eco_area")) |>
+    dplyr::select("Code_sp", "Species", "Geo_area", "Eco_area", "Surf_tot", 
+                  "Abund", "Abund_CV", "Abund_und", "Abund_CV_und") |>
+    dplyr::mutate(Abund_und = dplyr::case_when(is.na(Abund_und) ~ 0, 
+                                               TRUE ~ Abund_und), 
+                  Abund_CV_und = dplyr::case_when(is.na(Abund_CV_und) ~ 0, 
+                                                  TRUE ~ Abund_CV_und)) |>
+    dplyr::left_join(ratio_others_tib, by = c("Geo_area", "Eco_area", "Species")) |>
+    dplyr::mutate(ratio = dplyr::case_when(is.na(ratio) ~ 0, 
+                                           TRUE ~ ratio),
+                  Abund_tot = Abund + ratio*Abund_und, 
+                  Var_tot = (Abund*Abund_CV*Abund*Abund_CV) + 
+                    ratio*(Abund_und*Abund_CV_und*Abund_und*Abund_CV_und),
+                  Abund_CV_tot = sqrt(Var_tot)/Abund_tot) |>
+    dplyr::select(c("Code_sp", "Species", "Geo_area", "Eco_area", "Surf_tot", 
+                    "Abund_tot", "Abund_CV_tot")) |>
+    dplyr::rename(Abund = Abund_tot, 
+                  Abund_CV = Abund_CV_tot)
+  
+  # clean up 
+  rm(original_df_Meso_spp, Abund_df_Meso_spp,
+     original_df_Ziph_cav, Abund_df_Ziph_cav,
+     original_df_Indo_pac, Abund_df_Indo_pac,
+     original_df_Bera_bai, Abund_df_Bera_bai,
+     original_df_Ziphiid, Abund_df_Ziphiid)
+  
+  
+  ######### 3 - For when abundance was already dispatched between species including the und. species
+  
+  ######### t-NASS NAtlantic ##############
+  # Hyperoodon ampullatus - Northern Bottlenose whale
+  original_df_Hype_amp <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ################################### t-NASS
+                                          "NAtlantic", "FC", 77857, 11384, 0.135, 0.94, 
+                                          "NAtlantic", "FW", 176905, 2522, 0.0131, 0.84,
+                                          "NAtlantic", "IG", 93953, 1121, 0.011, 1.05,
+                                          "NAtlantic", "IR", 108550, 2777, 0.0235, 0.9,
+                                          "NAtlantic", "IW", 37905, 2170, 0.0527, 0.79,
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_Hype_amp)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Hype_amp <- build_sp_tib(original_df_Hype_amp, "Hyperoodon ampullatus", "Hype_amp")
+  
+  
+  
+  ######### WAtlantic 2011 ##############
+  # Ziphius cavirostris - Cuvier's beaked whale
+  original_df_Ziph_cav <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### NWAtl2011 
+                                          "NWAtlantic", "NWAtl_slope", 54376, 946, NA, 0.48,
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 4016, NA, 0.44
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_Ziph_cav)
+  
+  # focus on blocks of interest and computations
+  Abund_df_Ziph_cav <- build_sp_tib(original_df_Ziph_cav, "Ziphius cavirostris", "Ziph_cav")
+  
+  
+  # Mesoplodon spp (M. bidens & M. europaeus) - Sowerby's and Gervais' beaked whales
+  original_df_Meso_spp <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### NWAtl2011 # Mbid 
+                                          "NWAtlantic", "NWAtl_slope", 54376, 2007, NA, 0.99,
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 1646, NA, 0.93, 
+                                          ######################################### NWAtl2011 # Meur
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 1847, NA, 0.96
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_Meso_spp)
+  # here the cv is much lower than individual estimates.... :/
+  
+  # focus on blocks of interest and computations
+  Abund_df_Meso_spp <- build_sp_tib(original_df_Meso_spp, "Mesoplodon spp", "Meso_spp")
+  
+  
+  ##### concatenate everything 
+  rbind(Abund_Zc_Ha_Meso_Indo_pac, # from #1
+        Abund_Meso_spp_Ziph_cav_Indo_pac_Bera_bai_final, # from #2
+        Abund_df_Hype_amp, Abund_df_Ziph_cav, Abund_df_Meso_spp # from #3
+  )
+
+}
+
+
+##################################### REMMOA - Small delphinids ################
+build_sp_tib_REMMOA_smalldel <- function(ratio_REMMOAs_tib) {
+  # two species identified in French polynesia : Stenella longirostris and Stenella attenuata
+  # idem in NCal and WFu (but considered as 100? Sten_att as no Sten_long identified to species), and Indian ocean
+  
+  original_df_small_delph <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                             ######################################### French Poly 
+                                             "Pacific_FPoly", "SOC_C", 19372, 917, 0.04734, 0.65,  
+                                             "Pacific_FPoly", "SOC_P", 81650, 684, 0.00838, 0.76, 
+                                             "Pacific_FPoly", "TUN_P", 148366, 1335, 0.009, 0.65, 
+                                             "Pacific_FPoly", "TUS_P", 146201, 1678, 0.01148, 0.65, 
+                                             "Pacific_FPoly", "TUS_O", 151913, 514, 0.0338, 1.05, 
+                                             "Pacific_FPoly", "MAR_C", 24868, 199, 0.00802, 1.05, 
+                                             "Pacific_FPoly", "MAR_P", 64731, 826, 0.01276, 0.66, 
+                                             "Pacific_FPoly", "MAR_O", 243531, 3004, 0.01233, 0.49, 
+                                             ######################################### New Caledonia 
+                                             "Pacific_NCal", "NCal", 542300, 19589, 0.027, 0.38, 
+                                             ######################################### Indian
+                                             "Indian", "CMGM_N", 24237, 3037, 0.1655, 0.59,
+                                             "Indian", "CMGM_P", 87560, 30486, 0.3571, 0.34,
+                                             "Indian", "CMGM_O", 171931, 9721, 0.565, 0.8,
+                                             "Indian", "JMN_N", 24634, 5005, 0.2251, 0.57,
+                                             "Indian", "JMN_P", 27420, 8488, 0.3096, 0.41,
+                                             "Indian", "JMN_O", 74032, 10449, 0.1411, 0.44,
+                                             "Indian", "EBM_P", 36127, 3393, 0.1008, 0.48,
+                                             "Indian", "EBM_O", 119099, 561, 0.0047, 0.6,
+                                             "Indian", "TM_O", 155045, 578, 0.0038, 0.71, # it's not stratified here but as TM is only 6.4% shelf in surface we consider it as oceanic in this case
+                                             "Indian", "RM", 404884, 6115, 0.0150, 0.47,
+                                             "Indian", "SE_N", 29158, 3795, 0.1313, 0.54,
+                                             "Indian", "SE_P", 97713, 61155, 0.6259, 0.37,
+                                             "Indian", "SE_O", 167277, 30997, 0.1853, 0.5,
+                                             ######################################### Antilles-Guyana
+                                             "Antilles", "ANT_P1", 17476, 999, 0.057, 1.2,
+                                             "Antilles", "ANT_P2", 36006, 2224, 0.062, 0.81,
+                                             "Antilles", "ANT_P3", 52687, 4435, 0.084, 0.88,
+                                             "Antilles", "ANT_O1", 56841, 1139, 0.020, 1.01,
+                                             "Guyana", "GUY_P5", 61465, 5811, 0.095, 0.42,
+                                             "Guyana", "GUY_O5", 49129, 2840, 0.058, 0.6
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_small_delph) # not really anything to check here as no totals in the tables
+  # but the CV is far lower than all CVs of individual abundance estimates
+  
+  
+  # focus on blocks of interest and computations
+  Abund_df_small_delph <- build_sp_tib(original_df_small_delph, "Small delphinids","smalldel")
+  
+  
+  Abund_df_small_delph |>
+    dplyr::left_join(ratio_REMMOAs_tib |>
+                       dplyr::ungroup() |> 
+                       dplyr::filter(Group_sp == "Small delphinids"), 
+                     by = c("Geo_area", "Eco_area")) |>
+    dplyr::mutate(ratio = dplyr::case_when(is.na(ratio) ~ 0, 
+                                           TRUE ~ ratio), 
+                  Code_sp = dplyr::case_when(Species.y == "Stenella attenuata" ~ "Sten_att", 
+                                             Species.y == "Stenella longirostris" ~ "Sten_lon"),
+                  Abund_sp = round(ratio*Abund, 0), 
+                  Var_sp = ratio*(Abund*Abund_CV*Abund*Abund_CV),
+                  Abund_CV_sp = sqrt(Var_sp)/Abund_sp) |>
+    dplyr::select(c("Code_sp", "Species.y", "Geo_area", "Eco_area", "Surf_tot", 
+                    "Abund_sp", "Var_sp", "Abund_CV_sp")) |>
+    dplyr::rename(Species = Species.y, 
+                  Abund = Abund_sp, 
+                  Abund_CV = Abund_CV_sp) |> 
+    dplyr::group_by(Code_sp, Species, Geo_area, Eco_area, Surf_tot) |>
+    dplyr::summarise(Abund = sum(Abund), 
+                     Var = sum(Var_sp), 
+                     Abund_CV = sqrt(Var)/Abund) |> 
+    dplyr::select(- Var) |>
+    dplyr::filter(!is.na(Species), !(Abund == 0)) # Block where there was no observations
+  
+  
+}
+
+
+##################################### REMMOA - Large delphinids ################
+build_sp_tib_REMMOA_largedel <- function(ratio_REMMOAs_tib) {
+  # three species identified in French polynesia :Tursiops truncatus, Steno bredanensis, Lagenodelphis hosei
+  # For Indian ocean : add Sousa plumbea
+  original_df_large_delph <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                             ######################################### French Poly 
+                                             "Pacific_FPoly", "AUS_P", 75131, 283, 0.00377, 0.61,
+                                             "Pacific_FPoly", "SOC_C", 19372, 808, 0.0417, 0.55,  
+                                             "Pacific_FPoly", "SOC_P", 81650, 301, 0.0369, 0.73,  
+                                             "Pacific_FPoly", "SOC_O", 174253, 214, 0.00123, 1.02, 
+                                             "Pacific_FPoly", "TUN_P", 148366, 392, 0.00264, 0.73,  
+                                             "Pacific_FPoly", "TUN_O", 138368, 1486, 0.01074, 0.46,
+                                             "Pacific_FPoly", "TUS_P", 146201, 1232, 0.00842, 0.55, 
+                                             "Pacific_FPoly", "TUS_O", 151913, 226, 0.00149, 1.02, 
+                                             "Pacific_FPoly", "MAR_C", 24868, 120, 0.00481, 1.01, 
+                                             "Pacific_FPoly", "MAR_P", 64731, 661, 0.01021, 0.53, 
+                                             "Pacific_FPoly", "MAR_O", 243531, 3863, 0.01586, 0.35, 
+                                             ######################################### New Caledonia 
+                                             "Pacific_NCal", "NCal", 542300, 7367, 0.011, 0.33,  
+                                             ######################################### Wallis & Futuna 
+                                             "Pacific_WFu", "WFu", 233600, 4310, 0.014, 0.44, 
+                                             ######################################### Indian
+                                             "Indian", "CMGM_N", 24237, 1346, 0.0734, 0.3,
+                                             "Indian", "CMGM_P", 87560, 2462, 0.0288, 0.45,
+                                             "Indian", "CMGM_O", 171931, 7275, 0.0423, 0.35,
+                                             "Indian", "JMN_N", 24634, 2799, 0.1259, 0.23,
+                                             "Indian", "JMN_P", 27420, 4671, 0.1704, 0.24,
+                                             "Indian", "JMN_O", 74032, 26323, 0.3556, 0.29,
+                                             "Indian", "EBM_P", 36127, 5458, 0.1621, 0.3,
+                                             "Indian", "EBM_O", 119099, 20958, 0.1760, 0.33,
+                                             "Indian", "TM_N", 9835, 234, 0.0277, 0.46, 
+                                             "Indian", "TM_P", 20992, 419, 0.0203, 0.61, 
+                                             "Indian", "TM_O", 124218, 2968, 0.0239, 0.43, 
+                                             "Indian", "MAU_N", 6250, 362, 0.0579, 0.51,  
+                                             "Indian", "MAU_P", 74632, 3358, 0.0463, 0.3,  
+                                             "Indian", "MAU_O", 137889, 2091, 0.0152, 0.52,  
+                                             "Indian", "REU_N", 17141, 2161, 0.1038, 0.36, 
+                                             "Indian", "REU_O", 168972, 3753, 0.0222, 0.4, 
+                                             "Indian", "SE_N", 29158, 4891, 0.1692, 0.19,
+                                             "Indian", "SE_P", 97713, 16457, 0.1684, 0.29,
+                                             "Indian", "SE_O", 167277, 10352, 0.0619, 0.29,
+                                             ######################################### Antilles-Guyana
+                                             "Antilles", "ANT_P2", 36006, 2673, 0.074, 1.08,
+                                             "Antilles", "ANT_P3", 52687, 994, 0.019, 0.73,
+                                             "Antilles", "ANT_O1", 56841, 1515, 0.027, 0.66,
+                                             "Guyana", "GUY_P5", 61465, 5546, 0.090, 0.46,
+                                             "Guyana", "GUY_O5", 49129, 581, 0.012, 0.64 
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_large_delph) # not really anything to check here as no totals in the tables
+  # IDEM but the CV is far lower than all CVs of individual abundance estimates
+  
+  
+  # focus on blocks of interest and computations
+  Abund_df_large_delph <- build_sp_tib(original_df_large_delph, "Large delphinids","largedel")
+  
+  
+  Abund_df_large_delph |>
+    dplyr::left_join(ratio_REMMOAs_tib |>
+                       dplyr::ungroup() |>
+                       dplyr::filter(Group_sp == "Large delphinids"), 
+                     by = c("Geo_area", "Eco_area")) |>
+    dplyr::mutate(ratio = dplyr::case_when(is.na(ratio) ~ 0, 
+                                           TRUE ~ ratio), 
+                  Code_sp = dplyr::case_when(Species.y == "Lagenodelphis hosei" ~ "Lage_hos", 
+                                             Species.y == "Steno bredanensis" ~ "Sten_bre", 
+                                             Species.y == "Tursiops truncatus" ~ "Turs_tru", 
+                                             Species.y == "Sousa plumbea" ~ "Sous_plu"),
+                  Abund_sp = round(ratio*Abund, 0), 
+                  Var_sp = ratio*(Abund*Abund_CV*Abund*Abund_CV),
+                  Abund_CV_sp = sqrt(Var_sp)/Abund_sp) |>
+    dplyr::select(c("Code_sp", "Species.y", "Geo_area", "Eco_area", "Surf_tot", 
+                    "Abund_sp", "Var_sp", "Abund_CV_sp")) |>
+    dplyr::rename(Species = Species.y, 
+                  Abund = Abund_sp, 
+                  Abund_CV = Abund_CV_sp) |> 
+    dplyr::group_by(Code_sp, Species, Geo_area, Eco_area, Surf_tot) |>
+    dplyr::summarise(Abund = sum(Abund), 
+                     Var = sum(Var_sp), 
+                     Abund_CV = sqrt(Var)/Abund) |> 
+    dplyr::select(- Var) |>
+    dplyr::filter(!is.na(Species), !(Abund == 0)) # Block where there was no observations
+  
+}
+
+
+##################################### REMMOA - Small globicephalinids ################
+build_sp_tib_REMMOA_smallglobi <- function(ratio_REMMOAs_tib) {
+# 3 species identified in Antilles/Guyana: Grampus griseus, Peponocephala electra, Feresa attenuata
+# but Feresa attenuata never identified to species, so we considered Pepo_ele/Fere_att was 100 % Pepo_ele
+# NCal & Wallis & Futuna -> 100% Pepo_elec
+
+original_df_small_globi <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                   ######################################### Antilles-Guyana
+                                   "Antilles", "ANT_P1", 17476, 458, 0.026, 0.75,
+                                   "Antilles", "ANT_O1", 56841, 90, 0.002, 1.06,
+                                   "Guyana", "GUY_P5", 61465, 478, 0.008, 0.77,
+                                   "Guyana", "GUY_O5", 49129, 189, 0.004, 0.77 
+)
+
+# check totals from report with verify_totals
+#verify_total(original_df_small_globi) # not really anything to check here as no totals in the tables
+# IDEM but the CV is far lower than all CVs of individual abundance estimates
+
+
+# focus on blocks of interest and computations
+Abund_df_small_globi <- build_sp_tib(original_df_small_globi, "Small globicephalinids","small globi")
+
+
+Abund_df_small_globi |>
+  dplyr::left_join(ratio_REMMOAs_tib |>
+                     dplyr::ungroup() |>
+                     dplyr::filter(Group_sp == "Small globicephalinids"), 
+                   by = c("Geo_area", "Eco_area")) |>
+  dplyr::mutate(ratio = dplyr::case_when(is.na(ratio) ~ 0, 
+                                  TRUE ~ ratio), 
+                Code_sp = dplyr::case_when(Species.y == "Grampus griseus" ~ "Gram_gri", 
+                                    Species.y == "Peponocephala electra" ~ "Pepo_ele"),
+                Abund_sp = round(ratio*Abund, 0), 
+                Var_sp = ratio*(Abund*Abund_CV*Abund*Abund_CV),
+                Abund_CV_sp = sqrt(Var_sp)/Abund_sp) |>
+  dplyr::select(c("Code_sp", "Species.y", "Geo_area", "Eco_area", "Surf_tot", 
+                  "Abund_sp", "Var_sp", "Abund_CV_sp")) |>
+  dplyr::rename(Species = Species.y, 
+         Abund = Abund_sp, 
+         Abund_CV = Abund_CV_sp) |> 
+  dplyr::group_by(Code_sp, Species, Geo_area, Eco_area, Surf_tot) |>
+  dplyr::summarise(Abund = sum(Abund), 
+            Var = sum(Var_sp), 
+            Abund_CV = sqrt(Var)/Abund) |> 
+  dplyr::select(- Var) |>
+  dplyr::filter(!is.na(Species), !(Abund == 0)) # Block where there was no observations
+
+}
+
+
+##################################### REMMOA - Large globicephalinids ################
+build_sp_tib_REMMOA_largeglobi <- function(ratio_REMMOAs_tib) {
+  # 3 species identified in French polynesia: Globicephala macrorhynchus, Pseudorca crassidens, Orcinus orca
+  
+  original_df_large_globi <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                             ######################################### French Poly 
+                                             "Pacific_FPoly", "AUS_O", 186545, 358, 0.00192, 0.74,
+                                             "Pacific_FPoly", "SOC_C", 19372, 145, 0.0075, 1.03,  
+                                             "Pacific_FPoly", "SOC_P", 81650, 325, 0.00398, 0.74,  
+                                             "Pacific_FPoly", "TUN_P", 148366, 846, 0.0057, 0.82,
+                                             "Pacific_FPoly", "TUN_O", 138368, 917, 0.00663, 0.54,
+                                             "Pacific_FPoly", "TUS_P", 146201, 266, 0.00182, 1.03, 
+                                             "Pacific_FPoly", "TUS_O", 151913, 733, 0.00482, 0.61, 
+                                             "Pacific_FPoly", "MAR_C", 24868, 419, 0.01683, 0.61, 
+                                             "Pacific_FPoly", "MAR_P", 64731, 1156, 0.01786, 0.51, 
+                                             "Pacific_FPoly", "MAR_O", 243531, 3002, 0.01233, 0.4, 
+                                             ######################################### New Caledonia 
+                                             "Pacific_NCal", "NCal", 542300, 10512, 0.014, 0.3,  
+                                             ######################################### Wallis & Futuna 
+                                             "Pacific_WFu", "WFu", 233600, 1086, 0.003, 0.56, 
+                                             ######################################### Indian
+                                             "Indian", "CMGM_P", 87560, 707, 0.00828, 0.68,
+                                             "Indian", "CMGM_O", 171931, 300, 0.00174, 0.82,
+                                             "Indian", "JMN_P", 27420, 1437, 0.05242, 0.57,
+                                             "Indian", "JMN_O", 74032, 1435, 0.01938, 0.69,
+                                             "Indian", "EBM_P", 36127, 1403, 0.04168, 0.69,
+                                             "Indian", "EBM_O", 119099, 3139, 0.02636, 0.51,
+                                             "Indian", "TM_P", 20992, 252, 0.01222, 0.66, 
+                                             "Indian", "TM_O", 124218, 905, 0.00729, 0.51,  
+                                             "Indian", "RM_P", 74632, 293, 0.00314, 0.94, 
+                                             "Indian", "RM_O", 306861, 623, 0.00203, 1.44, 
+                                             "Indian", "SE_P", 97713, 9861, 0.10092, 0.62,
+                                             "Indian", "SE_O", 167277, 10358, 0.6192, 0.65,
+                                             ######################################### Antilles-Guyana
+                                             "Antilles", "ANT_P1", 17476, 731, 0.042, 1,
+                                             "Antilles", "ANT_P2", 36006, 1649, 0.046, 0.87,
+                                             "Antilles", "ANT_P3", 52687, 2414, 0.046, 0.83,
+                                             "Antilles", "ANT_O1", 56841, 342, 0.006, 0.83,
+                                             "Guyana", "GUY_O5", 49129, 726, 0.012, 0.79 
+  )
+  
+  # check totals from report with verify_totals
+  #verify_total(original_df_large_globi) # not really anything to check here as no totals in the tables
+  # IDEM but the CV is far lower than all CVs of individual abundance estimates
+  
+  
+  # focus on blocks of interest and computations
+  Abund_df_large_globi <- build_sp_tib(original_df_large_globi, "Large globicephalinids","large globi")
+  
+  Abund_df_large_globi |>
+    dplyr::left_join(ratio_REMMOAs_tib |>
+                       dplyr::ungroup() |>
+                       dplyr::filter(Group_sp == "Large globicephalinids"), by = c("Geo_area", "Eco_area")) |>
+    dplyr::mutate(ratio = dplyr::case_when(is.na(ratio) ~ 0, 
+                                           TRUE ~ ratio), 
+                  Code_sp = dplyr::case_when(Species.y == "Globicephala macrorhynchus" ~ "Glob_mac", 
+                                             Species.y == "Orcinus orca" ~ "Orci_orc", 
+                                             Species.y == "Pseudorca crassidens" ~ "Pseu_cra"),
+                  Abund_sp = round(ratio*Abund, 0), 
+                  Var_sp = ratio*(Abund*Abund_CV*Abund*Abund_CV),
+                  Abund_CV_sp = sqrt(Var_sp)/Abund_sp) |>
+    dplyr::select(c("Code_sp", "Species.y", "Geo_area", "Eco_area", "Surf_tot", 
+                    "Abund_sp", "Var_sp", "Abund_CV_sp")) |>
+    dplyr::rename(Species = Species.y, 
+                  Abund = Abund_sp, 
+                  Abund_CV = Abund_CV_sp) |> 
+    dplyr::group_by(Code_sp, Species, Geo_area, Eco_area, Surf_tot) |>
+    dplyr::summarise(Abund = sum(Abund), 
+                     Var = sum(Var_sp), 
+                     Abund_CV = sqrt(Var)/Abund) |> 
+    dplyr::select(- Var) |>
+    dplyr::filter(!is.na(Species), !(Abund == 0)) # Block where there was no observations
+  
+}
