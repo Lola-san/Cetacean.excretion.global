@@ -256,59 +256,861 @@ build_sp_tib <- function(original_tib, species, code_sp) {
 ############################## build original tibbles for each species ########################
 
 ## Balaenoptera acutorostrata - Minke whale
-# data from report 
 data_from_data_Bala_acu <- function() {
   
-  # here is where verify_totals should be called
-  #verify_totals(
-  tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
-                  ####################################### NEAtlantic - SCANS III 
-                  "NEAtlantic", "AC", 35180, 164, 0.0047, 1.137,
-                  "NEAtlantic", "B", 118471, 289, 0.0024, 0.837,
-                  "NEAtlantic", "C", 81297, 186, 0.0023, 1.119,
-                  "NEAtlantic", "D", 48590, 543, 0.0112, 0.755,
-                  "NEAtlantic", "E", 34870, 603, 0.0173, 0.618,
-                  "NEAtlantic", "G", 15122, 410, 0.0271, 0.700,
-                  "NEAtlantic", "H", 18634, 149, 0.0080, 1.072, 
-                  "NEAtlantic", "I", 13979, 285, 0.0204, 0.790,
-                  "NEAtlantic", "J", 35099, 647, 0.0184, 1.040, 
-                  "NEAtlantic", "K", 32505, 295, 0.0091, 0.805, 
-                  "NEAtlantic", "N", 69386, 1392, 0.0201, 0.504, 
-                  "NEAtlantic", "O", 60198, 603, 0.0100, 0.621, 
-                  "NEAtlantic", "P", 63655, 610, 0.0096, 0.657,
-                  "NEAtlantic", "Q", 49746, 348, 0.0070, 0.761,
-                  "NEAtlantic", "R", 64464, 2498, 0.0387, 0.614, 
-                  "NEAtlantic", "S", 40383, 383, 0.0095, 0.749, 
-                  "NEAtlantic", "T", 65417, 2068, 0.0316, 0.805, 
-                  "NEAtlantic", "U", 60046, 895, 0.0149, 0.848,
-                  "NEAtlantic", "V", 38306, 440, 0.0115, 1.144,
-                  "NEAtlantic", "X", 19496, 122, 0.0062, 1.092, 
-                  "NEAtlantic", "Y", 18779, 171, 0.0091, 1.101,
-                  "NEAtlantic", "8", 159669, 1657, 0.0104, 0.549, 
-                  ####################################### NEAtlantic - Observe (Season 3)
-                  "NEAtlantic", "S1_N", 62052, 751, 0.012, 0.705,
-                  "NEAtlantic", "S1_O", 62052, 751, 0.012, 0.705,
-                  "NEAtlantic", "S3_N", 100482, 930, 0.009, 0.6403,
-                  "NEAtlantic", "S3_O", 100482, 930, 0.009, 0.6403,
-                  "NEAtlantic", "S4", 63162, 760, 0.012, 0.6332,
-                  "NEAtlantic", "S5", 11010, 180, 0.016, 1.0613,
-                  "NEAtlantic", "S7", 17261, 1714, 0.102, 0.6915,
-                  "NEAtlantic", "S8", 9707, 2242, 0.236, 0.6614, 
-                  ######################################### t-NASS
-                  "NAtlantic", "CG", 46347, 2726, 0.0588, 0.52,
-                  "NAtlantic", "FC", 84816, 12926, 0.152, 0.64, 
-                  "NAtlantic", "FW", 170629, 5072, 0.0297, 0.43,
-                  "NAtlantic", "IC", 85700, 12710, 0.148, 0.53,
-                  "NAtlantic", "IE", 71325, 5655, 0.0793, 0.73,
-                  "NAtlantic", "IR", 52594, 1207, 0.023, 0.82,
-                  "NAtlantic", "IW", 92929, 2218, 0.0239, 0.53,
-                  ######################################### NWAtl2011
-                  "NWAtlantic", "GOM/BOF", 199656, 2538, NA, 0.87,
-                  "NWAtlantic", "NWAtl_slope", 54376, 53, NA, 0.73, 
-                  ######################################### Hawai2017
-                  "Pacific_Hawai", "Hawai", 2447635, 438, 0.00018, 1.05, 
-                  ######################################### California current mean 2005-2008
-                  "Pacific_Calif_current", "Calif_current", 1141807, 478, NA, 1.36 
-                    )
-  #) # end parenthesis for verify totals
+  original_df_Bala_acu <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ####################################### NEAtlantic - SCANS III 
+                                          "NEAtlantic", "AC", 35180, 164, 0.0047, 1.137,
+                                          "NEAtlantic", "B", 118471, 289, 0.0024, 0.837,
+                                          "NEAtlantic", "C", 81297, 186, 0.0023, 1.119,
+                                          "NEAtlantic", "D", 48590, 543, 0.0112, 0.755,
+                                          "NEAtlantic", "E", 34870, 603, 0.0173, 0.618,
+                                          "NEAtlantic", "G", 15122, 410, 0.0271, 0.700,
+                                          "NEAtlantic", "H", 18634, 149, 0.0080, 1.072, 
+                                          "NEAtlantic", "I", 13979, 285, 0.0204, 0.790,
+                                          "NEAtlantic", "J", 35099, 647, 0.0184, 1.040, 
+                                          "NEAtlantic", "K", 32505, 295, 0.0091, 0.805, 
+                                          "NEAtlantic", "N", 69386, 1392, 0.0201, 0.504, 
+                                          "NEAtlantic", "O", 60198, 603, 0.0100, 0.621, 
+                                          "NEAtlantic", "P", 63655, 610, 0.0096, 0.657,
+                                          "NEAtlantic", "Q", 49746, 348, 0.0070, 0.761,
+                                          "NEAtlantic", "R", 64464, 2498, 0.0387, 0.614, 
+                                          "NEAtlantic", "S", 40383, 383, 0.0095, 0.749, 
+                                          "NEAtlantic", "T", 65417, 2068, 0.0316, 0.805, 
+                                          "NEAtlantic", "U", 60046, 895, 0.0149, 0.848,
+                                          "NEAtlantic", "V", 38306, 440, 0.0115, 1.144,
+                                          "NEAtlantic", "X", 19496, 122, 0.0062, 1.092, 
+                                          "NEAtlantic", "Y", 18779, 171, 0.0091, 1.101,
+                                          "NEAtlantic", "8", 159669, 1657, 0.0104, 0.549, 
+                                          ####################################### NEAtlantic - Observe (Season 3)
+                                          "NEAtlantic", "S1_N", 62052, 751, 0.012, 0.705,
+                                          "NEAtlantic", "S1_O", 62052, 751, 0.012, 0.705,
+                                          "NEAtlantic", "S3_N", 100482, 930, 0.009, 0.6403,
+                                          "NEAtlantic", "S3_O", 100482, 930, 0.009, 0.6403,
+                                          "NEAtlantic", "S4", 63162, 760, 0.012, 0.6332,
+                                          "NEAtlantic", "S5", 11010, 180, 0.016, 1.0613,
+                                          "NEAtlantic", "S7", 17261, 1714, 0.102, 0.6915,
+                                          "NEAtlantic", "S8", 9707, 2242, 0.236, 0.6614, 
+                                          ######################################### t-NASS
+                                          "NAtlantic", "CG", 46347, 2726, 0.0588, 0.52,
+                                          "NAtlantic", "FC", 84816, 12926, 0.152, 0.64, 
+                                          "NAtlantic", "FW", 170629, 5072, 0.0297, 0.43,
+                                          "NAtlantic", "IC", 85700, 12710, 0.148, 0.53,
+                                          "NAtlantic", "IE", 71325, 5655, 0.0793, 0.73,
+                                          "NAtlantic", "IR", 52594, 1207, 0.023, 0.82,
+                                          "NAtlantic", "IW", 92929, 2218, 0.0239, 0.53,
+                                          ######################################### NWAtl2011
+                                          "NWAtlantic", "GOM/BOF", 199656, 2538, NA, 0.87,
+                                          "NWAtlantic", "NWAtl_slope", 54376, 53, NA, 0.73, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 438, 0.00018, 1.05, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 478, NA, 1.36 
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Bala_acu)
+  
+  original_df_Bala_acu
+  
 }
+
+
+## Balaenoptera borealis - Sei whale
+data_from_data_Bala_bor <- function() {
+  original_df_Bala_bor <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### t-NASS
+                                          "NAtlantic", "FW", 176905, 453, 0.00212, 0.72,
+                                          "NAtlantic", "IG", 93953, 438, 0.00387, 0.85,
+                                          "NAtlantic", "IP", 139248, 2601, 0.0155, 0.72,
+                                          "NAtlantic", "IW", 37905, 275, 0.00603, 0.74,
+                                          ######################################### NWAtl2011
+                                          "NWAtlantic", "GOM/BOF", 199656, 145, NA, 1,
+                                          "NWAtlantic", "NWAtl_slope", 54376, 212, NA, 0.54, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 126, NA, 0.53 
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Bala_bor)
+  
+  original_df_Bala_bor
+}
+
+
+## Balaenoptera edeni - Bryde's whale
+data_from_data_Bala_ede <- function() {
+  original_df_Bala_ede <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ################################## GoMexico 2018
+                                          "GoMexico", "GoMexico", 380432, 51, NA, 0.503, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 139, 0.00006, 0.72, # Bryde's sure
+                                          "Pacific_Hawai", "Hawai", 2447635, 157, 0.00006, 0.71 # Bryde's or Sei but only Bryde's confirmed observation
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Bala_ede)
+  
+  original_df_Bala_ede
+}
+
+
+## Balaenoptera musculus - Blue whale
+data_from_data_Bala_mus <- function() {
+  original_df_Bala_mus <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### t-NASS
+                                          "NAtlantic", "FW", 176905, 273, 0.00128, 0.95,
+                                          "NAtlantic", "IG", 93953, 656, 0.00579, 0.56,
+                                          "NAtlantic", "IP", 139248, 271, 0.00161, 0.96,
+                                          "NAtlantic", "IR", 108550, 1535, 0.0117, 0.58,
+                                          "NAtlantic", "IW", 37905, 266, 0.00581, 0.51, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 565, NA, 0.18, 
+                                          ########################################## Gulf of Alaska
+                                          "GoAlaska", "Seamount", 45377, 63, 0.0014, 0.76
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Bala_mus)
+  
+  original_df_Bala_mus
+}
+
+
+## Balaenoptera physalus  - Fin whale
+data_from_data_Bala_phy <- function() {
+  original_df_Bala_phy <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ################################################## NEAtlantic
+                                          "NEAtlantic", "8", 159669, 820, 0.0051, 0.493, 
+                                          "NEAtlantic", "9", 144352, 10600, 0.0734, 0.290, 
+                                          "NEAtlantic", "11", 68759, 2052, 0.0298, 0.220, 
+                                          "NEAtlantic", "12", 111115, 10245, 0.0922, 0.212, 
+                                          "NEAtlantic", "13", 59340, 3575, 0.0602, 0.215, 
+                                          ####################################### NEAtlantic - Observe (Season 3)
+                                          "NEAtlantic", "S2_N", 60167, 48, 0.001, 0.9951,
+                                          "NEAtlantic", "S2_O", 60167, 48, 0.001, 0.9951,
+                                          "NEAtlantic", "S3_N", 100482, 47, 0.000, 1.0074,
+                                          "NEAtlantic", "S3_O", 100482, 47, 0.000, 1.0074,
+                                          ############################################## MED
+                                          "Med", "Atlantic", 33720, 175, 0.0052, 0.7632,
+                                          "Med", "Alboran", 28071, 55, 0.0020, 1.0729,
+                                          "Med", "SWMed", 279415, 184, 0.0007, 0.6238,
+                                          "Med", "NWMed", 134760, 1048, 0.0078, 0.3423,
+                                          "Med", "PelagosW", 56756, 254, 0.0045, 0.3948,
+                                          "Med", "PelagosE", 31076, 0, 0, 0,
+                                          "Med", "Tyrrhenian", 231298, 181, 0.0008, 0.8727,
+                                          "Med","SCMed", 152961, 10, 0.0001, 1.0079,
+                                          "Med", "Adriatic", 135783, 0, 0, 0,
+                                          "Med", "Ionian", 358402, 0, 0, 0,
+                                          "Med", "Aegean", 191150, 0, 0, 0,
+                                          "Med", "NEMed", 161669, 0, 0, 0,
+                                          "Med", "EMed", 107687, 0, 0, 0,
+                                          ######################################### t-NASS
+                                          "NAtlantic", "FC", 77857, 5014, 0.056, 0.75, 
+                                          "NAtlantic", "FW", 176905, 9643, 0.0474, 0.39,
+                                          "NAtlantic", "IE", 108052, 394, 0.00317, 0.72,
+                                          "NAtlantic", "IG", 93953, 8887, 0.0822, 0.16,
+                                          "NAtlantic", "IP", 139248, 4138, 0.0258, 0.54,
+                                          "NAtlantic", "IQ", 70131, 1324, 0.0164, 0.39,
+                                          "NAtlantic", "IR", 108550, 3298, 0.0264, 0.35,
+                                          "NAtlantic", "IW", 37905, 4075, 0.0934, 0.19,
+                                          ######################################### NWAtl2011
+                                          "NWAtlantic", "GOM/BOF", 199656, 417, NA, 0.56,
+                                          "NWAtlantic", "NWAtl_slope", 54376, 1178, NA, 0.4, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 203, 0.00008, 0.99, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 3044, NA, 0.18, 
+                                          ########################################## Gulf of Alaska
+                                          "GoAlaska", "Inshore", 22749, 1556, 0.068, 0.48,
+                                          "GoAlaska", "Offshore", 60051, 971, 0.016, 0.23,
+                                          "GoAlaska", "Seamount", 45377, 145, 0.003, 0.37, 
+                                          "GoAlaska", "Slope", 36776, 496, 0.013, 0.2 
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Bala_phy)
+  
+  original_df_Bala_phy
+  
+}
+
+
+## Feresa attenuata - pygmy killer whales 
+data_from_data_Fere_att <- function() {
+  original_df_Fere_att <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 613, NA, 1.15,
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 10328, 0.00422, 0.75
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Fere_att)
+  
+  original_df_Fere_att
+  
+}
+
+
+## Globicephala macrorhynchus - short-finned pilot whales 
+data_from_data_Glob_mac <- function() {
+  original_df_Glob_mac <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV,
+                                          ######################################### goMexico mean 2017-2018 - Glob_mac
+                                          "GoMexico", "GoMexico", 380432, 1321, 0.0038, 0.43, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 7956, 0.00325, 0.59, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 760, NA, 0.64, 
+                                          # ########################################## Japan
+                                          # "Japan", "B_J", 44095*3.4342900120544, 1525, NA, 0.79, # (18891 + 44095 + 182656 + 213731 + 120949)*3.4342900120544
+                                          # "Japan", "C_J", 182656*3.4342900120544, 6839, NA, 1.29,
+                                          # "Japan", "D_J", 213731*3.4342900120544, 11243, NA, 0.55,
+                                          # "Japan", "E_J", 120949*3.4342900120544, 11788, NA, 1.34
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Glob_mac)
+  
+  original_df_Glob_mac
+  
+}
+
+
+## Globicephala melas - Long finned pilot whales
+data_from_data_Glob_mel <- function() {
+  original_df_Glob_mel <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV,
+                                          ################################################## NEAtlantic SCANS III
+                                          "NEAtlantic", "AA", 12015, 77, 0.0064, 1.093,
+                                          "NEAtlantic", "AC", 35180, 1942, 0.0552, 1.224,
+                                          "NEAtlantic", "B", 118471, 1365, 0.0115, 0.574,
+                                          "NEAtlantic", "J", 35099, 87, 0.0025, 1.182,
+                                          "NEAtlantic", "K", 32505, 1745, 0.0537, 1.059,
+                                          "NEAtlantic", "8", 159669, 12662, 0.0793, 0.484, 
+                                          "NEAtlantic", "9", 144352, 3125, 0.0216, 0.770, 
+                                          "NEAtlantic", "11", 68759, 173, 0.0025, 1.111, 
+                                          "NEAtlantic", "12", 111115, 3196, 0.0288, 0.718, 
+                                          "NEAtlantic", "13", 59340, 4377, 0.0738, 0.638, 
+                                          ####################################### NEAtlantic - Observe (Season 3)
+                                          "NEAtlantic", "S1_N", 62052, 4334, 0.07, 0.5686,
+                                          "NEAtlantic", "S1_O", 62052, 4334, 0.07, 0.5686,
+                                          "NEAtlantic", "S2_N", 60167, 1617, 0.027, 0.7146,
+                                          "NEAtlantic", "S2_O", 60167, 1617, 0.027, 0.7146,
+                                          "NEAtlantic", "S3_N", 100482, 1462, 0.015, 0.6508,
+                                          "NEAtlantic", "S3_O", 100482, 1462, 0.015, 0.6508,
+                                          ############################################## MED 
+                                          "Med", "Atlantic", 33720, 439, 0.0130, 0.7542,
+                                          "Med", "Alboran", 28071, 198, 0.0071, 1.0132, 
+                                          "Med", "SWMed", 279415, 2510, 0.0090, 0.6264,
+                                          "Med", "NWMed", 134760, 1900, 0.0141, 0.8613,
+                                          "Med", "PelagosW", 56756, 226, 0.0040, 1.0101,
+                                          "Med", "PelagosE", 31076, 267, 0.0086, 1.0031,
+                                          "Med", "Tyrrhenian", 231298, 0, 0, 0,
+                                          "Med","SCMed", 152961, 0, 0, 0,
+                                          "Med", "Adriatic", 135783, 0, 0, 0,
+                                          "Med", "Ionian", 358402, 0, 0, 0,
+                                          "Med", "Aegean", 191150, 0, 0, 0,
+                                          "Med", "NEMed", 161669, 0, 0, 0,
+                                          "Med", "EMed", 107687, 0, 0, 0,
+                                          ######################################### t-NASS 
+                                          "NAtlantic", "FC", 77857, 24427, 0.233, 0.55, 
+                                          "NAtlantic", "FW", 176905, 26177, 0.111, 0.56,
+                                          "NAtlantic", "IE", 108052, 42528, 0.311, 0.6,
+                                          "NAtlantic", "IG", 93953, 21327, 0.177, 0.46,
+                                          "NAtlantic", "IP", 139248, 116543, 0.695, 0.84,
+                                          "NAtlantic", "IR", 108550, 60428, 0.443, 0.42,
+                                          "NAtlantic", "IW", 37905, 52718, 1.2, 0.41,
+                                          ######################################### NWAtl2011 - Globispp --> Glob_mel
+                                          "NWAtlantic", "NWAtl_slope", 54376, 9483, NA, 0.65, 
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 2382, NA, 0.59,
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Glob_mel)
+  
+  original_df_Glob_mel
+  
+}
+
+
+## Grampus griseus - Risso's dolphin 
+data_from_data_Gram_gri <- function() {
+  original_df_Gram_gri <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ################################################## NEAtlantic - SCANS III 
+                                          "NEAtlantic", "AA", 12015, 575, 0.0478, 1.033,
+                                          "NEAtlantic", "AB", 26668, 640, 0.0240, 0.617,
+                                          "NEAtlantic", "AC", 35180, 237, 0.0067, 1.034,
+                                          "NEAtlantic", "B", 118471, 799, 0.0067, 0.982,
+                                          "NEAtlantic", "E", 34870, 1090, 0.0313, 0.686, 
+                                          "NEAtlantic", "H", 18634, 538, 0.0289, 0.954,  
+                                          "NEAtlantic", "J", 35099, 6750, 0.1923, 0.802, 
+                                          "NEAtlantic", "K", 32505, 440, 0.0135, 0.763,
+                                          "NEAtlantic", "9", 144352, 2515, 0.0174, 0.818, 
+                                          ####################################### NEAtlantic - Observe (Season 3 - S5 excluded as in SCANS III)
+                                          "NEAtlantic", "S1_N", 62052, 746, 0.012, 0.7405,
+                                          "NEAtlantic", "S1_O", 62052, 746, 0.012, 0.7405,
+                                          "NEAtlantic", "S2_N", 60167, 100, 0.0017, 1.0191,
+                                          "NEAtlantic", "S2_O", 60167, 100, 0.0017, 1.0191,
+                                          "NEAtlantic", "S4", 63162, 809, 0.0128, 0.9475,
+                                          "NEAtlantic", "S6", 15766, 426, 0.027, 0.7485,
+                                          "NEAtlantic", "S8", 9707, 549, 0.0565, 0.5091, 
+                                          ############################################## MED
+                                          "Med", "Atlantic", 33720, 942, 0.0279, 0.9888,
+                                          "Med", "Alboran", 28071, 595, 0.0212, 0.7655,  
+                                          "Med", "SWMed", 279415, 15682, 0.0561, 0.4141,
+                                          "Med", "NWMed", 134760, 2058, 0.0153, 0.5524,
+                                          "Med", "PelagosW", 56756, 223, 0.0039, 0.8565, 
+                                          "Med", "PelagosE", 31076, 0, 0, 0, 
+                                          "Med", "Tyrrhenian", 231298, 0, 0, 0,
+                                          "Med","SCMed", 152961, 0, 0, 0, 
+                                          "Med", "Adriatic", 135783, 1467, 0.0108, 0.7054, 
+                                          "Med", "Ionian", 358402, 3962, 0.0111, 0.6224, 
+                                          "Med", "Aegean", 191150, 1101, 0.0058, 0.5946, 
+                                          "Med", "NEMed", 161669, 0, 0, 0,
+                                          "Med", "EMed", 107687, 0, 0, 0, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 1973, NA, 0.456,
+                                          ######################################### NWAtl2011
+                                          "NWAtlantic", "NWAtl_slope", 54376, 4521, NA, 0.48, 
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 10676, NA, 0.72, 
+                                          ######################################### French Poly 
+                                          "Pacific_FPoly", "GAM_P", 150930, 429, 0.00285, 1.03,
+                                          "Pacific_FPoly", "GAM_O", 185976, 863, 0.00464, 0.74,
+                                          "Pacific_FPoly", "SOC_P", 81650, 230, 0.00282, 1.02,  
+                                          "Pacific_FPoly", "SOC_O", 174253, 1304, 0.00748, 0.56, 
+                                          "Pacific_FPoly", "TUN_O", 138368, 1296, 0.00936, 0.56,
+                                          "Pacific_FPoly", "TUS_P", 146201, 1127, 0.00771, 0.62, 
+                                          "Pacific_FPoly", "TUS_O", 151913, 1035, 0.00682, 0.63, 
+                                          "Pacific_FPoly", "MAR_C", 24868, 365, 0.01468, 0.75, 
+                                          "Pacific_FPoly", "MAR_P", 64731, 252, 0.00389, 1.02, 
+                                          "Pacific_FPoly", "MAR_O", 243531, 1178, 0.00484, 0.63, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 6245, 0.00255, 0.5, 
+                                          ######################################### New Caledonia 
+                                          "Pacific_NCal", "NCal", 542300, 7005, 0.004, 0.51,  
+                                          ######################################### Wallis & Futuna (N and not Ncorrigee)
+                                          "Pacific_WFu", "WFu", 233600, 1188, 0.005, 0.5, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 6272, NA, 0.3, 
+                                          ######################################### Indian
+                                          "Indian", "CMGM_P", 87560, 112, 0.00608, 1.02,
+                                          "Indian", "CMGM_O", 171931, 186, 0.00218, 1.02, 
+                                          "Indian", "JMN_P", 27420, 566, 2.063, 0.49,
+                                          "Indian", "JMN_O", 74032, 2541, 0.03432, 0.39,
+                                          "Indian", "EBM_P", 36127, 1042, 0.03097, 0.44,
+                                          "Indian", "EBM_O", 119099, 2099, 0.01762, 0.44,
+                                          "Indian", "RM_P", 74632, 252, 0.00270, 1.43, 
+                                          "Indian", "RM_O", 306861, 302, 0.00098, 1.02, 
+                                          "Indian", "SE_P", 97713, 7644, 0.07822, 0.53,
+                                          "Indian", "SE_O", 167277, 2372, 0.01418, 0.82
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Gram_gri)
+  
+  original_df_Gram_gri
+  
+}
+
+
+## Kogia species (K. sima and K. breviceps) - Dwarf and Pygmy sperm whale
+data_from_data_Kogi_spp <- function() { 
+  original_df_Kogi_spp <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 336, NA, 0.346,
+                                          ######################################### NWAtl2011 # For dwarf
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 1042, NA, 0.65,
+                                          ######################################### NWAtl2011 # for pygmy
+                                          "NWAtlantic", "NWAtl_slope", 54376, 63, NA, 0.61, 
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 678, NA, 0.43, 
+                                          ######################################### French Poly 
+                                          "Pacific_FPoly", "SOC_C", 19372, 41, 0.002, 1.02, 
+                                          "Pacific_FPoly", "TUN_P", 148366, 119, 0.001, 0.74, 
+                                          "Pacific_FPoly", "TUN_O", 138368, 129, 0.001, 0.74,
+                                          "Pacific_FPoly", "MAR_C", 24868, 73, 0.003, 0.75, 
+                                          "Pacific_FPoly", "MAR_P", 64731, 201, 0.003, 0.55, 
+                                          "Pacific_FPoly", "MAR_O", 243531, 863, 0.004, 0.4, 
+                                          ######################################### Hawai2017 
+                                          "Pacific_Hawai", "Hawai", 2447635, 42083, 0.01719, 0.64, # for pygmy
+                                          "Pacific_Hawai", "Hawai", 2447635, 53421, 0.02183, 0.63, # und. Kogia
+                                          ######################################### New Caledonia 
+                                          "Pacific_NCal", "NCal", 542300, 1017, 0.002, 0.43,  
+                                          ######################################### Wallis & Futuna 
+                                          "Pacific_WFu", "WFu", 233600, 297, 0.001, 0.49, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 579, NA, 1.12, 
+                                          ######################################### Indian # for kogia there is only one est per subarea but all obs were either in slope or oceanic area, so we put everything in O
+                                          "Indian", "CMGM_O", 259491, 197, 0.00072, 0.64,
+                                          "Indian", "JMN_O", 101452, 78, 0.00063, 0.84,
+                                          "Indian", "EBM_O", 155226, 109, 0.00072, 1.1,
+                                          "Indian", "TM_O", 145210, 36, 0.00023, 1.05, 
+                                          "Indian", "RM_O", 381493, 275, 0.00068, 82.61,
+                                          "Indian", "SE_O", 264990, 723, 0.00246, 0.43,
+                                          ######################################### Antilles-Guyana
+                                          "Antilles", "ANT_P1", 17476, 38, 0.002, 1,
+                                          "Antilles", "ANT_P2", 36006, 252, 0.007, 0.58,
+                                          "Antilles", "ANT_P3", 52687, 37, 0.001, 1.05,
+                                          "Antilles", "ANT_O1", 56841, 286, 0.005, 0.59,
+                                          "Guyana", "GUY_P5", 61465, 43, 0.001, 0.72,
+                                          "Guyana", "GUY_O5", 49129, 275, 0.006, 0.64
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Kogi_spp)
+  
+  original_df_Kogi_spp
+  
+}
+
+
+## Lagenorhynchus acutus - Atlantic white-sided dolphin
+data_from_data_Lage_acu <- function() { 
+  original_df_Lage_acu <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ################################## NEAtlantic  - SCANS III 
+                                          "NEAtlantic", "R", 64464, 644, 0.0100, 0.994, 
+                                          "NEAtlantic", "T", 65417, 1366, 0.0209, 0.984, 
+                                          "NEAtlantic", "U", 60046, 177, 0.0029, 0.989,
+                                          "NEAtlantic", "8", 159669, 13322, 0.0834, 0.826,
+                                          ####################################### NEAtlantic - Observe (Season 1&3 - S5 excluded as in SCANS III)
+                                          # only model based estimates were available 
+                                          "NEAtlantic", "S1_N", 62052, 1505, 0.025, 0.531,
+                                          "NEAtlantic", "S1_O", 62052, 1505, 0.025, 0.531,
+                                          "NEAtlantic", "S2_N", 60167, 60, 0.001, 1.001,
+                                          "NEAtlantic", "S2_O", 60167, 60, 0.001, 1.001,
+                                          "NEAtlantic", "S3_N", 100482, 357, 0.003, 0.996,
+                                          "NEAtlantic", "S3_O", 100482, 357, 0.003, 0.996,
+                                          ############################ t-NASS
+                                          "NAtlantic", "FC", 77857, 5463, 0.0215, 0.68, 
+                                          "NAtlantic", "FW", 176905, 86053, 0.149, 0.83,
+                                          "NAtlantic", "IG", 93953, 6267, 0.0204, 0.88,
+                                          "NAtlantic", "IP", 139248, 33239, 0.0732, 1.07,
+                                          ######################################### NWAtl2011 
+                                          "NWAtlantic", "GOM/BOF", 199656, 48819, NA, 0.61
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Lage_acu)
+  
+  original_df_Lage_acu
+  
+}
+
+## Lagenorhynchus albirostris - White-beaked dolphin
+data_from_data_Lage_alb <- function() { 
+  original_df_Lage_alb<- tibble::tribble(~ Geo_area, ~ Block, ~ Surf,  ~ Abund, ~Dens, ~CV, 
+                                         ################################## NEAtlantic  - SCANS III 
+                                         "NEAtlantic", "H", 18634, 5881, 0.316, 0.627,
+                                         "NEAtlantic", "J", 35099, 1871, 0.053, 0.909,
+                                         "NEAtlantic", "K", 32505, 7055, 0.217, 0.529,
+                                         "NEAtlantic", "O", 60198, 143, 0.002, 0.970,
+                                         "NEAtlantic", "P", 63655, 1938, 0.030, 0.385, 
+                                         "NEAtlantic", "P1", 23557, 72, 0.003, 0.877,  
+                                         "NEAtlantic", "R", 64464, 15694, 0.243, 0.484, 
+                                         "NEAtlantic", "S", 40383, 868, 0.021, 0.690,
+                                         "NEAtlantic", "T", 65417, 2417, 0.037, 0.463,
+                                         "NEAtlantic", "V", 38306, 261, 0.007, 0.983,
+                                         "NEAtlantic", "X", 19496, 88, 0.005, 0.923, 
+                                         ####################################### NEAtlantic - Observe (Season 3 - S5 excluded as in SCANS III)
+                                         # only model based estimates were available 
+                                         "NEAtlantic", "S1_N", 62052, 893, 0.015, 0.691,
+                                         "NEAtlantic", "S1_O", 62052, 893, 0.015, 0.691,
+                                         "NEAtlantic", "S2_N", 60167, 359, 0.002, 0.985,
+                                         "NEAtlantic", "S2_O", 60167, 359, 0.002, 0.985,
+                                         "NEAtlantic", "S7", 17261, 1996, 0.118, 0.646,
+                                         ############################ t-NASS
+                                         "NAtlantic", "IE", 108052, 13046, 0.037, 1.26,
+                                         "NAtlantic", "IG", 93953, 15216, 0.0497, 0.96,
+                                         "NAtlantic", "IP", 139248, 27721, 0.061, 1.11,
+                                         "NAtlantic", "IQ", 70131, 18317, 0.081, 0.8,
+                                         "NAtlantic", "IR", 108550, 72102, 0.204, 0.68,
+                                         "NAtlantic", "IW", 37905, 12599, 0.102, 0.9)
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Lage_alb)
+  # there is a difference of CV for t-NASS
+  
+  original_df_Lage_alb
+  
+}
+
+## Lagenodelphis hosei - Fraser's dolphin
+data_from_data_Lage_hos <- function() { 
+  original_df_Lage_hos <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 213, NA, 1.028, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 40960, 0.01673, 0.7
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Lage_hos)
+  
+  original_df_Lage_hos
+  
+}
+
+
+## Lagenorhynchus obliquidens - Pacific white-sided dolphin
+data_from_data_Lage_obl <- function() { 
+  original_df_Lage_obl <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 26930, NA, 0.28
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Lage_obl)
+  
+  original_df_Lage_obl
+  
+}
+
+
+## Lissodelphis borealis - Northern right whale dolphin
+data_from_data_Liss_bor <- function() { 
+  original_df_Liss_bor <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 8334, NA, 0.4
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Liss_bor)
+  
+  original_df_Liss_bor
+  
+}
+
+
+## Megaptera novaeangliae - Humpback whale
+data_from_data_Mega_nov <- function() { 
+  original_df_Mega_nov <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV,
+                                          ######################################### t-NASS
+                                          "NAtlantic", "FC", 77857, 571, 0.00487, 0.72, 
+                                          "NAtlantic", "FW", 176905, 1059, 0.00435, 0.42,
+                                          "NAtlantic", "IE", 108052, 966, 0.00456, 0.52,
+                                          "NAtlantic", "IG", 93953, 1111, 0.00913, 0.53,
+                                          "NAtlantic", "IR", 108550, 6051, 0.0375, 0.5,
+                                          "NAtlantic", "IW", 37905, 110, 0.00185, 0.78,
+                                          ######################################### NWAtl2011 
+                                          "NWAtlantic", "GOM/BOF", 199656, 129, NA, 0.41,
+                                          "NWAtlantic", "NWAtl_slope", 54376, 206, NA, 0.55, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 1389, NA, 0.21,
+                                          ########################################## Gulf of Alaska
+                                          "GoAlaska", "Inshore", 22749, 2107, 0.093, 0.74,
+                                          "GoAlaska", "Offshore", 60051, 65, 0.001, 0.85,
+                                          "GoAlaska", "Seamount", 45377, 37, 0.001, 0.59, 
+                                          "GoAlaska", "Slope", 36776, 6, 0.0000, 1.01
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Mega_nov)
+  
+  original_df_Mega_nov
+  
+}
+
+
+## Orcinus orca - Killer whale 
+data_from_data_Orci_orc <- function() { 
+  original_df_Orci_orc <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 267, 0.00122, 0.749, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 161, 0.00007, 1.06, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 691, NA, 0.49,
+                                          ########################################## Gulf of Alaska
+                                          "GoAlaska", "Inshore", 22749, 107, 0.005, 0.5,
+                                          "GoAlaska", "Seamount", 45377, 107, 0.002, 0.77, 
+                                          "GoAlaska", "Slope", 36776, 685, 0.019, 0.92
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Orci_orc)
+  
+  original_df_Orci_orc
+  
+}
+
+## Peponocephala electra - melon-headed whale 
+data_from_data_Pepo_ele <- function() { 
+  original_df_Pepo_ele <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 1749, NA, 0.683, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 40647, 0.01661, 0.74, 
+                                          ######################################### New Caledonia : small globi -> 100% Pepo_elec
+                                          "Pacific_NCal", "NCal", 542300, 10741, 0.014, 0.79,  
+                                          ######################################### Wallis & Futuna : small globi -> 100% Pepo_elec
+                                          "Pacific_WFu", "WFu", 233600, 10555, 0.04, 0.65,
+                                          ######################################### Indian
+                                          "Indian", "CMGM_N", 24237, 2335, 0.1273, 0.73,
+                                          "Indian", "CMGM_P", 87560, 43103, 0.50494, 0.42,
+                                          "Indian", "CMGM_O", 171931, 52161, 0.30338, 0.51,
+                                          "Indian", "JMN_P", 27420, 14312, 0.52208, 0.67,
+                                          "Indian", "JMN_O", 74032, 10047, 0.13572, 0.62,
+                                          "Indian", "EBM_P", 36127, 4090, 0.1215, 1.01,
+                                          "Indian", "EBM_O", 119099, 5490, 0.04610, 1.01,
+                                          "Indian", "TM_P", 20992, 5637, 0.27391, 0.55, 
+                                          "Indian", "TM_O", 124218, 8694, 0.06999, 0.77, 
+                                          "Indian", "RM_P", 74632, 2228, 0.02385, 1.00, 
+                                          "Indian", "RM_O", 306861, 3303, 0.01076, 1.02, 
+                                          "Indian", "SE_P", 97713, 6031, 0.06172, 1.00,
+                                          "Indian", "SE_O", 167277, 10294, 0.06154, 0.76
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Pepo_ele)
+  
+  original_df_Pepo_ele
+  
+}
+
+
+## Phocoenoides dalli - Dall's porpoise
+data_from_data_Phoc_dal <- function() {
+  original_df_Phoc_dal <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 42000, NA, 0.33,
+                                          ########################################## Gulf of Alaska
+                                          "GoAlaska", "Inshore", 22749, 4961, 0.2180, 0.39,
+                                          "GoAlaska", "Offshore", 60051, 2192, 0.037, 0.42,
+                                          "GoAlaska", "Seamount", 45377, 1076, 0.0240, 0.45, 
+                                          "GoAlaska", "Slope", 36776, 7194, 0.1960, 0.48
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Phoc_dal)
+  
+  original_df_Phoc_dal
+  
+}
+
+
+## Phocoena phocoena - Harbour porpoise
+data_from_data_Phoc_pho <- function() { 
+  original_df_Phoc_pho <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ############################################ NEAtlantic
+                                          "NEAtlantic", "AA", 12015, 0, 0, 0,
+                                          "NEAtlantic", "AB", 26668, 2715, 0.102, 0.308,
+                                          "NEAtlantic", "AC", 35180, 183, 0.005, 1.020,
+                                          "NEAtlantic", "B", 118471, 3374, 0.028, 0.586,
+                                          "NEAtlantic", "C", 81297, 17323, 0.213, 0.303,
+                                          "NEAtlantic", "D", 48590, 5734, 0.118, 0.489,
+                                          "NEAtlantic", "E", 34870, 8320, 0.239, 0.282, 
+                                          "NEAtlantic", "F", 12322, 1056, 0.086, 0.383,
+                                          "NEAtlantic", "G", 15122, 5087, 0.336, 0.428, 
+                                          "NEAtlantic", "H", 18634, 1682, 0.09, 0.741, 
+                                          "NEAtlantic", "I", 13979, 5556, 0.397, 0.347, 
+                                          "NEAtlantic", "J", 35099, 2045, 0.058, 0.716, 
+                                          "NEAtlantic", "K", 32505, 9999, 0.308, 0.273,
+                                          "NEAtlantic", "L", 31404, 19064, 0.607, 0.383,
+                                          "NEAtlantic", "M", 56469, 15655, 0.277, 0.342, 
+                                          "NEAtlantic", "N", 69386, 58066, 0.837, 0.257,
+                                          "NEAtlantic", "O", 60198, 53485, 0.888, 0.209,
+                                          "NEAtlantic", "P", 63655, 52406, 0.823, 0.315, 
+                                          "NEAtlantic", "P1", 23557, 25367, 1.077, 0.302, 
+                                          "NEAtlantic", "Q", 49746, 16569, 0.333, 0.347, 
+                                          "NEAtlantic", "R", 64464, 38646, 0.599, 0.287, 
+                                          "NEAtlantic", "S", 40383, 6147, 0.152, 0.279, 
+                                          "NEAtlantic", "T", 65417, 26309, 0.402, 0.295, 
+                                          "NEAtlantic", "U", 60046, 19269, 0.321, 0.298,
+                                          "NEAtlantic", "V", 38306, 5240, 0.137, 0.367, 
+                                          "NEAtlantic", "W", 49778, 8978, 0.180, 0.568,
+                                          "NEAtlantic", "X", 19496, 6713, 0.344, 0.305, 
+                                          "NEAtlantic", "Y", 18779, 4006, 0.213, 0.400,
+                                          "NEAtlantic", "Z", 11228, 4556, 0.406, 0.275,
+                                          "NEAtlantic", "SVG", 714, 423, 0.593, 0.386, 
+                                          "NEAtlantic", "TRD", 966, 273, 0.282, 0.476,
+                                          ####################################### NEAtlantic - Observe (Season 3)
+                                          "NEAtlantic", "S1_N", 62052, 3219, 0.053, 0.558,
+                                          "NEAtlantic", "S1_O", 62052, 3219, 0.053, 0.558,
+                                          "NEAtlantic", "S3_N", 100482, 3320, 0.032, 0.525,
+                                          "NEAtlantic", "S3_O", 100482, 3320, 0.032, 0.525,
+                                          "NEAtlantic", "S4", 63162, 14196, 0.227, 0.372,
+                                          "NEAtlantic", "S5", 11010, 11624, 0.295, 0.282,
+                                          "NEAtlantic", "S6", 15766, 3300, 0.212, 0.357,
+                                          "NEAtlantic", "S7", 17261, 624, 0.037, 0.789,
+                                          "NEAtlantic", "S8", 9707, 1977, 0.208, 0.626, 
+                                          ######################################### NWAtl2011 
+                                          "NWAtlantic", "GOM/BOF", 199656, 79883, NA, 0.32
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Phoc_pho)
+  
+  original_df_Phoc_pho
+  
+}
+
+
+## Physeter macrocephalus - Sperm whale
+data_from_data_Phys_mac <- function() { 
+  original_df_Phys_mac <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ################################################## NEAtlantic
+                                          "NEAtlantic", "8", 159669, 9599, 0.0601, 0.471, 
+                                          "NEAtlantic", "9", 144352, 1427, 0.0099, 0.546, 
+                                          "NEAtlantic", "11", 68759, 777, 0.0113, 1.083, 
+                                          "NEAtlantic", "12", 111115, 4167, 0.0375, 0.740, 
+                                          "NEAtlantic", "13", 59340, 1298, 0.0219, 0.640, 
+                                          ############################################## MED
+                                          "Med", "Atlantic", 33720, 0, 0, 0,
+                                          "Med", "Alboran", 28071, 0, 0, 0,
+                                          "Med", "SWMed", 279415, 416, 0.0015, 0.8240,
+                                          "Med", "NWMed", 134760, 0, 0, 0,
+                                          "Med", "PelagosW", 56756, 0, 0, 0,
+                                          "Med", "PelagosE", 31076, 0, 0, 0,
+                                          "Med", "Tyrrhenian", 231298, 63, 0.0003, 1.0596,
+                                          "Med","SCMed", 152961, 0, 0, 0,
+                                          "Med", "Adriatic", 135783, 0, 0, 0,
+                                          "Med", "Ionian", 358402, 331, 0.0009, 0.8944,
+                                          "Med", "Aegean", 191150, 472, 0.0025, 1.0425,
+                                          "Med", "NEMed", 161669, 195, 0.0012, 1.0577,
+                                          "Med", "EMed", 107687, 0, 0, 0,
+                                          ######################################### t-NASS
+                                          "NAtlantic", "FC", 77857, 4992, 0.0174, 0.72, 
+                                          "NAtlantic", "FW", 176905, 16204, 0.0249, 0.71,
+                                          "NAtlantic", "IE", 108052, 213, 0.0015, 0.54,
+                                          "NAtlantic", "IG", 93953, 399, 0.00323, 0.6,
+                                          "NAtlantic", "IP", 139248, 721, 0.00394, 0.77,
+                                          "NAtlantic", "IR", 108550, 372, 0.0026, 0.51,
+                                          "NAtlantic", "IW", 37905, 265, 0.00532, 0.48, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 1180, NA, 0.219,
+                                          ######################################### NWAtl2011 
+                                          "NWAtlantic", "GOM/BOF", 199656, 287, NA, 1.4,
+                                          "NWAtlantic", "NWAtl_slope", 54376, 161, NA, 0.46,
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 1145, NA, 0.38, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 5095, 0.00208, 0.56, 
+                                          ######################################### New Caledonia 
+                                          "Pacific_NCal", "NCal", 542300, 700, 0.001, 0.6, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 971, NA, 0.31, 
+                                          ######################################### Indian
+                                          "Indian", "CMGM_P", 87560, 104, 0.0122, 0.76,
+                                          "Indian", "JMN_O", 74032, 35, 0.00048, 1.04,
+                                          "Indian", "EBM_O", 119099, 73, 0.00061, 0.76,
+                                          "Indian", "TM_P", 20992, 60, 0.00292, 0.68, 
+                                          "Indian", "TM_O", 124218, 77, 0.00062, 1.04, 
+                                          "Indian", "RM_P", 74632, 31, 0.00033, 0.72, 
+                                          "Indian", "RM_O", 306861, 42, 0.00014, 1.04, 
+                                          "Indian", "SE_P", 97713, 241, 0.00247, 0.55,
+                                          "Indian", "SE_O", 167277, 46, 0.00027, 1.04,
+                                          ######################################### Antilles-Guyana
+                                          "Antilles", "ANT_P1", 17476, 88, 0.005, 0.9,
+                                          "Antilles", "ANT_P2", 36006, 23, 0.001, 1.07,
+                                          "Antilles", "ANT_P3", 52687, 39, 0.001, 0.78,
+                                          "Antilles", "ANT_O1", 56841, 58, 0.001, 0.63,
+                                          "Guyana", "GUY_P5", 61465, 45, 0.001, 1.05,
+                                          ########################################## Gulf of Alaska
+                                          "GoAlaska", "Seamount", 45377, 12, 0.0000, 1.03, 
+                                          "GoAlaska", "Slope", 36776, 117, 0.003, 0.46
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Phys_mac)
+  
+  original_df_Phys_mac
+  
+}
+
+
+## Pseudorca crassidens - False killer whale 
+data_from_data_Pseu_cra <- function() {
+  original_df_Pseu_cra <- tibble::tribble(~ Geo_area, ~ Block, ~ Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 494, NA, 0.787, 
+                                          ######################################### Hawai2017 # from Bradford et al 2020 but reported in Baradford et al 2021
+                                          "Pacific_Hawai", "Hawai_Pelagic", 2447635, 5106, 0.00209, 0.63,
+                                          "Pacific_Hawai", "NWHI", 2447635, 477, 0.00106, 1.71
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Pseu_cra)
+  
+  original_df_Pseu_cra
+}
+
+
+## Tursiops truncatus - Common bottlenose dolphin
+data_from_data_Turs_tru <- function() {
+  original_df_Turs_tru <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
+                                          ############################################### NEAtlantic
+                                          "NEAtlantic", "AB", 26668, 735, 0.0275, 0.703,
+                                          "NEAtlantic", "AC", 35180, 4210, 0.1197, 0.479,
+                                          "NEAtlantic", "B", 118471, 6926, 0.0585, 0.382,
+                                          "NEAtlantic", "D", 48590, 2938, 0.0605, 0.447,
+                                          "NEAtlantic", "E", 34870, 288, 0.0082, 0.573, 
+                                          "NEAtlantic", "G", 15122, 1824, 0.1206, 0.682,
+                                          "NEAtlantic", "H", 18634, 59, 0.0032, 1.009,  
+                                          "NEAtlantic", "P", 63655, 147, 0.0023, 0.995, 
+                                          "NEAtlantic", "R", 64464, 1924, 0.0298, 0.861, 
+                                          "NEAtlantic", "S", 40383, 151, 0.0037, 1.007,
+                                          "NEAtlantic", "8", 159669, 1195, 0.0075, 0.634,
+                                          "NEAtlantic", "9", 144352, 5928, 0.0411, 0.633, 
+                                          "NEAtlantic", "12", 111115, 6029, 0.0543, 0.685, 
+                                          "NEAtlantic", "13", 59340, 769, 0.0130, 1.056, 
+                                          ####################################### NEAtlantic - Observe (Season 3 - S5 excluded as in SCANS III)
+                                          "NEAtlantic", "S1_N", 62052, 10524, 0.17, 0.3899,
+                                          "NEAtlantic", "S1_O", 62052, 10524, 0.17, 0.3899,
+                                          "NEAtlantic", "S2_N", 60167, 9211, 0.153, 0.5508,
+                                          "NEAtlantic", "S2_O", 60167, 9211, 0.153, 0.5508,
+                                          "NEAtlantic", "S3_N", 100482, 29602, 0.295, 0.3072,
+                                          "NEAtlantic", "S3_O", 100482, 29602, 0.295, 0.3072,
+                                          "NEAtlantic", "S4", 63162, 5549, 0.088, 0.4772,
+                                          "NEAtlantic", "S6", 15766, 2473, 0.157, 0.9741,
+                                          "NEAtlantic", "S7", 17261, 18704, 1.084, 0.6245,
+                                          "NEAtlantic", "S8", 9707, 11266, 1.161, 0.599, 
+                                          ############################################## MED 
+                                          "Med", "Atlantic", 33720, 3495, 0.1037, 0.6763,
+                                          "Med", "Alboran", 28071, 9821, 0.3499, 0.4977,
+                                          "Med", "SWMed", 279415, 590, 0.0021, 0.6054,
+                                          "Med", "NWMed", 134760, 10615, 0.0788, 0.4090,
+                                          "Med", "PelagosW", 56756, 988, 0.0174, 0.7797, 
+                                          "Med", "PelagosE", 31076, 1217, 0.0391, 0.5987, 
+                                          "Med", "Tyrrhenian", 231298, 4628, 0.02, 0.3830,
+                                          "Med","SCMed", 152961, 8668, 0.0567, 0.5084, 
+                                          "Med", "Adriatic", 135783, 10350, 0.0762, 0.2916, 
+                                          "Med", "Ionian", 358402, 3228, 0.009, 0.3768,
+                                          "Med", "Aegean", 191150, 9017, 0.0472, 0.3728, 
+                                          "Med", "NEMed", 161669, 661, 0.0041, 0.5690,
+                                          "Med", "EMed", 107687, 75, 0.0007, 0.9934,
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 7462, NA, 0.313,
+                                          ######################################### NWAtl2011 
+                                          "NWAtlantic", "GOM/BOF", 199656, 814, NA, 0.52,
+                                          "NWAtlantic", "NWAtl_slope", 54376, 13911, NA, 0.76,
+                                          "NWAtlantic", "NWAtl_offshore", 197953, 12041, NA, 0.39, 
+                                          ######################################### California current mean 2005-2008
+                                          "Pacific_Calif_current", "Calif_current", 1141807, 1006, NA, 0.48
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Turs_tru)
+  
+  original_df_Turs_tru
+  
+}
+
+
+## Stenella attenuata - Pantropical spotted dolphin
+data_from_data_Sten_att <- function() {
+  original_df_Sten_att <- tibble::tribble(~ Geo_area, ~ Block, ~Surf, ~ Abund, ~Dens, ~CV, 
+                                          ######################################### goMexico mean 2017-2018
+                                          "GoMexico", "GoMexico", 380432, 37195, NA, 0.244, 
+                                          ######################################### Hawai2017
+                                          "Pacific_Hawai", "Hawai", 2447635, 39798, 0.01663, 0.51, 
+                                          ######################################### REMMOA Wallis & Futuna : 
+                                          #small delph are only Sten_att (no Sten_lon identified to species so no ratio)
+                                          "Pacific_WFu", "WFu", 233600, 15283, 0.049, 0.28
+  )
+  
+  # check totals from report with verify_totals
+  #verify_totals(original_df_Sten_att)
+  
+  original_df_Sten_att
+  
+}
+
+
