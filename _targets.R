@@ -17,7 +17,11 @@ lapply(list.files(here::here("R"),
 
 
 list(
+  
+  ##############################################################################
   ############### compute ratio of cetacean abundances where needed ############
+  ################# refers to functions of 00_ratio_abundances.R ###############
+  
   # define data files (only ASI, SCANSIII, REMMOA ANTGUY and Indian ocean)
   tar_target(data_ASI_file,
              "data/abundance_surveys/ASI/ASI_Total_Sighting_Exchange_data.xlsx",
@@ -64,5 +68,19 @@ list(
                                                     ratio_ASI, 
                                                     ratio_GoMex, 
                                                     ratio_Hawaii,
-                                                    ratio_Calif)) 
+                                                    ratio_Calif)), 
+  
+  ##############################################################################
+  ###################### generate population abundance data ####################
+  ################# refers to functions of 01_abundance_data.R #################
+  
+  # generate original data sets from reports and articles, sp per sp
+  tar_target(original_tib_Bala_acu, data_from_data_Bala_acu()), 
+  
+  
+  # build tibbles with our format
+  tar_target(abund_Bala_acu, build_sp_tib(original_tib_Bala_acu, 
+                                          "Balaenoptera acutorostrata", 
+                                          "Bala_acu"))
+  
 )

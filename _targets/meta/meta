@@ -29,6 +29,9 @@ ratio_Hawaii|stem|29aa5c7f4e43a40d|50436342f776c162|f1ac470511325fd8|-135661486|
 ratio_Calif|stem|3e961fe69645d00b|49451b656e7c2fb9|be8977cbadc204fc|1413409044||t18970.4133059034s|e5dae6b098d24426|469|rds|vector|||0.12||
 bind_ratios_REMMOA|function|9328dd0b7490f4b3||||||||||||||
 bind_ratios_others|function|108a9494be83ec8b||||||||||||||
+ratio_full_REMMOAs|stem|dfce0078a9329e75|a20ce60585527a9b|9130135670d91c2a|1550420734||t18970.425699198s|124861856939d110|1342|rds|vector|||0||
+ratio_full_others|stem|e689f45a00d8c700|057a447cb0f3b4ce|939c6e20009be614|589333777||t18970.425699348s|f77b5ca3ea74bce0|854|rds|vector|||0||
+original_tib_Bala_acu|stem|5f267e07259e3dbb|1fd4e222981fc304|c8b911893fe2a3f1|-88406618||t18970.4809109156s|bb7d1897b1601692|1196|rds|vector|||0.02||
 compute_ratio_REMMOA_Ind|function|8dd6d1476e8520af||||||||||||||
 compute_ratio_Hawaii|function|b0c49c414e2d01a6||||||||||||||
 compute_ratio_REMMOA_ANTGUY|function|72d1182fd19b7456||||||||||||||
@@ -37,11 +40,13 @@ compute_ratio_GoMex|function|7b1e039cd37630da||||||||||||||
 compute_ratio_NEA|function|0a5ed1dae47ad717||||||||||||||
 compute_ratio_REMMOA_NCal|function|987239089615d59b||||||||||||||
 compute_ratio_Calif|function|f212ee8e2634847c||||||||||||||
+data_from_data_Bala_acu|function|f977a0243c28914e||||||||||||||
 load_csv|function|3a771fbb0a29452d||||||||||||||
 load_xl|function|afdc855e2ae9f85c||||||||||||||
+verify_totals|function|f645a7ee3c76c7b5||||||||||||||
+build_sp_tib|function|cfa1f517d174b722||||||||||||||
 compute_ratio_REMMOA_WFu|function|79d75607540ab3fd||||||||||||||
 bind_ratio_REMMOAs|function|9328dd0b7490f4b3||||||||||||||
 compute_ratio_REMMOA_FPol|function|b53a442cad6337c3||||||||||||||
 bind_ratio_others|function|108a9494be83ec8b||||||||||||||
-ratio_full_REMMOAs|stem|dfce0078a9329e75|a20ce60585527a9b|9130135670d91c2a|1550420734||t18970.425699198s|124861856939d110|1342|rds|vector|||0||
-ratio_full_others|stem|e689f45a00d8c700|057a447cb0f3b4ce|939c6e20009be614|589333777||t18970.425699348s|f77b5ca3ea74bce0|854|rds|vector|||0||
+abund_Bala_acu|stem|cbe07fa80c992c8f|3c4c1260ccfd1606|4f8449fb8dc07921|1698505942||t18970.4835089206s|cab6728591ccc42a|597|rds|vector|||0.12||
