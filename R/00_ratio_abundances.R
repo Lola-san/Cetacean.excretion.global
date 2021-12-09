@@ -26,12 +26,12 @@ load_SCANSIII_air <- function(pathSCANSIII_aerial) {
 
 # load SCANS III ship sighting data
 load_SCANSIII_ship <- function(pathSCANSIII_ship) {
-  readr::read_csv(pathSCANSIII_ship)
+  readxl::read_excel(pathSCANSIII_ship)
 }
 
-# load REMMOA Antilles sighting data
-load_REMMOA_ANT <- function(pathREMMOA_ANT) {
-  readr::read_csv(pathREMMOA_ANT)
+# load REMMOA Antilles & Guyana sighting data
+load_REMMOA_ANTGUY <- function(pathREMMOA_ANTGUY) {
+  readxl::read_csv(pathREMMOA_ANTGUY)
 }
 
 # load REMMOA Indian ocean sighting data
@@ -104,7 +104,7 @@ compute_ratio_ASI <- function(ASI_tib) {
 
 
 # SCANS III: include aerial sightings, ship sightings and Observe (Ireland) sightings
-compute_SCANSIII_ratio <- function(SCANS_air_tib, SCANS_ship_tib) {
+compute_ratio_NEA <- function(SCANS_air_tib, SCANS_ship_tib) {
   # SCANS_air_tib is the tibble resulting from the call of load_SCANSIII_air()
   # SCANS_ship_tib is the tibble resulting from the call of load_SCANSIII_ship()
   
@@ -175,8 +175,8 @@ compute_SCANSIII_ratio <- function(SCANS_air_tib, SCANS_ship_tib) {
       dplyr::mutate(sumnobs = sum(nobs))
   )
   
-  # Observe sighting tibble
-  Observe_sighting_tib <- tribble(~ Geo_area, ~ Eco_area, ~ Species, ~ n,  
+  # Observe sighting tibble (Season 3 summer 2016)
+  Observe_sightings <- tibble::tribble(~ Geo_area, ~ Eco_area, ~ Species, ~ n,  
                              "NEAtlantic", "oceanic", "Mesoplodon spp", 8,
                              "NEAtlantic", "oceanic", "Ziphius cavirostris", 2) |>
     dplyr::group_by(Geo_area, Eco_area, Species) |>
@@ -184,4 +184,53 @@ compute_SCANSIII_ratio <- function(SCANS_air_tib, SCANS_ship_tib) {
     dplyr::ungroup() |>
     dplyr::group_by(Geo_area, Eco_area) |>
     dplyr::mutate(sumnobs = sum(nobs))
+  
+  
+  # bind and compute ratio
+  rbind(SCANS_air_sightings, 
+        SCANS_ship_sightings, 
+        Observe_sightings) |>
+    dplyr::group_by(Geo_area, Eco_area, Species) |>
+    dplyr:: mutate(nobs = sum(nobs), 
+                   sumnobs = sum(sumnobs), 
+                   ratio = nobs/sumnobs) |>
+    dplyr::distinct()
+}
+
+
+# REMMOA ANTGUY
+compute_ratio_REMMOA_ANTGUY <- function(REMMOA_ANTGUY_tib) {
+  # REMMOA_ANTGUY_tib is the tibble resulting from the call of load_REMMOA_ANTGUY()
+  
+  REMMOA_ANTGUY_tib |> 
+    dplyr::mutate(Secteur = dplyr::case_when(Secteur == "IleNord" ~ "ANT", 
+                                             TRUE ~ Secteur)) |>
+    dplyr::filter(TAXON == "Marine mammal", !is.na(STRATE_TYP)) |>
+    dplyr::filter(!(SPECIES_LA %in% c("Delphinidae sp.", "Small Cetacean", "Medium Cetacean",
+                                      "Ziphiidae sp.", "Large delphininae", "Small delphininae", "Globicephala / Pseudorca",
+                                      "Balaenopteridae sp.", "Megaptera novaeangliae", # no abundance estimate
+                                      "Physeter macrocephalus", "Kogiidae sp.", "Sotalia guianensis" # separated abundance estimate
+    ))) |>
+    dplyr::mutate(SPECIES_LA = dplyr::case_when(SPECIES_LA == "Peponocephala / Feresa" ~ "Peponocephala electra", 
+                                                SPECIES_LA == "Mesoplodon sp." ~ "Mesoplodon spp",
+                                                TRUE ~ SPECIES_LA),
+                  Group_sp = dplyr::case_when(SPECIES_LA %in% c("Stenella attenuata",  "Stenella longirostris") ~ "Small delphinids", 
+                                              SPECIES_LA %in% c("Lagenodelphis hosei",  "Tursiops truncatus", 
+                                                                "Steno bredanensis") ~ "Large delphinids",
+                                              SPECIES_LA %in% c("Peponocephala electra", "Grampus griseus") ~ "Small globicephalinids",
+                                              SPECIES_LA %in% c("Globicephala macrorhynchus", "Pseudorca crassidens") ~ "Large globicephalinids",
+                                              SPECIES_LA %in% c("Ziphius cavirostris", "Mesoplodon spp") ~ "Beaked whales"),
+                  Eco_area = dplyr::case_when(STRATE %in% c("P3", "P2", "P1", "P5") ~ "shelf", 
+                                              STRATE %in% c("O1", "O5") ~ "oceanic"), 
+                  Geo_area = dplyr::case_when(Secteur == "ANT" ~ "Antilles", 
+                                              Secteur == "GUY" ~ "Guyana")
+    ) |>
+    dplyr::rename(Species = SPECIES_LA) |>
+    dplyr::group_by(Geo_area, Eco_area, Group_sp, Species) |>
+    dplyr::summarise(nobs = dplyr::n()) |> 
+    dplyr::group_by(Geo_area, Eco_area, Group_sp) |> 
+    dplyr::mutate(sumnobs = sum(nobs), 
+                  ratio = nobs/sumnobs) |>
+    dplyr::select(Geo_area, Eco_area, Group_sp, Species, nobs, sumnobs, ratio) |>
+    dplyr::arrange(Geo_area, Eco_area, Group_sp, Species) 
 }

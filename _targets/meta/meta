@@ -2,10 +2,22 @@ name|type|data|command|depend|seed|path|time|size|bytes|format|iteration|parent|
 data_SCANSIII_air_file|stem|60e2e78af6831792|961812fd23e60568|ef46db3751d8e999|1132471983|data/abundance_surveys/SCANSIII/aerial_sightings_by_block.xlsx|t18732.3052592685s|3c42b4b3e7c147b5|33279|file|vector|||0||
 data_ASI_file|stem|f068f2578210df7e|f3fe6937d67eaac4|ef46db3751d8e999|-333506314|data/abundance_surveys/ASI/ASI_Total_Sighting_Exchange_data.xlsx|t18730.6203561688s|dc3df5f991673a85|2158369|file|vector|||0||
 data_ASI|stem|02055d8fd996677f|049de175944ab741|43d6c494d8145adf|1732094092||t18969.7404480279s|29f012be68cb56de|506858|rds|vector|||0.67||
-load_SCANSIII_ship|function|1cf4d6990ba23c4c||||||||||||||
+ratio_ASI|stem|5ae91200fd9f57fc|ac8df01199e25493|f9cb00971f5e542e|-1944800939||t18969.7419998322s|a5127ff02efbacb6|454|rds|vector|||0.19||
+compute_SCANSIII_ratio|function|5f88d8df8bf80d5f||||||||||||||
+data_SCANSIII_ship_file|stem|ede32e7a616e6077|33793980da825972|ef46db3751d8e999|387363442|data/abundance_surveys/SCANSIII/ship_sightings_by_block.xlsx|t18732.2916263143s|602910a7fbd0306f|9972|file|vector|||0||
+data_SCANS_air|stem|e02ce6ff061f00b8|5245363e13e33cb8|00f378433d05018e|776852047||t18970.3171637595s|9aaad31f901ea3ad|993|rds|vector|||0.12||
+data_SCANS_ship|stem|f3aeaaa2b955922a|cd6c826afe1609c0|dc66b9007c8aeea3|1667953215||t18970.3191422545s|8a2c2895f7e00680|383|rds|vector|||0.11||
+load_REMMOA_ANT|function|dd5b5ba00ce6b329||||||||||||||
+ratio_NEA|stem|3c051f290829439b|fb61ac17dd88f43c|e8e720a671ecd8db|2056721256||t18970.3224783716s|62733ef7a35b25f5|576|rds|vector|||0.25||
+compute_ratio_REMMMOA_ANTGUY|function|d0a79aa5e72760a5||||||||||||||
+data_REMMOA_ANTGUY_file|stem|a3d0184e4701d0e2|1ebfd7cc9ec99f25|ef46db3751d8e999|175670264|data/abundance_surveys/REMMOA_ANTGUY/Obs-Effort_ANTGUY2017_RapportFinal.xlsx|t18848.3332864335s|52913232b8fd8f21|1358589|file|vector|||0||
+data_REMMOA_ANTGUY|stem|e9a2194e831c810d|070f74681fc3820f|6446f40c6b5d2439|-1229618343||t18970.3396609932s|6823842e866ecf34|230570|rds|vector|||0.31|Expecting logical in Y2313  R2313C25 got A|
+load_SCANSIII_ship|function|eef64d12052ab014||||||||||||||
+compute_ratio_REMMOA_ANTGUY|function|72d1182fd19b7456||||||||||||||
 compute_ratio_ASI|function|5923af3600a2b786||||||||||||||
+compute_ratio_NEA|function|0a5ed1dae47ad717||||||||||||||
+load_REMMOA_ANTGUY|function|6c5f92569ff2412a||||||||||||||
 load_SCANSIII_air|function|66bbbdb6aa52c7d6||||||||||||||
 load_ASI|function|fb9ab64b82fe1109||||||||||||||
 load_REMMOA_Ind|function|95fd3e2854017246||||||||||||||
-load_REMMOA_ANT|function|dd5b5ba00ce6b329||||||||||||||
-ratio_ASI|stem|5ae91200fd9f57fc|ac8df01199e25493|f9cb00971f5e542e|-1944800939||t18969.7419998322s|a5127ff02efbacb6|454|rds|vector|||0.19||
+ratio_REMMOA_ANTGUY|stem|b6962728fd2cd954|5c581541c07f0776|b5ed7b6ebb8d095d|436491881||t18970.3419374117s|fd29fe8ef604fccf|856|rds|vector|||0.14||
