@@ -104,6 +104,10 @@ data_prey_gps|stem|394178f7c59ef036|753d2cee4d90fe7b|6a79ad21ce156f72|842050925|
 data_diets|stem|c33b356c573b94af|3c9f42a3375cc450|c22d043e82aa1d5d|-432895262||t18971.4678004209s|75eccdff3761967d|26557|rds|vector|||0.04||
 data_diets_PG|stem|47414ceab2ba7d7e|7e7e70a7e366ee80|b4d7d0ac33dc456f|-1709996511||t18971.586393794s|20ee0a0cfc8676f8|35374|rds|vector|||0.17|NAs introduits lors de la conversion automatique|
 population_input|stem|116b2583e55e4205|e2cde09e1da1fe23|a5ae54f97d96fc6c|-873157677||t18971.5869302012s|ddd445d5ed2021ac|5658|rds|vector|||0.02||
+diet_input|stem|53cb18b2154ce54d|63003d5b15d0a0ae|89f5d68aa9fe7e6f|782931691||t18971.5889932367s|3ffa905440cadc24|5776|rds|vector|||8.06||
+data_prey_compo_file|stem|fbb201b883f4a52c|2ee3ab7953e89495|ef46db3751d8e999|-2028369905|data/prey_composition/Nuts_in_preys_full_corrected.xlsx|t18788.5025500973s|595e45deffaf358d|49136|file|vector|||0||
+data_prey_compo|stem|fff9606880ae2d7b|8b3459419a8d26e9|86d4b5dd463c0e49|-1441745732||t18971.6019765428s|addef320e41be807|18039|rds|vector|||0.17||
+prey_compo|stem|abedb728c652021b|ab5336e13b4be8f2|8d67e84159dbe827|-115476531||t18971.6105934863s|3fe6a223f19ed565|15906|rds|vector|||0.14||
 data_from_data_Kogi_spp|function|779fc6bd965641b0||||||||||||||
 data_from_data_Pseu_cra|function|90c21a588a032253||||||||||||||
 build_sp_tib|function|cfa1f517d174b722||||||||||||||
@@ -111,6 +115,7 @@ data_from_data_Phys_mac|function|1e5430ca027d3151||||||||||||||
 data_from_data_Orci_orc|function|7f3c7d31a788724f||||||||||||||
 bind_ratio_others|function|108a9494be83ec8b||||||||||||||
 data_from_data_Glob_mac|function|fab2d78a3231787a||||||||||||||
+compute_nut_in_diet|function|4881b9430571c905||||||||||||||
 data_from_data_Sten_att|function|914d98b21846e051||||||||||||||
 data_from_data_Bala_ede|function|dbea12af383fbaa3||||||||||||||
 data_from_data_Bala_acu|function|9281f1444a09aebd||||||||||||||
@@ -119,6 +124,7 @@ data_from_data_Pepo_ele|function|bea3f3b2567cd99d||||||||||||||
 compute_ratio_REMMOA_WFu|function|79d75607540ab3fd||||||||||||||
 data_from_data_Lage_acu|function|bf2a1c372a6ecb79||||||||||||||
 compute_ratio_NEA|function|0a5ed1dae47ad717||||||||||||||
+join_clean_compo_tib|function|9643be9ca59f3507||||||||||||||
 data_from_data_Liss_bor|function|90f6e8ab451887f2||||||||||||||
 join_clean_diet_tib|function|f58449ce855b6f34||||||||||||||
 add_nrjtic|function|30766c58f72d06dd||||||||||||||
@@ -126,6 +132,7 @@ data_from_data_Fere_att|function|730bf77e05aff38b||||||||||||||
 create_diet_input|function|8c980b7ffa22c673||||||||||||||
 load_csv|function|3a771fbb0a29452d||||||||||||||
 data_from_data_Mega_nov|function|9f8a1688f3e8a36c||||||||||||||
+bootstrap_compo_pg|function|ddbfef33391690d6||||||||||||||
 compute_ratio_GoMex|function|7b1e039cd37630da||||||||||||||
 data_from_data_Bala_phy|function|392d591fad8f21b4||||||||||||||
 compute_ratio_REMMOA_ANTGUY|function|72d1182fd19b7456||||||||||||||
@@ -158,4 +165,5 @@ build_sp_tib_REMMOA_smalldel|function|7fedcd43d9095f32||||||||||||||
 build_sp_tib_REMMOA_largedel|function|5150b256ba2b609a||||||||||||||
 build_sp_tib_BW|function|65bc3cb86a0a83aa||||||||||||||
 build_sp_tib_REMMOA_smallglobi|function|d41a9a1ebb4632c9||||||||||||||
-diet_input|stem|53cb18b2154ce54d|63003d5b15d0a0ae|89f5d68aa9fe7e6f|782931691||t18971.5889932367s|3ffa905440cadc24|5776|rds|vector|||8.06||
+prey_compo_boot|stem|c4bc6e4d4e2a6eb1|9a433e51d3a5501f|c771df1c059026bd|-1870263277||t18971.6402458691s|1d8ac3b9805a2676|13670842|rds|vector|||0.69||
+diet_nut_input|stem||f05094c4dab9620a|45e071862141b103|-1274213382||t18971.6408879989s||0|rds|vector|||55.42||Problem with mutate column Nut_W.34mi39m Nut_W  purrrmap....31mx39m impossible dallouer un vecteur de taille 781 Ko34mi39m The error occurred in group 29 Code_sp  Phoc_pho.

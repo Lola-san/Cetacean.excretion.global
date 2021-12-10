@@ -260,5 +260,22 @@ list(
   tar_target(data_diets_PG, join_clean_diet_tib(data_diets, 
                                                 data_prey_gps)), 
   # create our diet input
-  tar_target(diet_input, create_diet_input(data_diets_PG))
+  tar_target(diet_input, create_diet_input(data_diets_PG)), 
+  
+  ##############################################################################
+  ########### compute mean nutrient content of diet per species ################
+  ################## refers to functions of 04_nut_in_diets.R ##################
+  # define data file 
+  tar_target(data_prey_compo_file,
+             "data/prey_composition/Nuts_in_preys_full_corrected.xlsx",
+             format = "file"),
+  # load data
+  tar_target(data_prey_compo, load_xl(data_prey_compo_file)), 
+  # join with tibble with prey groups and clean the tibble
+  tar_target(prey_compo, join_clean_compo_tib(data_prey_compo, 
+                                              data_prey_gps)), 
+  # bootstrap composition of prey groups
+  tar_target(prey_compo_boot, bootstrap_compo_pg(prey_compo, nsim = 1e5)), #NSIM HERE!
+  # compute mean nutrient concentration of diets
+  tar_target(diet_nut_input, compute_nut_in_diet(diet_input, prey_compo_boot))
 )
