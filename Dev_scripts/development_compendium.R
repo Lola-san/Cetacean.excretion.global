@@ -34,6 +34,7 @@ renv::install("targets")
 renv::install("readxl")
 renv::install("dplyr")
 renv::install("tidyr")
+renv::install("purrr")
 
 ############################### renv update
 # check renv status
