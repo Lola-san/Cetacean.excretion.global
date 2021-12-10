@@ -120,11 +120,11 @@ compute_nut_in_diet <- function(diet_tib, compo_tib_boot) {
                      purrr::pluck(Nut_W, ., 13, 1) ), 
       # NRJ should be a separated column as it will be used to compute the daily ration
       NRJ_diet = seq_along(Nut_diet) |>
-        purrr::map(~ as_tibble_col(purrr::pluck(Nut_diet, ., "NRJ")*1e3)), # from kJ per g to kJ per kg
+        purrr::map(~ tibble::as_tibble_col(purrr::pluck(Nut_diet, ., "NRJ")*1e3)), # from kJ per g to kJ per kg
       # delete it from Nut_diet tibbles 
       Nut_diet = seq_along(Nut_diet) |>
         purrr::map(~ purrr::pluck(Nut_diet, .) |>
-                     select(-NRJ))
+                     dplyr::select(-NRJ))
       ) |>
     # delete now unused (and very heavy!) column
     dplyr::select(-c(Nut_W))

@@ -142,7 +142,7 @@ list(
                                           "Lagenorhynchus albirostris", 
                                           "Lage_alb")),
   tar_target(abund_Lage_hos, build_sp_tib(original_tib_Lage_hos, 
-                                          "Lagenorhynchus hosei", 
+                                          "Lagenodelphis hosei", 
                                           "Lage_hos")),
   tar_target(abund_Lage_obl, build_sp_tib(original_tib_Lage_obl, 
                                           "Lagenorhynchus obliquidens", 
@@ -239,7 +239,7 @@ list(
   ##############################################################################
   ###################### add species-specific energetic data ###################
   ################# refers to function of 02_add_energetic_data.R ##############
-  tar_target(population_input, add_nrjtic(abund_sp_all)), 
+  tar_target(pop_input, add_nrjtic(abund_sp_all)), 
   
   ##############################################################################
   ############################ define diet per species #########################
@@ -275,7 +275,18 @@ list(
   tar_target(prey_compo, join_clean_compo_tib(data_prey_compo, 
                                               data_prey_gps)), 
   # bootstrap composition of prey groups
-  tar_target(prey_compo_boot, bootstrap_compo_pg(prey_compo, nsim = 1e5)), #NSIM HERE!
+  tar_target(prey_compo_boot, bootstrap_compo_pg(prey_compo, nsim = 1e4)), #NSIM HERE!
+  # can not go above 1e4 on my laptop
   # compute mean nutrient concentration of diets
-  tar_target(diet_nut_input, compute_nut_in_diet(diet_input, prey_compo_boot))
+  tar_target(diet_nut_input, compute_nut_in_diet(diet_input, prey_compo_boot)), 
+  
+  ##############################################################################
+  ##################### prepare input tibble of the model ######################
+  ############## refers to functions of 05_prepare_full_input.R ################
+  tar_target(model_input, prepare_input(pop_input, diet_nut_input)), 
+  
+  ##############################################################################
+  ############################### RUN MODEL ####################################
+  ############## refers to functions of 06_run_model.R ################
+  tar_target(model_output, run_model(model_input, nsim = 1e4)) #NSIM HERE!
 )
