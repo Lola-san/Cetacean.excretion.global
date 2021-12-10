@@ -33,6 +33,7 @@ dir.create("manuscript")
 renv::install("targets")
 renv::install("readxl")
 renv::install("dplyr")
+renv::install("tidyr")
 
 ############################### renv update
 # check renv status

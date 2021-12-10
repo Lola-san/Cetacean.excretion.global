@@ -95,6 +95,13 @@ abund_sp_REMMOA_smalldel|stem|c19aa11e1e6f9c67|3984dc6d50f5c53b|a9d3af9f6ab4daec
 abund_sp_REMMOA_largedel|stem|f54f81c390b90d27|776806cd26c7f46d|5eff4737da4c83bf|1563272798||t18970.6583338102s|6579fa3602b2b781|875|rds|vector|||0.17||
 abund_sp_REMMOA_largeglobi|stem|3e1eae4e4ed3aa6a|3a0323acf9681a11|2b4209eba87ec61c|123815012||t18970.6626988485s|d232f05b7f2cef41|742|rds|vector|||0.17||
 abund_sp_REMMOA_smallglobi|stem|a2443b5cfa6e4da5|c5416c65381cd923|2e161c4619bf11e3|1748990533||t18970.6626998183s|51482797987a18b4|541|rds|vector|||0.05||
+bind_all|function|7f751aef04cd03cd||||||||||||||
+abund_sp_all|stem|82e51bd4c266ec03|bb4452ffcf675e0d|9fc58dac73a087d2|-1861940310||t18970.6687797375s|8de3728ac943cfcc|4920|rds|vector|||0.36||
+full_population_data|stem|116b2583e55e4205|e2cde09e1da1fe23|a5ae54f97d96fc6c|116782699||t18971.456831826s|ddd445d5ed2021ac|5658|rds|vector|||0.09||
+data_prey_gps_file|stem|c4dd85ee4f8f2a7c|205b899b0fd7c867|ef46db3751d8e999|813307174|data/diets_cetaceans/Sp_preys_PG_js_lg.xlsx|t18905.3435028892s|53f6014142fbf9c7|31483|file|vector|||0||
+data_diets_file|stem|746d11a605def759|50d1cf00c03d8719|ef46db3751d8e999|2032559964|data/diets_cetaceans/All_sp_pred_diet.xlsx|t18929.7256284872s|a1d1ec3c964dcd12|126785|file|vector|||0||
+data_prey_gps|stem|394178f7c59ef036|753d2cee4d90fe7b|6a79ad21ce156f72|842050925||t18971.4677991277s|68fd78bd7a6c7dbb|8159|rds|vector|||0.13||
+data_diets|stem|c33b356c573b94af|3c9f42a3375cc450|c22d043e82aa1d5d|-432895262||t18971.4678004209s|75eccdff3761967d|26557|rds|vector|||0.04||
 data_from_data_Kogi_spp|function|779fc6bd965641b0||||||||||||||
 data_from_data_Pseu_cra|function|90c21a588a032253||||||||||||||
 build_sp_tib|function|cfa1f517d174b722||||||||||||||
@@ -111,6 +118,8 @@ compute_ratio_REMMOA_WFu|function|79d75607540ab3fd||||||||||||||
 data_from_data_Lage_acu|function|bf2a1c372a6ecb79||||||||||||||
 compute_ratio_NEA|function|0a5ed1dae47ad717||||||||||||||
 data_from_data_Liss_bor|function|90f6e8ab451887f2||||||||||||||
+join_clean_diet_tib|function|1f59f25bd473dd31||||||||||||||
+add_nrjtic|function|30766c58f72d06dd||||||||||||||
 data_from_data_Fere_att|function|730bf77e05aff38b||||||||||||||
 load_csv|function|3a771fbb0a29452d||||||||||||||
 data_from_data_Mega_nov|function|9f8a1688f3e8a36c||||||||||||||
@@ -135,16 +144,15 @@ compute_ratio_REMMOA_Ind|function|8dd6d1476e8520af||||||||||||||
 data_from_data_Sten_bre|function|be339fa9b34dcfe6||||||||||||||
 compute_ratio_Calif|function|f212ee8e2634847c||||||||||||||
 compute_ratio_Hawaii|function|b0c49c414e2d01a6||||||||||||||
-data_from_data_Gram_gri|function|b853b34482aff062||||||||||||||
-data_from_data_Sota_gui|function|a4f26216c18f1da4||||||||||||||
 data_from_data_Sten_cly|function|6f09386963f5a5de||||||||||||||
+data_from_data_Sota_gui|function|a4f26216c18f1da4||||||||||||||
+data_from_data_Gram_gri|function|b853b34482aff062||||||||||||||
 compute_ratio_REMMOA_FPol|function|b53a442cad6337c3||||||||||||||
 data_from_data_Phoc_dal|function|04d1c30adc3b2a55||||||||||||||
-bind_all|function|7f751aef04cd03cd||||||||||||||
 build_sp_tib_Dd_Dc_Sc|function|5825b530a85e1ab1||||||||||||||
 build_sp_tib_REMMOA_largeglobi|function|3397f2883626bf54||||||||||||||
 build_sp_tib_REMMOA_smalldel|function|7fedcd43d9095f32||||||||||||||
 build_sp_tib_REMMOA_largedel|function|5150b256ba2b609a||||||||||||||
 build_sp_tib_BW|function|65bc3cb86a0a83aa||||||||||||||
 build_sp_tib_REMMOA_smallglobi|function|d41a9a1ebb4632c9||||||||||||||
-abund_sp_all|stem|82e51bd4c266ec03|bb4452ffcf675e0d|9fc58dac73a087d2|-1861940310||t18970.6687797375s|8de3728ac943cfcc|4920|rds|vector|||0.36||
+data_diets_PG|stem|47414ceab2ba7d7e|7e7e70a7e366ee80|7ec84c5a40d0f9f5|-1709996511||t18971.4769396048s|20ee0a0cfc8676f8|35374|rds|vector|||0.11|NAs introduits lors de la conversion automatique|

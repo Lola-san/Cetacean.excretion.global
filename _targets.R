@@ -234,5 +234,29 @@ list(
                                  abund_sp_REMMOA_largedel, 
                                  abund_sp_REMMOA_smallglobi, 
                                  abund_sp_REMMOA_largeglobi) |> 
-               dplyr::arrange(Code_sp, Species, Geo_area, Eco_area))
+               dplyr::arrange(Code_sp, Species, Geo_area, Eco_area)), 
+  
+  ##############################################################################
+  ###################### add species-specific energetic data ###################
+  ################# refers to function of 02_add_energetic_data.R ##############
+  tar_target(full_population_data, add_nrjtic(abund_sp_all)), 
+  
+  ##############################################################################
+  ############################ define diet per species #########################
+  ################# refers to functions of 03_define_sp_diets.R ################
+  # define data files (file with all quantitative data from litterature &
+  # file with correspondance between prey groups and prey species)
+  tar_target(data_diets_file,
+             "data/diets_cetaceans/All_sp_pred_diet.xlsx",
+             format = "file"), 
+  tar_target(data_prey_gps_file,
+             "data/diets_cetaceans/Sp_preys_PG_js_lg.xlsx",
+             format = "file"), 
+  # load data 
+  tar_target(data_diets, load_xl(data_diets_file)),
+  tar_target(data_prey_gps, load_xl(data_prey_gps_file)), 
+  # join the two tables and clean to get a clean full table of diets 
+  # from litterature with prey species and prey groups 
+  tar_target(data_diets_PG, join_clean_diet_tib(data_diets, 
+                                                data_prey_gps))
 )
