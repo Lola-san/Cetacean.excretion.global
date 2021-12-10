@@ -239,7 +239,7 @@ list(
   ##############################################################################
   ###################### add species-specific energetic data ###################
   ################# refers to function of 02_add_energetic_data.R ##############
-  tar_target(full_population_data, add_nrjtic(abund_sp_all)), 
+  tar_target(population_input, add_nrjtic(abund_sp_all)), 
   
   ##############################################################################
   ############################ define diet per species #########################
@@ -258,5 +258,7 @@ list(
   # join the two tables and clean to get a clean full table of diets 
   # from litterature with prey species and prey groups 
   tar_target(data_diets_PG, join_clean_diet_tib(data_diets, 
-                                                data_prey_gps))
+                                                data_prey_gps)), 
+  # create our diet input
+  tar_target(diet_input, create_diet_input(data_diets_PG))
 )

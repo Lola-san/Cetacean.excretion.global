@@ -102,6 +102,8 @@ data_prey_gps_file|stem|c4dd85ee4f8f2a7c|205b899b0fd7c867|ef46db3751d8e999|81330
 data_diets_file|stem|746d11a605def759|50d1cf00c03d8719|ef46db3751d8e999|2032559964|data/diets_cetaceans/All_sp_pred_diet.xlsx|t18929.7256284872s|a1d1ec3c964dcd12|126785|file|vector|||0||
 data_prey_gps|stem|394178f7c59ef036|753d2cee4d90fe7b|6a79ad21ce156f72|842050925||t18971.4677991277s|68fd78bd7a6c7dbb|8159|rds|vector|||0.13||
 data_diets|stem|c33b356c573b94af|3c9f42a3375cc450|c22d043e82aa1d5d|-432895262||t18971.4678004209s|75eccdff3761967d|26557|rds|vector|||0.04||
+data_diets_PG|stem|47414ceab2ba7d7e|7e7e70a7e366ee80|b4d7d0ac33dc456f|-1709996511||t18971.586393794s|20ee0a0cfc8676f8|35374|rds|vector|||0.17|NAs introduits lors de la conversion automatique|
+population_input|stem|116b2583e55e4205|e2cde09e1da1fe23|a5ae54f97d96fc6c|-873157677||t18971.5869302012s|ddd445d5ed2021ac|5658|rds|vector|||0.02||
 data_from_data_Kogi_spp|function|779fc6bd965641b0||||||||||||||
 data_from_data_Pseu_cra|function|90c21a588a032253||||||||||||||
 build_sp_tib|function|cfa1f517d174b722||||||||||||||
@@ -118,9 +120,10 @@ compute_ratio_REMMOA_WFu|function|79d75607540ab3fd||||||||||||||
 data_from_data_Lage_acu|function|bf2a1c372a6ecb79||||||||||||||
 compute_ratio_NEA|function|0a5ed1dae47ad717||||||||||||||
 data_from_data_Liss_bor|function|90f6e8ab451887f2||||||||||||||
-join_clean_diet_tib|function|1f59f25bd473dd31||||||||||||||
+join_clean_diet_tib|function|f58449ce855b6f34||||||||||||||
 add_nrjtic|function|30766c58f72d06dd||||||||||||||
 data_from_data_Fere_att|function|730bf77e05aff38b||||||||||||||
+create_diet_input|function|8c980b7ffa22c673||||||||||||||
 load_csv|function|3a771fbb0a29452d||||||||||||||
 data_from_data_Mega_nov|function|9f8a1688f3e8a36c||||||||||||||
 compute_ratio_GoMex|function|7b1e039cd37630da||||||||||||||
@@ -155,4 +158,4 @@ build_sp_tib_REMMOA_smalldel|function|7fedcd43d9095f32||||||||||||||
 build_sp_tib_REMMOA_largedel|function|5150b256ba2b609a||||||||||||||
 build_sp_tib_BW|function|65bc3cb86a0a83aa||||||||||||||
 build_sp_tib_REMMOA_smallglobi|function|d41a9a1ebb4632c9||||||||||||||
-data_diets_PG|stem|47414ceab2ba7d7e|7e7e70a7e366ee80|7ec84c5a40d0f9f5|-1709996511||t18971.4769396048s|20ee0a0cfc8676f8|35374|rds|vector|||0.11|NAs introduits lors de la conversion automatique|
+diet_input|stem|53cb18b2154ce54d|63003d5b15d0a0ae|89f5d68aa9fe7e6f|782931691||t18971.5889932367s|3ffa905440cadc24|5776|rds|vector|||8.06||
