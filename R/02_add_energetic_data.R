@@ -16,7 +16,7 @@
 ## -> we used balanced mean of male and female body mass with 0.5 ratio
 # beta, species-specific parameter accounting for activity costs and metabolic 
 # efficiency
-## from Spitz et al 2018, and guessed based on close species when not in it
+## from Spitz et al 2018/2012, and guessed based on close species when not in it
 
 add_nrjtic <- function(pop_tib) {
   

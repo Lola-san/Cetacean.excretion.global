@@ -288,5 +288,12 @@ list(
   ##############################################################################
   ############################### RUN MODEL ####################################
   ############## refers to functions of 06_run_model.R ################
-  tar_target(model_output, run_model(model_input, nsim = 1e4)) #NSIM HERE!
+  tar_target(model_output, run_model(model_input, nsim = 1e4)), #NSIM HERE!
+  
+  ##############################################################################
+  #################### RUN sensitivity analysis ################################
+  ############## refers to functions of 06_run_model.R ################
+  tar_target(sobol_index_all, create_sobol_index_tib(model_input, 
+                                                     model_output, 
+                                                     nsim = 1e4)) #NSIM HERE!
 )

@@ -35,6 +35,7 @@ renv::install("readxl")
 renv::install("dplyr")
 renv::install("tidyr")
 renv::install("purrr")
+renv::install("sensobol")
 
 ############################### renv update
 # check renv status
