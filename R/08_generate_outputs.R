@@ -51,7 +51,7 @@ format_names <- function(output_tib) {
 }
 
 
-######################## functions to create tables #############################
+######################## functions to create tables ############################
 
 ################ ALL AREAS #######################
 
@@ -1000,8 +1000,8 @@ fig_exc_all_areas_1_facet_element <- function(output_tib) {
 # function to create graph with densities of excretion in all areas, one facet/element
 # but just with one taxa
 fig_exc_all_areas_1_facet_element_taxa <- function(output_tib, 
-                                              taxa # should be a character string
-                                              ) {
+                                                   taxa # should be a character string
+) {
   output_tib |>
     dplyr::group_by(Geo_area) |>
     dplyr::filter(Eco_gp == taxa) |>
@@ -1098,18 +1098,18 @@ fig_exc_vs_tot_surf <- function(output_tib) {
                      sum = list(sum_tibb(excrete_nut))) |>
     tidyr::unnest(sum) |>
     tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
-                 names_to = "Element", 
-                 values_to = "Excretion") |> 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
     dplyr::mutate(Element = factor(Element, 
-                            levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                       "Se", "Zn", "Co", "As")), 
-           Excretion = Excretion*1e3/Surf, 
-           Geo_area = factor(Geo_area, 
-                             levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
-                                        "Northwest Atlantic", "California current", 
-                                        "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "Antilles", 
-                                        "New Caledonia", "Hawaii",  
-                                        "Guyana", "Wallis & Futuna", "French Polynesia"))
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = Excretion*1e3/Surf, 
+                  Geo_area = factor(Geo_area, 
+                                    levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "Guyana", "Wallis & Futuna", "French Polynesia"))
     )  |>
     dplyr::filter(Element == "N") |>
     dplyr::group_by(Geo_area, Surf) |>
@@ -1127,4 +1127,139 @@ fig_exc_vs_tot_surf <- function(output_tib) {
     ggplot2::xlab("Surface of area (km2)") +
     ggplot2::ylab("Mean N fertilization density (kg/yr/km2)") +
     ggplot2::theme()
+}
+
+
+################## AREA PER AREA ######################
+
+#'
+#'
+#'
+#'
+#'
+# function with graph of total excretion of each cetacean taxa
+fig_exc_taxa_log10 <- function(output_tib, 
+                         geo_area
+) {
+  
+  output_tib |>
+    dplyr::group_by(Eco_gp, Geo_area) |>
+    dplyr::filter(Geo_area == geo_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                 names_to = "Element", 
+                 values_to = "Excretion") |> 
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As"))) |> # from tons to kg
+    dplyr::filter(Element != "As") |>
+    dplyr::group_by(Eco_gp, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                             `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                             mean = mean(Excretion), 
+                             median = median(Excretion), 
+                             `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                             max = max(Excretion)) |>
+    ggplot2::ggplot() +
+    ggplot2::geom_errorbar(ggplot2::aes(x = Element, ymin = `2.5_quant`, ymax = `97.5_quant`, color = Eco_gp), 
+                           size = 1) +
+    ggplot2::geom_point(ggplot2::aes(x = Element, y = mean, color = Eco_gp)) +
+    ggplot2::scale_color_manual(values = c(`Baleen whales` = wesanderson::wes_palette("FantasticFox1", 3, 
+                                                                                      type = "continuous")[1],
+                                           `Deep divers` = wesanderson::wes_palette("FantasticFox1", 3, 
+                                                                                    type = "continuous")[2],
+                                           `Small delphinids` = wesanderson::wes_palette("FantasticFox1", 3, 
+                                                                                         type = "continuous")[3])) +
+    ggplot2::scale_y_continuous(trans = "log10") +
+    ggplot2::ylab("Excretion (in tons/yr)") +
+    ggplot2::ggtitle(geo_area) +
+    ggplot2::xlab("Element") +
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
+                   strip.text.x = ggplot2::element_text(face = "bold", size = 12),
+                   strip.text.y = ggplot2::element_text(face = "bold", size = 12),
+                   axis.text.x = ggplot2::element_text(size = 12), 
+                   axis.text.y = ggplot2::element_text(size = 12), 
+                   axis.title.x = ggplot2::element_text(face = "bold", size = 12), 
+                   axis.title.y = ggplot2::element_text(face = "bold", size = 12), 
+                   legend.title = ggplot2::element_blank()
+    )
+  
+}
+
+
+
+#'
+#'
+#'
+#'
+#'
+# function with graph of total excretion of each cetacean taxa
+fig_exc_hab_log10 <- function(output_tib, 
+                              geo_area, 
+                              quantity
+) {
+  # quantity is a character string stating if output should a weight or a weight per surface unit 
+  # either "weight" or "weight_per_km2"
+  
+  # adapt y title depending on calculation
+  if (quantity == "weight") {
+    
+    # adapt axe title 
+    y_title <- "Excretion (in tons/yr)"
+    
+  } else if (quantity == "weight_per_km2") {
+    
+    # adapt axe title 
+    y_title <- "Excretion (in kg/yr/km2)"
+  }
+  
+  output_tib |>
+    dplyr::group_by(Eco_area, Geo_area) |>
+    dplyr::filter(Geo_area == geo_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = dplyr::case_when(quantity == "weight" ~ Excretion, 
+                                        quantity == "weight_per_km2" ~ Excretion*1e3/Surf)) |> # from tons to kg/km2/yr
+    dplyr::filter(Element != "As") |>
+    dplyr::group_by(Eco_area, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
+    ggplot2::ggplot() +
+    ggplot2::geom_errorbar(ggplot2::aes(x = Element, ymin = `2.5_quant`, ymax = `97.5_quant`, color = Eco_gp), 
+                           size = 1) +
+    ggplot2::geom_point(ggplot2::aes(x = Element, y = mean, color = Eco_area)) +
+    ggplot2::scale_color_manual(values = c(`Neritic waters` = wesanderson::wes_palette("Darjeeling1", 
+                                                                                       6, 
+                                                                                       type = "continuous")[3],
+                                           `Slope & oceanic waters` = wesanderson::wes_palette("Darjeeling1", 
+                                                                                               6, 
+                                                                                               type = "continuous")[2])) +
+    ggplot2::scale_y_continuous(trans = "log10") +
+    ggplot2::ylab("Excretion (in tons/yr)") +
+    ggplot2::ggtitle(geo_area) +
+    ggplot2::xlab("Element") +
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
+                   strip.text.x = ggplot2::element_text(face = "bold", size = 12),
+                   strip.text.y = ggplot2::element_text(face = "bold", size = 12),
+                   axis.text.x = ggplot2::element_text(size = 12), 
+                   axis.text.y = ggplot2::element_text(size = 12), 
+                   axis.title.x = ggplot2::element_text(face = "bold", size = 12), 
+                   axis.title.y = ggplot2::element_text(face = "bold", size = 12), 
+                   legend.title = ggplot2::element_blank()
+    )
+  
+  
 }
