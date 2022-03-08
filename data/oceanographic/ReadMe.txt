@@ -1,7 +1,12 @@
-Data was downloaded from https://neo.sci.gsfc.nasa.gov/. 
-We chose July 2018 for both chlorophyll and sst, for sst we chos the MODIS data (2006+). We used the button "Download Raw Data". 
-For chlorophyll, it does not seem that the name of the file contains the true date: there is the year, but for the month 
-format is weird. 
+Data was downloaded from https://neo.sci.gsfc.nasa.gov/. Tab "OCEAN"
+We chose July 2018 for both chlorophyll and sst, for sst we chos the MODIS data (2002+). 
+Then, we choose the month we want (June 2021), and we press the button "Download Raw Data". You must have
+a free account logged in to download the data.
 
-28/10/21: For both files, apparently the website was bugging: we could not download July, as when we asked for July the name of the file still 
-indicated it was December 2018 instead. We will try again soon. 
+I am not sure the date are the ones we want, does not seem to change when we change the month! 
+
+For chlorophyll, it does not seem that the name of the file contains the true date: there is the year, 
+but for the month format is weird. And it does not change when we ask for another month. So well well, 
+not so good! 
+
+For sst, it seems that we just have December month, 2021 here! 
