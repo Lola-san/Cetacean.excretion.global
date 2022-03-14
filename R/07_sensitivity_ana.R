@@ -68,8 +68,20 @@ create_sobol_index_tib <- function(data_tib,
     
     # change distributions of inputs according to data or bibliography/assumptions
     matN[, "Abund"] <- qlnorm(matN[, "Abund"], 
-                              meanlog = log(purrr::pluck(data_tib, "Abund", rw, "Abund") /sqrt(1 + purrr::pluck(data_tib, "Abund", rw, "Abund_CV")*purrr::pluck(data_tib, "Abund", rw, "Abund_CV"))),
-                              sdlog = sqrt(log1p(purrr::pluck(data_tib, "Abund", rw, "Abund_CV")*purrr::pluck(data_tib, "Abund", rw, "Abund_CV"))))
+                              meanlog = log(purrr::pluck(data_tib, 
+                                                         "Abund", 
+                                                         rw, 
+                                                         "Abund") /sqrt(1 + purrr::pluck(data_tib, 
+                                                                                         "Abund", 
+                                                                                         rw, 
+                                                                                         "Abund_CV")*purrr::pluck(data_tib, 
+                                                                                                                  "Abund",
+                                                                                                                  rw, 
+                                                                                                                  "Abund_CV"))),
+                              sdlog = sqrt(log1p(purrr::pluck(data_tib, 
+                                                              "Abund", 
+                                                              rw, 
+                                                              "Abund_CV")*purrr::pluck(data_tib, "Abund", rw, "Abund_CV"))))
     matN[, "Mass"] <- qnorm(matN[, "Mass"], 
                             mean = purrr::pluck(data_tib, "Mass", rw, "Mass"), 
                             sd = (purrr::pluck(data_tib, "Mass", rw, "Mass_max")-purrr::pluck(data_tib, "Mass", rw, "Mass_min"))/4)
