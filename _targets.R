@@ -330,6 +330,18 @@ list(
   ######### for all areas - link with productivity
   # create data with chlor and sst data for all areas
   tar_target(chloro_sst_tib, create_tib_sst_chloro()),
+  # generate plots
+  tar_target(fig_N_vs_chloro_Guy, plot_exc_chloro(chloro_sst_tib,
+                                                  model_output_clean,
+                                                  "N",
+                                                  "YES")),
+  tar_target(fig_N_vs_chloro_noGuy, plot_exc_chloro(chloro_sst_tib,
+                                                  model_output_clean,
+                                                  "N",
+                                                  "NO")),
+  tar_target(fig_N_vs_sst, plot_exc_sst(chloro_sst_tib,
+                                                  model_output_clean,
+                                                  "N")),
   
   ########## area per area - tables
   # table with estimates and statistics for habitats - just for 8 of the areas with 2 habitats

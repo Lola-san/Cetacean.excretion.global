@@ -242,6 +242,9 @@ fig_hab_taxa_Ant|stem|8ae601a593cf47af|92b6233a4c92ffd1|71696814804ae9f5|-208561
 fig_hab_taxa_NWA|stem|758effc9f23ff4a0|8a096d7c7388de1d|71696814804ae9f5|959627846||t19059.6762387153s|c35b266f14af1f03|1300500082|rds|vector|||0.33||
 fig_hab_taxa_Med|stem|cf681574c74f1604|f197cf10e0097f0e|71696814804ae9f5|-1312248557||t19059.6772583249s|95bf78b4e325dc2b|1300500072|rds|vector|||0.33||
 fig_hab_taxa_CNA|stem|89dad89de4d1c85a|4e444658efc20b8b|71696814804ae9f5|-906720709||t19059.6783627348s|bd424411598d30ed|1300500090|rds|vector|||0.42||
+N_vs_chloro_Guy|stem|c4c14fba48550c20|3158bca13f1c0201|22c378205843af6f|-838324950||t19072.6907402151s|a81fa68ba11ba7f6|1300485879|rds|vector|||0.62||
+chloro_sst_tib|stem|da73a2364c61406b|a0dcadbfd6415676|0e9e6f817948739e|1555878130||t19072.6933642375s|53af1afd4b46f940|2028|rds|vector|||46.13||
+fig_N_vs_chloro_Guy|stem|4a770a7997758b4b|3158bca13f1c0201|802ad8249070ceb0|-1535928558||t19072.6944356207s|ac59d43698f540b4|1300488606|rds|vector|||0.66||
 bind_ratio_others|function|108a9494be83ec8b||||||||||||||
 sum_tibb|function|b3e6ac377e6030d9||||||||||||||
 data_from_data_Lage_alb|function|21d5fa6cb1f9b8b5||||||||||||||
@@ -249,7 +252,7 @@ data_from_data_Sten_fro|function|917b1b4a675c42c4||||||||||||||
 data_from_data_Lage_obl|function|d60fbd586e9e1588||||||||||||||
 data_from_data_Pepo_ele|function|bea3f3b2567cd99d||||||||||||||
 join_clean_compo_tib|function|9643be9ca59f3507||||||||||||||
-create_tib_sst_chloro|function|8e1412781845d97d||||||||||||||
+create_tib_sst_chloro|function|cc81b2797d81a484||||||||||||||
 data_from_data_Fere_att|function|730bf77e05aff38b||||||||||||||
 bootstrap_compo_pg|function|ddbfef33391690d6||||||||||||||
 data_from_data_Phoc_pho|function|917b9c590367d445||||||||||||||
@@ -313,13 +316,15 @@ create_full_stat_tab_kg_km2_yr|function|423a81d687d33af3||||||||||||||
 test_differences_taxa_hab|function|23e6314c6b407084||||||||||||||
 test_differences_hab|function|116844813025e6c2||||||||||||||
 create_full_stat_tab_tons_yr|function|dd1306a5e3e61aca||||||||||||||
+plot_exc_chloro|function|0ec2c961aa02dbbe||||||||||||||
 create_hab_stat_tab_tons_yr|function|ed44094b1533e940||||||||||||||
 taxa_contribution_hab|function|4fb57f505ae2f50d||||||||||||||
 fig_exc_hab_log10|function|9b36db5aa2be28f3||||||||||||||
 fig_exc_taxa_log10|function|309664de6eee8942||||||||||||||
 fig_exc_vs_tot_surf|function|d767318d991cf79c||||||||||||||
-taxa_contribution_total|function|5e73212ff9d0b00a||||||||||||||
+plot_exc_sst|function|6eaaf6c4557fd73a||||||||||||||
 create_tab_stat_diff_tot_exc|function|bcb2842f5a1ef10c||||||||||||||
+taxa_contribution_total|function|5e73212ff9d0b00a||||||||||||||
 build_sp_tib_REMMOA_smallglobi|function|d41a9a1ebb4632c9||||||||||||||
 build_sp_tib_REMMOA_largedel|function|5150b256ba2b609a||||||||||||||
 build_sp_tib_Dd_Dc_Sc|function|5825b530a85e1ab1||||||||||||||
@@ -328,4 +333,5 @@ build_sp_tib_BW|function|65bc3cb86a0a83aa||||||||||||||
 build_sp_tib_REMMOA_smalldel|function|7fedcd43d9095f32||||||||||||||
 run_model|function|922e6968f078e0a9||||||||||||||
 create_sobol_index_tib|function|978254fb9fafe910||||||||||||||
-chloro_sst_tib|stem|4154ab51c6e7d22b|a0dcadbfd6415676|4ab757498c6d0ba1|1555878130||t19072.6743725209s|0b4a59f57ccde78d|1630|rds|vector|||45.5||
+fig_N_vs_chloro_noGuy|stem|32e23d1b7902eddf|fc6b804b651c93a6|802ad8249070ceb0|1552094219||t19072.7016659317s|da9e28eff0b162dc|1300488212|rds|vector|||0.7||
+fig_N_vs_sst|stem|9849b0950e4da749|5ad713032cf9e59d|86361468bc58ccc1|-490564883||t19072.7026105796s|2b7975f89bd6a226|1300488581|rds|vector|||0.45||
