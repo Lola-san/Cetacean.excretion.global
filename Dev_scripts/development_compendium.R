@@ -36,6 +36,7 @@ renv::install("dplyr")
 renv::install("tidyr")
 renv::install("purrr")
 renv::install("sensobol")
+renv::install("ncdf4")
 
 ############################### renv update
 # check renv status
