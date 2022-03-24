@@ -37,6 +37,8 @@ renv::install("tidyr")
 renv::install("purrr")
 renv::install("sensobol")
 renv::install("ncdf4")
+renv::install("tarchetypes")
+renv::install("kableExtra")
 
 ############################### renv update
 # check renv status

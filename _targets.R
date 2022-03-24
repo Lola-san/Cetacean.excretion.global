@@ -312,7 +312,10 @@ list(
   tar_target(tot_est_stat_kg_km2_yr, create_full_stat_tab_kg_km2_yr(model_output_clean)),
   # table with results of statistical test of significance of difference between areas
   # only for N 
-  tar_target(test_diff_tot_exc_N, create_tab_stat_diff_tot_exc(model_output_clean)), 
+  tar_target(test_diff_tot_exc_N, create_tab_stat_diff_tot_exc(model_output_clean, 
+                                                               element = "N")), 
+  tar_target(test_diff_tot_exc_P, create_tab_stat_diff_tot_exc(model_output_clean, 
+                                                               element = "P")), 
   # table with total surfaces of areas
   tar_target(surf_tot_areas, table_tot_surf(model_output_clean)), 
   
@@ -602,6 +605,9 @@ list(
   tar_target(fig_hab_taxa_WIO, fig_exc_hab_taxa_log10(model_output_clean,
                                                 "West Indian ocean")),
   tar_target(fig_hab_taxa_GoAl, fig_exc_hab_taxa_log10(model_output_clean,
-                                                 "Gulf of Alaska"))
+                                                 "Gulf of Alaska")), 
+  
+  # generate report Rmd
+  tarchetypes::tar_render(rmd_report, "manuscript/Full_results.Rmd")
   
 )

@@ -1,0 +1,113 @@
+---
+title: "Full_results"
+author: "Lola Gilbert"
+date: "24/03/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This project is available on 
+_[github](https://github.com/Lola-san/Cetacean.excretion.global.git)_
+
+# Nutrient cycling in the photic zone through cetacean populations
+
+## Comparison between areas
+
+To compare the contribution of cetacean populations to the fertilization of the photic zone between different areas (of different sizes), we computed a "density" of fertilization, considering an homogeneous distribution of cetaceans within each area. 
+
+### All elements, all cetacean groups
+
+Table with all results, with 95% CI intervals limits, with results as quantities (tons per year) and not densities: 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(tot_est_stat_tns_yr), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+And with densities (kg per km^2^ and per year): 
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+
+kableExtra::kable(targets::tar_read(tot_est_stat_kg_km2_yr), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+We can take a look at this on a graph, with densities to be able to compare between areas 
+
+```{r  echo=FALSE, fig.align="center"}
+
+targets::tar_read(fig_tot_exc_all_areas_facetperel)
+```
+
+We can visualize better with all elements on one facet, using a log10 transformation on the y scale 
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_tot_exc_all_areas_log10)
+```
+
+We can test if the difference between areas is significant, for N excretion:
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+
+kableExtra::kable(targets::tar_read(test_diff_tot_exc_N) |>
+  dplyr::mutate(`Central North Atlantic` = kableExtra:::cell_spec(`Central North Atlantic`, 
+                                                                  color = ifelse(`Central North Atlantic` > 0.98, "#EE6363","black")), 
+         `Northeast Atlantic` = kableExtra:::cell_spec(`Northeast Atlantic`, 
+                                                       color = ifelse(`Northeast Atlantic` > 0.98, "#EE6363","black")),
+         `Northwest Atlantic` = kableExtra:::cell_spec(`Northwest Atlantic`, 
+                                                       color = ifelse(`Northwest Atlantic` > 0.98, "#EE6363","black")),
+         `California current` = kableExtra:::cell_spec(`California current`, 
+                                                       color = ifelse(`California current` > 0.98, "#EE6363","black")),
+         `Mediterranean Sea` = kableExtra:::cell_spec(`Mediterranean Sea`, 
+                                                      color = ifelse(`Mediterranean Sea` > 0.98, "#EE6363","black")),
+         `West Indian ocean` = kableExtra:::cell_spec(`West Indian ocean`, 
+                                                      color = ifelse(`West Indian ocean` > 0.98, "#EE6363","black")),
+         `Gulf of Mexico` = kableExtra:::cell_spec(`Gulf of Mexico`, 
+                                                   color = ifelse(`Gulf of Mexico` > 0.98, "#EE6363","black")),
+         `French Antilles` = kableExtra:::cell_spec(`French Antilles`, 
+                                                    color = ifelse(`Antilles` > 0.98, "#EE6363","black")),
+         `New Caledonia` = kableExtra:::cell_spec(`New Caledonia`, 
+                                                  color = ifelse(`New Caledonia` > 0.98, "#EE6363","black")),
+         `Hawaii` = kableExtra:::cell_spec(`Hawaii`, 
+                                           color = ifelse(`Hawaii` > 0.98, "#EE6363","black")),
+         `French Guyana` = kableExtra:::cell_spec(`Guyana`, 
+                                                  color = ifelse(`French Guyana` > 0.98, "#EE6363","black")),
+         `Wallis & Futuna` = kableExtra:::cell_spec(`Wallis & Futuna`, 
+                                                    color = ifelse(`Wallis & Futuna` > 0.98, "#EE6363","black")),
+         `French Polynesia` = kableExtra:::cell_spec(`French Polynesia`, 
+                                                     color = ifelse(`French Polynesia` > 0.98, "#EE6363","black"))), 
+  align = 'c' , 
+  booktabs = TRUE, 
+  escape = FALSE, 
+  digits = 2,
+  caption = "Statistical test results - if excretion in the area in row is significantely superior to the area in column, result of the test is > 0.98 and colored in red") |>
+  kableExtra::kable_styling() 
+```
+
+And for P excretion: 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+
+kableExtra::kable(targets::tar_read(test_diff_tot_exc_P), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```

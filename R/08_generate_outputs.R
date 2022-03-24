@@ -125,7 +125,7 @@ create_full_stat_tab_kg_km2_yr <- function(output_tib) {
 # statistical test significance of differences between areas
 # for all areas, but only for N (could be done similarly for other, just very long)
 # in kg/km2/yr
-create_tab_stat_diff_tot_exc <- function(output_tib) {
+create_tab_stat_diff_tot_exc <- function(output_tib, element) {
   output_tib |>
     dplyr::group_by(Geo_area) |>
     dplyr::summarise(Surf = sum(unique(Surf_tot)), 
@@ -138,7 +138,7 @@ create_tab_stat_diff_tot_exc <- function(output_tib) {
                   Element = factor(Element, 
                                    levels = c("N", "P", "Fe", "Cu", "Mn", 
                                               "Se", "Zn", "Co", "As")))  |> 
-    dplyr::filter(Element == "N") |>
+    dplyr::filter(Element == element) |>
     dplyr::select(Geo_area, Excretion) |>
     tidyr::pivot_wider(names_from = Geo_area, 
                        values_from = Excretion, 
