@@ -214,7 +214,6 @@ fig_contrib_taxa_WFu|stem|777dd2fc1a7e490a|ec99a71b4052dcc8|5908623acd461475|-94
 model_output_clean|stem|83c042801947bde6|56aa25bc2393b563|def54033cd593f1e|-170097650||t19059.6412623384s|5473c7714c5a4af8|1300396300|rds|vector|||0.11||
 taxa_contrib_tot_NCal|stem|159a91542cbaeb7d|91c3cca76ed85a66|7eb349066efd3260|1311911261||t19059.6412825324s|a62a08e83199e542|1067|rds|vector|||0.2||
 test_diff_taxa_hab_NEA|stem|1a09e9cc12c3e391|35f09d7741981eae|ec156fbf43e6e506|860758199||t19059.6413043808s|0bece17483124d4e|706|rds|vector|||1.87||
-fig_tot_exc_vs_surfaces|stem|9e1ab28efe120fd2|c3c9691962c98f3d|b7f253b22e7b99e4|1788229652||t19059.6422849808s|8c649aab505d0638|1300447703|rds|vector|||0.62||
 fig_tot_exc_all_areas_facetperel_SD|stem|cc96689bce48a000|cd5bcfad1430ac40|b30f7e43a8d38be4|2077580203||t19059.6434029102s|e5a293d4d56cc919|1300480015|rds|vector|||0.42||
 test_diff_hab_GoAla|stem|106645f803302947|1e8012ff67c093ed|43af9cbb4ef12f31|-704067736||t19059.6434396425s|f20cd2b8fcfedc44|285|rds|vector|||1.07||
 fig_hab_abs_NEA|stem|357795fb396b72be|21367d984184e204|a27e043b76933351|-781094902||t19059.6444681588s|ddde3fc8853e8eb3|1300481780|rds|vector|||0.25||
@@ -248,6 +247,18 @@ fig_N_vs_chloro_noGuy|stem|32e23d1b7902eddf|fc6b804b651c93a6|802ad8249070ceb0|15
 fig_N_vs_sst|stem|9849b0950e4da749|5ad713032cf9e59d|86361468bc58ccc1|-490564883||t19072.7026105796s|2b7975f89bd6a226|1300488581|rds|vector|||0.45||
 test_diff_tot_exc_N|stem|06d3ed31ee2a2046|62e4ea8fd37a9822|a777870fe483be6a|2093266860||t19075.6834484463s|43635233fc0380d7|680|rds|vector|||0.65||
 test_diff_tot_exc_P|stem|4a4fca1d07bda8ec|bfcd9089bd49f1ab|a777870fe483be6a|1598160039||t19075.6834526617s|f8cf54eb723c1980|691|rds|vector|||0.34||
+test_diff_tot_exc_Zn|stem|deee85c33325c3f9|891a8a85d32d7aaf|a777870fe483be6a|390170486||t19076.600275693s|02380df006b0cb1c|692|rds|vector|||0.64||
+test_diff_tot_exc_Fe|stem|9a615470f8f7e1f4|11f731c260976096|a777870fe483be6a|672007671||t19076.6002801378s|35ae8440155645f9|737|rds|vector|||0.34||
+test_diff_tot_exc_Co|stem|9ce3f43466ff0d6d|3a17fe8868573cb7|a777870fe483be6a|-430962712||t19076.6002867431s|700aac1d13dd5485|775|rds|vector|||0.42||
+test_diff_tot_exc_Cu|stem|51157325f9275a35|99ccd8bb4b37c700|a777870fe483be6a|-590220056||t19076.6002921521s|4772fea41651c0c8|791|rds|vector|||0.39||
+test_diff_tot_exc_Se|stem|9d71272b641aa161|98fe1d4cda30fade|a777870fe483be6a|1871532664||t19076.6002971998s|4cbe05f27acbf98b|711|rds|vector|||0.36||
+test_diff_tot_exc_Mn|stem|7b960503b9ffafb1|689121cc8132e440|a777870fe483be6a|1351582721||t19076.6003022032s|1e19357f05a79414|710|rds|vector|||0.35||
+fig_tot_exc_vs_surfaces|stem|bb3e0c6eb2fded3c|c3c9691962c98f3d|d353327e1247ff70|1788229652||t19076.6148429499s|08b212d8dea9b0c9|1300447948|rds|vector|||0.66||
+table_fold|stem|87f2f62e6056e750|ea1e6a5ea725928f|8a282a6a871d0565|1106630679||t19076.6369195344s|b2904f98bd7c6d7a|6489|rds|vector|||0.62||
+rmd_report|stem|bf102e06d9058399|74c8079c1567f568|c3f54d2ef11a3aa3|-234516627|manuscript/Full_results.html*manuscript/Full_results.Rmd|t19076.6430316282s||1288759|file|vector|||27.98||impossible dallouer un vecteur de taille 78 Ko
+fig_all_el_log10_vs_sst|stem|a7fd09efbcbc6385|834705c2562c82d1|4a4c66f98987c8e1|-163700680||t19076.676201132s|baf447c1a8ce61a3|1300522316|rds|vector|||1.01||
+fig_all_el_vs_sst|stem|e034dde9b77f575b|864d5a5944b35828|6bab6699911b5e6c|1994575317||t19076.6809228664s|53046949d73801d6|1300467728|rds|vector|||1.04||
+rmd_report1|stem|8ee5d0acde1ae355|7500664df1482cc6|7311a82a2f7093f9|1117962222|manuscript/01_Results_all-areas.html*manuscript/01_Results_all-areas.Rmd|t19076.6539328539s||1285608|file|vector|||29.18||impossible dallouer un vecteur de taille 78 Ko
 bind_ratio_others|function|108a9494be83ec8b||||||||||||||
 sum_tibb|function|b3e6ac377e6030d9||||||||||||||
 data_from_data_Lage_alb|function|21d5fa6cb1f9b8b5||||||||||||||
@@ -303,17 +314,20 @@ compute_y_c_biomass|function|4f5e813cdab4fb6c||||||||||||||
 compute_ratio_REMMOA_WFu|function|79d75607540ab3fd||||||||||||||
 data_from_data_Bala_acu|function|9281f1444a09aebd||||||||||||||
 compute_ratio_REMMOA_Ind|function|8dd6d1476e8520af||||||||||||||
-data_from_data_Sten_cly|function|6f09386963f5a5de||||||||||||||
-data_from_data_Turs_tru|function|afdee4c615c598b0||||||||||||||
 data_from_data_Bala_ede|function|dbea12af383fbaa3||||||||||||||
+data_from_data_Turs_tru|function|afdee4c615c598b0||||||||||||||
+data_from_data_Sten_cly|function|6f09386963f5a5de||||||||||||||
 compute_ratio_GoMex|function|7b1e039cd37630da||||||||||||||
 load_csv|function|3a771fbb0a29452d||||||||||||||
 compute_ratio_REMMOA_NCal|function|987239089615d59b||||||||||||||
 fig_exc_all_areas_1_facet_element_taxa|function|bb5b38cf61f40f8c||||||||||||||
 create_hab_stat_tab_kg_km2_yr|function|2c8e9bb9d992750c||||||||||||||
 fig_exc_all_areas_log10|function|78896879ebce4df9||||||||||||||
+plot_exc_sst_all_el_norm|function|fac8d73d95a2cb6a||||||||||||||
 fig_exc_all_areas_1_facet_element|function|2d5b4f301fc23b19||||||||||||||
 test_differences_taxa|function|7086764d9e3dec48||||||||||||||
+table_fold_change|function|45f530b510ff35fe||||||||||||||
+plot_exc_sst_all_el_log10|function|d099a51b89a12558||||||||||||||
 fig_exc_hab_taxa_log10|function|9bd7e3cf4fc5eab7||||||||||||||
 create_full_stat_tab_kg_km2_yr|function|423a81d687d33af3||||||||||||||
 test_differences_taxa_hab|function|23e6314c6b407084||||||||||||||
@@ -324,7 +338,8 @@ create_hab_stat_tab_tons_yr|function|ed44094b1533e940||||||||||||||
 taxa_contribution_hab|function|4fb57f505ae2f50d||||||||||||||
 fig_exc_hab_log10|function|9b36db5aa2be28f3||||||||||||||
 fig_exc_taxa_log10|function|309664de6eee8942||||||||||||||
-fig_exc_vs_tot_surf|function|d767318d991cf79c||||||||||||||
+fig_exc_vs_tot_surf|function|cf3711e66b23aab7||||||||||||||
+plot_exc_sst_all_el|function|b743bb6fcf94892a||||||||||||||
 plot_exc_sst|function|6eaaf6c4557fd73a||||||||||||||
 create_tab_stat_diff_tot_exc|function|85ed569d18f350db||||||||||||||
 taxa_contribution_total|function|5e73212ff9d0b00a||||||||||||||
@@ -336,4 +351,5 @@ build_sp_tib_BW|function|65bc3cb86a0a83aa||||||||||||||
 build_sp_tib_REMMOA_smalldel|function|7fedcd43d9095f32||||||||||||||
 run_model|function|922e6968f078e0a9||||||||||||||
 create_sobol_index_tib|function|978254fb9fafe910||||||||||||||
-rmd_report|stem|f557017f6491b907|714d391d16e56bfa|58751fe29e7f73de|-234516627|manuscript/Full_results.html*manuscript/Full_results.Rmd|t19075.6840456567s||856381|file|vector|||29.24||Problem with mutate column Central North Atlantic.i Central North Atlantic  kableExtracell_spec....x valeur manquante là où TRUE  FALSE est requis
+fig_all_el_vs_sst_norm|stem|a754da50398fec51|c27298103dcbd675|24a505572d889200|961066333||t19076.6886420126s|bead9bd3e390340d|1300467799|rds|vector|||0.84||
+rmd_report2|stem|8ea1ad7a2b3318c3|18312e1196eac137|79343f2f6ad08cbc|1657536592|manuscript/02_Results_all-areas_prod.html*manuscript/02_Results_all-areas_prod.Rmd|t19076.689937755s|40432bf3631aa33f|733986|file|vector|||69.55||

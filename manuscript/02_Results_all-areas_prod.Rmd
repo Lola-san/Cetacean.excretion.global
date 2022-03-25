@@ -1,0 +1,46 @@
+---
+title: "Results - correlation between excretion and productivity"
+author: "Lola Gilbert"
+date: "25/03/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This project is available on 
+_[github](https://github.com/Lola-san/Cetacean.excretion.global.git)_
+
+# Nutrient cycling in the photic zone through cetacean populations
+
+We show excretion by cetacean communities is heterogeneous at a large scale worldwide and that there is some kind of latitudinal pattern, lower latitudes being associated with lower levels of excretion compared to higher latitude areas being associated with highest levels of excretion. We hypothethize this heterogeneity may be correlated to difference in the productivity of ecosystems. 
+
+### Correlation between cetacean excretion and productivity of ecosystems
+
+Temperate waters are known as eutrophic compared to oligotrophic tropical waters. So, we can wonder if there is a link with primary production. Primary production itself is challenging to estimate on a routine at a large scale, but it is widely accepted that is can be approached through indices like chlorophyll concentration (both are positively proportional) and sea surface temperature (negatively correlated). We used chlorophyll and sst data from NEO (NASA Earth Observations, [https://oceancolor.gsfc.nasa.gov/l3/order/](https://oceancolor.gsfc.nasa.gov/l3/order/)), defined roughly the same areas where we used abundance surveys to compute estimates, to compare these data. 
+We used annual mean estimates for year 2021. 
+
+We can compare mean values and distribution of excretion, sst and chlorophyll in all areas. First for just on nutrient (as the between-area variations seem to be similar for all elements), say N:
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_N_vs_sst)
+```
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_N_vs_chloro_Guy)
+```
+
+There seems to be a negative relation between excretion and sst, for the chlorophyll also but less intense, and there is something happening with Guyana. Chlorophyll concentration esitmates are from satellite data, Guyana may pop out as an outlier because of the high turbidity of the water due to the Amazon River plume. 
+
+Being an outlier, we can simply take it out: 
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_N_vs_chloro_noGuy)
+```
+
+It looks a lot better, and the relation seems to be quite strong between the two variables. 
+
+We included 8 nutrients in our analysis, so it would be interesting to see if this relation holds for all of them. 
+
+

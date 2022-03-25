@@ -516,3 +516,170 @@ plot_exc_sst <- function(tib_chloro_sst,
                    legend.text = ggplot2::element_text(size = 12, face = "bold")
     )
 }
+
+
+#'
+#'
+#'
+#'
+#'
+#'
+# function to plot elemental excretion vs sst for all elements with log10 transformation of the y axis
+plot_exc_sst_all_el_log10 <- function(tib_chloro_sst, 
+                         output_tib) {
+  
+  tib_chloro_sst |>
+    dplyr::left_join(output_tib |>
+                       dplyr::group_by(Geo_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion/Surf
+                       )  |>
+                       dplyr::filter(Element != "As") |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::summarize(min_exc = min(Excretion), 
+                                        `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                                        `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
+                                        mean_exc = mean(Excretion), 
+                                        median_exc = median(Excretion), 
+                                        `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
+                                        `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                                        max_exc = max(Excretion))) |>
+    dplyr::mutate(Geo_area = factor(Geo_area, 
+                                    levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
+    ggplot2::ggplot(ggplot2::aes(x = mean_sst, y = mean_exc, colour = Element)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::scale_y_continuous(trans = "log10" ) +
+    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
+                                  "#94A323", "#F7D42A", "#26897E", 
+                                  "#CF3E53")) +
+    ggplot2::ylab("Nutrient excretion (t/km2/yr)") +
+    ggplot2::xlab("Mean sea surface temperature") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+    
+}
+
+
+#'
+#'
+#'
+#'
+#'
+#'
+# function to plot elemental excretion vs sst for all elements with no transformation of the y axis
+plot_exc_sst_all_el <- function(tib_chloro_sst, 
+                                      output_tib) {
+  
+  tib_chloro_sst |>
+    dplyr::left_join(output_tib |>
+                       dplyr::group_by(Geo_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion/Surf
+                       )  |>
+                       dplyr::filter(Element != "As") |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::summarize(min_exc = min(Excretion), 
+                                        `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                                        `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
+                                        mean_exc = mean(Excretion), 
+                                        median_exc = median(Excretion), 
+                                        `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
+                                        `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                                        max_exc = max(Excretion))) |>
+    dplyr::mutate(Geo_area = factor(Geo_area, 
+                                    levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
+    ggplot2::ggplot(ggplot2::aes(x = mean_sst, y = mean_exc, colour = Element)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
+                                           "#94A323", "#F7D42A", "#26897E", 
+                                           "#CF3E53")) +
+    ggplot2::ylab("Nutrient excretion (t/km2/yr)") +
+    ggplot2::xlab("Mean sea surface temperature") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+  
+}
+
+
+
+#'
+#'
+#'
+#'
+#'
+#'
+# function to plot elemental excretion vs sst with normalized excretion data, so with no transformation of the y axis again
+plot_exc_sst_all_el_norm <- function(tib_chloro_sst, 
+                                output_tib) {
+  
+  tib_chloro_sst |>
+    dplyr::left_join(output_tib |>
+                       dplyr::group_by(Geo_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion/Surf
+                       )  |>
+                       dplyr::filter(Element != "As") |>
+                       # normalize excretion data 
+                       dplyr::group_by(Element) |>
+                       dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::summarize(min_exc = min(Excretion), 
+                                        `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                                        `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
+                                        mean_exc = mean(Excretion), 
+                                        median_exc = median(Excretion), 
+                                        `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
+                                        `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                                        max_exc = max(Excretion))) |>
+    dplyr::mutate(Geo_area = factor(Geo_area, 
+                                    levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
+    ggplot2::ggplot(ggplot2::aes(x = mean_sst, y = mean_exc, colour = Element)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
+                                           "#94A323", "#F7D42A", "#26897E", 
+                                           "#CF3E53")) +
+    ggplot2::ylab("Normalized Nutrient excretion (t/km2/yr)") +
+    ggplot2::xlab("Mean sea surface temperature") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+  
+}

@@ -474,6 +474,48 @@ table_tot_surf <- function(output_tib) {
 }
 
 
+
+#'
+#'
+#'
+#'
+#'
+# function to create table with fold change ratio between areas
+table_fold_change <- function(output_tib) {
+  inter_table <- output_tib |>
+    dplyr::group_by(Geo_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = Excretion*1e3/Surf # from tons to kg/km2
+    )  |>
+    dplyr::group_by(Geo_area, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
+    dplyr::filter(Element != "As")
+  
+  
+  minimum_df <- inter_table |> 
+    dplyr::group_by(Element) |>
+    dplyr::summarize(min_all_mean = min(mean), 
+                     max_all_mean = max(mean))
+  
+  # compute the fold-change ratio
+  inter_table |>
+    dplyr::left_join(minimum_df, by = "Element", keep = FALSE) |>
+    dplyr::mutate(fold = round(mean/min_all_mean) )
+}
+
 ################ AREA PER AREA ######################
 
 
@@ -1107,9 +1149,9 @@ fig_exc_vs_tot_surf <- function(output_tib) {
                   Geo_area = factor(Geo_area, 
                                     levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
                                                "Northwest Atlantic", "California current", 
-                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "Antilles", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
                                                "New Caledonia", "Hawaii",  
-                                               "Guyana", "Wallis & Futuna", "French Polynesia"))
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))
     )  |>
     dplyr::filter(Element == "N") |>
     dplyr::group_by(Geo_area, Surf) |>

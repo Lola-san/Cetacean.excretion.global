@@ -315,9 +315,25 @@ list(
   tar_target(test_diff_tot_exc_N, create_tab_stat_diff_tot_exc(model_output_clean, 
                                                                element = "N")), 
   tar_target(test_diff_tot_exc_P, create_tab_stat_diff_tot_exc(model_output_clean, 
-                                                               element = "P")), 
+                                                               element = "P")),  
+  tar_target(test_diff_tot_exc_Fe, create_tab_stat_diff_tot_exc(model_output_clean, 
+                                                                element = "Fe")),  
+  tar_target(test_diff_tot_exc_Cu, create_tab_stat_diff_tot_exc(model_output_clean, 
+                                                                element = "Cu")),  
+  tar_target(test_diff_tot_exc_Mn, create_tab_stat_diff_tot_exc(model_output_clean, 
+                                                                element = "Mn")),  
+  tar_target(test_diff_tot_exc_Se, create_tab_stat_diff_tot_exc(model_output_clean, 
+                                                                element = "Se")),  
+  tar_target(test_diff_tot_exc_Zn, create_tab_stat_diff_tot_exc(model_output_clean, 
+                                                                element = "Zn")),  
+  tar_target(test_diff_tot_exc_Co, create_tab_stat_diff_tot_exc(model_output_clean, 
+                                                                element = "Co")), 
+  
   # table with total surfaces of areas
   tar_target(surf_tot_areas, table_tot_surf(model_output_clean)), 
+  
+  # table with fold-change ratios
+  tar_target(table_fold, table_fold_change(model_output_clean)),
   
   ######### for all areas - figures
   tar_target(fig_tot_exc_all_areas_facetperel, fig_exc_all_areas_1_facet_element(model_output_clean)),
@@ -339,12 +355,21 @@ list(
                                                   "N",
                                                   "YES")),
   tar_target(fig_N_vs_chloro_noGuy, plot_exc_chloro(chloro_sst_tib,
-                                                  model_output_clean,
-                                                  "N",
-                                                  "NO")),
+                                                    model_output_clean,
+                                                    "N",
+                                                    "NO")),
   tar_target(fig_N_vs_sst, plot_exc_sst(chloro_sst_tib,
-                                                  model_output_clean,
-                                                  "N")),
+                                        model_output_clean,
+                                        "N")),
+  # figure with all elements, one facet and a log10 scale
+  tar_target(fig_all_el_log10_vs_sst, plot_exc_sst_all_el_log10(chloro_sst_tib,
+                                                                model_output_clean)),
+  # figure with all elements, one facet no log10 scale
+  tar_target(fig_all_el_vs_sst, plot_exc_sst_all_el(chloro_sst_tib,
+                                                    model_output_clean)),
+  # figure with all elements, one facet no log10 scale but normalized excretion
+  tar_target(fig_all_el_vs_sst_norm, plot_exc_sst_all_el_norm(chloro_sst_tib,
+                                                    model_output_clean)),
   
   ########## area per area - tables
   # table with estimates and statistics for habitats - just for 8 of the areas with 2 habitats
@@ -591,23 +616,24 @@ list(
   
   # figure with excretion per taxa in each habitat (per unit area)
   tar_target(fig_hab_taxa_NEA, fig_exc_hab_taxa_log10(model_output_clean, 
-                                                "Northeast Atlantic")),
+                                                      "Northeast Atlantic")),
   tar_target(fig_hab_taxa_CNA, fig_exc_hab_taxa_log10(model_output_clean,
-                                                "Central North Atlantic")),
+                                                      "Central North Atlantic")),
   tar_target(fig_hab_taxa_NWA, fig_exc_hab_taxa_log10(model_output_clean,
-                                                "Northwest Atlantic")),
+                                                      "Northwest Atlantic")),
   tar_target(fig_hab_taxa_Med, fig_exc_hab_taxa_log10(model_output_clean,
-                                                "Mediterranean Sea")),
+                                                      "Mediterranean Sea")),
   tar_target(fig_hab_taxa_Ant, fig_exc_hab_taxa_log10(model_output_clean,
-                                                "French Antilles")),
+                                                      "French Antilles")),
   tar_target(fig_hab_taxa_Guy, fig_exc_hab_taxa_log10(model_output_clean,
-                                                "French Guyana")),
+                                                      "French Guyana")),
   tar_target(fig_hab_taxa_WIO, fig_exc_hab_taxa_log10(model_output_clean,
-                                                "West Indian ocean")),
+                                                      "West Indian ocean")),
   tar_target(fig_hab_taxa_GoAl, fig_exc_hab_taxa_log10(model_output_clean,
-                                                 "Gulf of Alaska")), 
+                                                       "Gulf of Alaska")), 
   
-  # generate report Rmd
-  tarchetypes::tar_render(rmd_report, "manuscript/Full_results.Rmd")
+  # generate Rmd reports
+  #tarchetypes::tar_render(rmd_report1, "manuscript/01_Results_all-areas.Rmd"), 
+  tarchetypes::tar_render(rmd_report2, "manuscript/02_Results_all-areas_prod.Rmd")
   
 )
