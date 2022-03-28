@@ -12,116 +12,116 @@
 
 ######################## preliminary functions #################################
 
-# function to verify totals of abundances, CVs, and densities with report
-# because we are not using the same blocks, we are computing subtotals 
-# this is a checking function, just to use directly in the console, 
-# does not generate output with target
-# it is indicated within functions where it should be called (# line)
-verify_totals <- function(df) {
-  # special case for Observe survey (Ireland)
-  # there are stratum with mixed neritic and oceanic waters
-  # we use the ratio of surfaces to separate abudances estimates between neritic and oceanic
-  rS1_N <- 30177/62052
-  rS1_O <- 31875/62052
-  rS2_N <- 35464/60167
-  rS2_O <- 24703/60167
-  rS3_N <- 80009/100482
-  rS3_O <- 20743/100482
-  
-  # compute our totals, to be compared with those from reports/papers
-  df |>
-    dplyr::group_by(Geo_area) |> 
-    dplyr::mutate(Abund = dplyr::case_when(Block == "S1_N" ~ round(rS1_N*Abund, 0), 
-                                           Block == "S1_O" ~ round(rS1_O*Abund, 0),
-                                           Block == "S2_N" ~ round(rS2_N*Abund, 0),
-                                           Block == "S2_O" ~ round(rS2_O*Abund, 0),
-                                           Block == "S3_N" ~ round(rS3_N*Abund, 0),
-                                           Block == "S3_O" ~ round(rS3_O*Abund, 0),
-                                           TRUE ~ Abund),
-                  Var_abund = dplyr::case_when(Block == "S1_N" ~ rS1_N*(Abund*CV*Abund*CV), 
-                                               Block == "S1_O" ~ rS1_O*(Abund*CV*Abund*CV),
-                                               Block == "S2_N" ~ rS2_N*(Abund*CV*Abund*CV),
-                                               Block == "S2_O" ~ rS2_O*(Abund*CV*Abund*CV),
-                                               Block == "S3_N" ~ rS3_N*(Abund*CV*Abund*CV),
-                                               Block == "S3_O" ~ rS3_O*(Abund*CV*Abund*CV),
-                                               TRUE ~ Abund*CV*Abund*CV),
-                  Survey = dplyr::case_when(Block %in% c("AA", "AB", "AC",
-                                                         "B", "C", "D", 
-                                                         "E", "F", "G", 
-                                                         "H", "I", "J", 
-                                                         "K", "L", "M", 
-                                                         "N", "O", "P", 
-                                                         "Q", "R", "S", 
-                                                         "T", "U", "V", 
-                                                         "W", "X", "Y",
-                                                         "Z", "P1", "SVG", 
-                                                         "TRD") ~ "SCANSIII_aerial", 
-                                            Block %in% c("8", "9", "11", 
-                                                         "12", "13") ~ "SCANSIII_ship", 
-                                            Block %in% c("S1_N", "S1_O", "S2_N", "S2_O", "S3_N", "S3_O", "S4",
-                                                         "S5", "S6", "S7", "S8") ~ "Observe",
-                                            Block %in% c("Atlantic", "Alboran", "SWMed", "NWMed", 
-                                                         "PelagosW", "PelagosE", 
-                                                         "Tyrrhenian", "SCMed", 
-                                                         "Adriatic", "Ionian", 
-                                                         "Aegean", "NEMed", "EMed") ~ "ASI", 
-                                            Block %in% c("FC", "FW",  
-                                                         "IE", "IC", "IG", "IP", 
-                                                         "IQ", "IR", "IW", 
-                                                         "SW", "CG", "X") ~ "t-NASS", 
-                                            Block == "GoMexico" ~ "goMexico mean 2017-2018", 
-                                            Block %in% c("GOM/BOF", "NWAtl_slope", "NWAtl_offshore") ~ "NWAtl2011",
-                                            Block %in% c("AUS_C", "AUS_P", "AUS_O", 
-                                                         "GAM_C", "GAM_P", "GAM_O",
-                                                         "SOC_C", "SOC_P", "SOC_O", 
-                                                         "TUN_P", "TUN_O", "TUS_P", "TUS_O",
-                                                         "MAR_C", "MAR_P", "MAR_O") ~ "REMMOA_Poly", 
-                                            Block %in% c("Hawai", "Hawai_Pelagic", "NWHI") ~ "Hawai2017", 
-                                            Block == "NCal" ~ "REMMOA_NCal", 
-                                            Block == "WFu" ~ "REMMOA_WFu", 
-                                            Block %in% c("Calif_current") ~ "California_curr2005-8", 
-                                            Block %in% c("CMGM_N", "CMGM_P", "CMGM_O",
-                                                         "JMN_N", "JMN_P", "JMN_O", 
-                                                         "EBM_P", "EBM_O", 
-                                                         "TM_N", "TM_P", "TM_O",
-                                                         "MAU_N", "MAU_P", "MAU_O",
-                                                         "REU_N", "REU_O",  
-                                                         "RM", "RM_N", "RM_P", "RM_O", # unstratified subarea of Mauritius and Reunion
-                                                         "SE_N", "SE_P", "SE_O") ~ "REMMOA_Indian", 
-                                            Block %in% c("ANT_P1", "ANT_P2", "ANT_P3", 
-                                                         "ANT_O1") ~ "REMMOA_ANT", 
-                                            Block %in% c("GUY_P5", "GUY_O5") ~ "REMMOA_GUY", 
-                                            Block %in% c("Inshore", "Offshore", "Seamount", 
-                                                         "Slope") ~ "GoAlaska"
-                  ), 
-                  Surf_tot = dplyr::case_when(Survey == "SCANSIII_aerial" ~ 1200575,
-                                              Survey == "SCANSIII_ship" ~  604393, 
-                                              Survey == "Observe" ~ 328596, # all Stratum except S5 that is in SCANS III
-                                              Survey == "ASI" ~ sum(Surf), 
-                                              Survey == "t-NASS" ~ 812602, 
-                                              Survey == "goMexico mean 2017-2018" ~ 380432, 
-                                              Survey == "NWAtl2011" ~ 451985, 
-                                              Survey == "REMMOA_Poly" ~ 7849 + 75131 + 186545 + # AUS
-                                                4078 + 150930 + 185976 + # GAM
-                                                19372 + 81650 + 174253 + # SOC
-                                                148366 + 138368 + # TUN
-                                                146201 + 151913 + # TUS
-                                                24868 + 64731 + 243531, # MAR 
-                                              Survey == "Hawai2017" ~ 2447635, 
-                                              Survey == "REMMOA_NCal" ~ 542300,
-                                              Survey == "REMMOA_WFu" ~ 233600,
-                                              Survey == "California_curr2005-8" ~ 1141807,
-                                              Survey == "REMMOA_Indian" ~ 1417309,
-                                              Survey == "REMMOA_ANT" ~ 163010,
-                                              Survey == "REMMOA_GUY" ~ 110594,
-                                              Survey == "GoAlaska" ~ 22749 + 60051 + 45377 + 36776
-                  )) |> 
-    dplyr::group_by(Geo_area, Survey) |>
-    dplyr::summarise(Abund_tot = sum(Abund), 
-                     Dens_tot = Abund_tot/unique(Surf_tot),
-                     Var_tot = sum(Var_abund), 
-                     CV_tot = sqrt(Var_tot)/Abund_tot)
-}
+# # function to verify totals of abundances, CVs, and densities with report
+# # because we are not using the same blocks, we are computing subtotals 
+# # this is a checking function, just to use directly in the console, 
+# # does not generate output with target
+# # it is indicated within functions where it should be called (# line)
+# verify_totals <- function(df) {
+#   # special case for Observe survey (Ireland)
+#   # there are stratum with mixed neritic and oceanic waters
+#   # we use the ratio of surfaces to separate abudances estimates between neritic and oceanic
+#   rS1_N <- 30177/62052
+#   rS1_O <- 31875/62052
+#   rS2_N <- 35464/60167
+#   rS2_O <- 24703/60167
+#   rS3_N <- 80009/100482
+#   rS3_O <- 20743/100482
+#   
+#   # compute our totals, to be compared with those from reports/papers
+#   df |>
+#     dplyr::group_by(Geo_area) |> 
+#     dplyr::mutate(Abund = dplyr::case_when(Block == "S1_N" ~ round(rS1_N*Abund, 0), 
+#                                            Block == "S1_O" ~ round(rS1_O*Abund, 0),
+#                                            Block == "S2_N" ~ round(rS2_N*Abund, 0),
+#                                            Block == "S2_O" ~ round(rS2_O*Abund, 0),
+#                                            Block == "S3_N" ~ round(rS3_N*Abund, 0),
+#                                            Block == "S3_O" ~ round(rS3_O*Abund, 0),
+#                                            TRUE ~ Abund),
+#                   Var_abund = dplyr::case_when(Block == "S1_N" ~ rS1_N*(Abund*CV*Abund*CV), 
+#                                                Block == "S1_O" ~ rS1_O*(Abund*CV*Abund*CV),
+#                                                Block == "S2_N" ~ rS2_N*(Abund*CV*Abund*CV),
+#                                                Block == "S2_O" ~ rS2_O*(Abund*CV*Abund*CV),
+#                                                Block == "S3_N" ~ rS3_N*(Abund*CV*Abund*CV),
+#                                                Block == "S3_O" ~ rS3_O*(Abund*CV*Abund*CV),
+#                                                TRUE ~ Abund*CV*Abund*CV),
+#                   Survey = dplyr::case_when(Block %in% c("AA", "AB", "AC",
+#                                                          "B", "C", "D", 
+#                                                          "E", "F", "G", 
+#                                                          "H", "I", "J", 
+#                                                          "K", "L", "M", 
+#                                                          "N", "O", "P", 
+#                                                          "Q", "R", "S", 
+#                                                          "T", "U", "V", 
+#                                                          "W", "X", "Y",
+#                                                          "Z", "P1", "SVG", 
+#                                                          "TRD") ~ "SCANSIII_aerial", 
+#                                             Block %in% c("8", "9", "11", 
+#                                                          "12", "13") ~ "SCANSIII_ship", 
+#                                             Block %in% c("S1_N", "S1_O", "S2_N", "S2_O", "S3_N", "S3_O", "S4",
+#                                                          "S5", "S6", "S7", "S8") ~ "Observe",
+#                                             Block %in% c("Atlantic", "Alboran", "SWMed", "NWMed", 
+#                                                          "PelagosW", "PelagosE", 
+#                                                          "Tyrrhenian", "SCMed", 
+#                                                          "Adriatic", "Ionian", 
+#                                                          "Aegean", "NEMed", "EMed") ~ "ASI", 
+#                                             Block %in% c("FC", "FW",  
+#                                                          "IE", "IC", "IG", "IP", 
+#                                                          "IQ", "IR", "IW", 
+#                                                          "SW", "CG", "X") ~ "t-NASS", 
+#                                             Block == "GoMexico" ~ "goMexico mean 2017-2018", 
+#                                             Block %in% c("GOM/BOF", "NWAtl_slope", "NWAtl_offshore") ~ "NWAtl2011",
+#                                             Block %in% c("AUS_C", "AUS_P", "AUS_O", 
+#                                                          "GAM_C", "GAM_P", "GAM_O",
+#                                                          "SOC_C", "SOC_P", "SOC_O", 
+#                                                          "TUN_P", "TUN_O", "TUS_P", "TUS_O",
+#                                                          "MAR_C", "MAR_P", "MAR_O") ~ "REMMOA_Poly", 
+#                                             Block %in% c("Hawai", "Hawai_Pelagic", "NWHI") ~ "Hawai2017", 
+#                                             Block == "NCal" ~ "REMMOA_NCal", 
+#                                             Block == "WFu" ~ "REMMOA_WFu", 
+#                                             Block %in% c("Calif_current") ~ "California_curr2005-8", 
+#                                             Block %in% c("CMGM_N", "CMGM_P", "CMGM_O",
+#                                                          "JMN_N", "JMN_P", "JMN_O", 
+#                                                          "EBM_P", "EBM_O", 
+#                                                          "TM_N", "TM_P", "TM_O",
+#                                                          "MAU_N", "MAU_P", "MAU_O",
+#                                                          "REU_N", "REU_O",  
+#                                                          "RM", "RM_N", "RM_P", "RM_O", # unstratified subarea of Mauritius and Reunion
+#                                                          "SE_N", "SE_P", "SE_O") ~ "REMMOA_Indian", 
+#                                             Block %in% c("ANT_P1", "ANT_P2", "ANT_P3", 
+#                                                          "ANT_O1") ~ "REMMOA_ANT", 
+#                                             Block %in% c("GUY_P5", "GUY_O5") ~ "REMMOA_GUY", 
+#                                             Block %in% c("Inshore", "Offshore", "Seamount", 
+#                                                          "Slope") ~ "GoAlaska"
+#                   ), 
+#                   Surf_tot = dplyr::case_when(Survey == "SCANSIII_aerial" ~ 1200575,
+#                                               Survey == "SCANSIII_ship" ~  604393, 
+#                                               Survey == "Observe" ~ 328596, # all Stratum except S5 that is in SCANS III
+#                                               Survey == "ASI" ~ sum(Surf), 
+#                                               Survey == "t-NASS" ~ 812602, 
+#                                               Survey == "goMexico mean 2017-2018" ~ 380432, 
+#                                               Survey == "NWAtl2011" ~ 451985, 
+#                                               Survey == "REMMOA_Poly" ~ 7849 + 75131 + 186545 + # AUS
+#                                                 4078 + 150930 + 185976 + # GAM
+#                                                 19372 + 81650 + 174253 + # SOC
+#                                                 148366 + 138368 + # TUN
+#                                                 146201 + 151913 + # TUS
+#                                                 24868 + 64731 + 243531, # MAR 
+#                                               Survey == "Hawai2017" ~ 2447635, 
+#                                               Survey == "REMMOA_NCal" ~ 542300,
+#                                               Survey == "REMMOA_WFu" ~ 233600,
+#                                               Survey == "California_curr2005-8" ~ 1141807,
+#                                               Survey == "REMMOA_Indian" ~ 1417309,
+#                                               Survey == "REMMOA_ANT" ~ 163010,
+#                                               Survey == "REMMOA_GUY" ~ 110594,
+#                                               Survey == "GoAlaska" ~ 22749 + 60051 + 45377 + 36776
+#                   )) |> 
+#     dplyr::group_by(Geo_area, Survey) |>
+#     dplyr::summarise(Abund_tot = sum(Abund), 
+#                      Dens_tot = Abund_tot/unique(Surf_tot),
+#                      Var_tot = sum(Var_abund), 
+#                      CV_tot = sqrt(Var_tot)/Abund_tot)
+# }
 
 
 

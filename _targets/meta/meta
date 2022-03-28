@@ -258,7 +258,10 @@ table_fold|stem|87f2f62e6056e750|ea1e6a5ea725928f|8a282a6a871d0565|1106630679||t
 rmd_report|stem|bf102e06d9058399|74c8079c1567f568|c3f54d2ef11a3aa3|-234516627|manuscript/Full_results.html*manuscript/Full_results.Rmd|t19076.6430316282s||1288759|file|vector|||27.98||impossible dallouer un vecteur de taille 78 Ko
 fig_all_el_log10_vs_sst|stem|a7fd09efbcbc6385|834705c2562c82d1|4a4c66f98987c8e1|-163700680||t19076.676201132s|baf447c1a8ce61a3|1300522316|rds|vector|||1.01||
 fig_all_el_vs_sst|stem|e034dde9b77f575b|864d5a5944b35828|6bab6699911b5e6c|1994575317||t19076.6809228664s|53046949d73801d6|1300467728|rds|vector|||1.04||
-rmd_report1|stem|8ee5d0acde1ae355|7500664df1482cc6|7311a82a2f7093f9|1117962222|manuscript/01_Results_all-areas.html*manuscript/01_Results_all-areas.Rmd|t19076.6539328539s||1285608|file|vector|||29.18||impossible dallouer un vecteur de taille 78 Ko
+fig_all_el_vs_sst_norm|stem|a754da50398fec51|c27298103dcbd675|24a505572d889200|961066333||t19076.6886420126s|bead9bd3e390340d|1300467799|rds|vector|||0.84||
+rmd_report2|stem|8ea1ad7a2b3318c3|18312e1196eac137|79343f2f6ad08cbc|1657536592|manuscript/02_Results_all-areas_prod.html*manuscript/02_Results_all-areas_prod.Rmd|t19076.689937755s|40432bf3631aa33f|733986|file|vector|||69.55||
+verify_totals|function|f645a7ee3c76c7b5||||||||||||||
+rmd_report1|stem|f21088207abe1e8d|7500664df1482cc6|7311a82a2f7093f9|1117962222|manuscript/01_Results_all-areas.html*manuscript/01_Results_all-areas.Rmd|t19079.2903874637s|c3eeed5b52768d25|1285704|file|vector|||108.09||
 bind_ratio_others|function|108a9494be83ec8b||||||||||||||
 sum_tibb|function|b3e6ac377e6030d9||||||||||||||
 data_from_data_Lage_alb|function|21d5fa6cb1f9b8b5||||||||||||||
@@ -297,7 +300,6 @@ compute_ratio_REMMOA_ANTGUY|function|72d1182fd19b7456||||||||||||||
 compute_ratio_REMMOA_FPol|function|b53a442cad6337c3||||||||||||||
 compute_ratio_NEA|function|0a5ed1dae47ad717||||||||||||||
 data_from_data_Sten_bre|function|be339fa9b34dcfe6||||||||||||||
-verify_totals|function|f645a7ee3c76c7b5||||||||||||||
 data_from_data_Kogi_spp|function|779fc6bd965641b0||||||||||||||
 data_from_data_Bala_bor|function|5f6dfb33c7530fa1||||||||||||||
 join_clean_diet_tib|function|f58449ce855b6f34||||||||||||||
@@ -315,8 +317,8 @@ compute_ratio_REMMOA_WFu|function|79d75607540ab3fd||||||||||||||
 data_from_data_Bala_acu|function|9281f1444a09aebd||||||||||||||
 compute_ratio_REMMOA_Ind|function|8dd6d1476e8520af||||||||||||||
 data_from_data_Bala_ede|function|dbea12af383fbaa3||||||||||||||
-data_from_data_Turs_tru|function|afdee4c615c598b0||||||||||||||
 data_from_data_Sten_cly|function|6f09386963f5a5de||||||||||||||
+data_from_data_Turs_tru|function|afdee4c615c598b0||||||||||||||
 compute_ratio_GoMex|function|7b1e039cd37630da||||||||||||||
 load_csv|function|3a771fbb0a29452d||||||||||||||
 compute_ratio_REMMOA_NCal|function|987239089615d59b||||||||||||||
@@ -351,5 +353,3 @@ build_sp_tib_BW|function|65bc3cb86a0a83aa||||||||||||||
 build_sp_tib_REMMOA_smalldel|function|7fedcd43d9095f32||||||||||||||
 run_model|function|922e6968f078e0a9||||||||||||||
 create_sobol_index_tib|function|978254fb9fafe910||||||||||||||
-fig_all_el_vs_sst_norm|stem|a754da50398fec51|c27298103dcbd675|24a505572d889200|961066333||t19076.6886420126s|bead9bd3e390340d|1300467799|rds|vector|||0.84||
-rmd_report2|stem|8ea1ad7a2b3318c3|18312e1196eac137|79343f2f6ad08cbc|1657536592|manuscript/02_Results_all-areas_prod.html*manuscript/02_Results_all-areas_prod.Rmd|t19076.689937755s|40432bf3631aa33f|733986|file|vector|||69.55||
