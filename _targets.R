@@ -364,12 +364,34 @@ list(
   # figure with all elements, one facet and a log10 scale
   tar_target(fig_all_el_log10_vs_sst, plot_exc_sst_all_el_log10(chloro_sst_tib,
                                                                 model_output_clean)),
+  tar_target(fig_all_el_log10_vs_chloro, plot_exc_chloro_all_el_log10(chloro_sst_tib,
+                                                                model_output_clean)),
   # figure with all elements, one facet no log10 scale
   tar_target(fig_all_el_vs_sst, plot_exc_sst_all_el(chloro_sst_tib,
+                                                    model_output_clean)),
+  tar_target(fig_all_el_vs_chloro, plot_exc_chloro_all_el(chloro_sst_tib,
                                                     model_output_clean)),
   # figure with all elements, one facet no log10 scale but normalized excretion
   tar_target(fig_all_el_vs_sst_norm, plot_exc_sst_all_el_norm(chloro_sst_tib,
                                                     model_output_clean)),
+  tar_target(fig_all_el_vs_chloro_norm, plot_exc_chloro_all_el_norm(chloro_sst_tib,
+                                                              model_output_clean)),
+  # figure with all elements, one facet no log10 scale but relative, fold-change excretion
+  tar_target(fig_all_el_vs_sst_fold, plot_exc_sst_all_el_fold(chloro_sst_tib,
+                                                              model_output_clean)),
+  tar_target(fig_all_el_vs_chloro_fold, plot_exc_chloro_all_el_fold(chloro_sst_tib,
+                                                                    model_output_clean)),
+  # table with results of models 
+  tar_target(tib_models_fold, run_models_fold(chloro_sst_tib,
+                                             model_output_clean)),
+  tar_target(tib_models_norm, run_models_norm(chloro_sst_tib,
+                                             model_output_clean)),
+  # figures with results of models 
+  tar_target(graph_models_sst_fold, graph_models_sst(tib_models_fold)),
+  tar_target(graph_models_chloro_fold, graph_models_chloro(tib_models_fold)),
+  tar_target(graph_models_sst_norm, graph_models_sst(tib_models_norm)),
+  tar_target(graph_models_chloro_norm, graph_models_chloro(tib_models_norm)),
+  
   
   ########## area per area - tables
   # table with estimates and statistics for habitats - just for 8 of the areas with 2 habitats
@@ -633,7 +655,7 @@ list(
                                                        "Gulf of Alaska")), 
   
   # generate Rmd reports
-  tarchetypes::tar_render(rmd_report1, "manuscript/01_Results_all-areas.Rmd"), 
-  tarchetypes::tar_render(rmd_report2, "manuscript/02_Results_all-areas_prod.Rmd")
+  tarchetypes::tar_render(rmd_report1, "manuscript/01_Results_all-areas.Rmd") 
+  #tarchetypes::tar_render(rmd_report2, "manuscript/02_Results_all-areas_prod.Rmd")
   
 )

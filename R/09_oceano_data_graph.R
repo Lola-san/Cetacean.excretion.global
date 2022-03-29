@@ -301,7 +301,7 @@ create_tib_sst_chloro <- function() {
                      `90_quant_chloro` = quantile(chloro_mg_m3, probs = c(0.90), na.rm = TRUE), 
                      `97.5_quant_chloro` = quantile(chloro_mg_m3, probs = c(0.975), na.rm = TRUE), 
                      max_chloro = max(chloro_mg_m3, na.rm = TRUE)
-                     )
+    )
   
   # clean up
   rm(sst_NEA, sst_tNASS, sst_NWcoast, sst_Med, sst_GoMex,
@@ -373,7 +373,7 @@ plot_exc_chloro <- function(tib_chloro_sst,
                                              "#CF3E53", "#F1788D")) +
       ggplot2::guides(color = ggplot2::guide_legend("")) + 
       ggplot2::ylab(paste0(element, " excretion (t/km2/yr)")) +
-      ggplot2::xlab("Mean chlorophyll concentration") +
+      ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      strip.text.x = ggplot2::element_text(face = "bold", size = 12),
                      strip.text.y = ggplot2::element_text(face = "bold", size = 12),
@@ -431,7 +431,7 @@ plot_exc_chloro <- function(tib_chloro_sst,
                                              "#CF3E53", "#F1788D")) +
       ggplot2::guides(color = ggplot2::guide_legend("")) + 
       ggplot2::ylab(paste0(element, " excretion (t/km2/yr)")) +
-      ggplot2::xlab("Mean chlorophyll concentration") +
+      ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      strip.text.x = ggplot2::element_text(face = "bold", size = 12),
                      strip.text.y = ggplot2::element_text(face = "bold", size = 12),
@@ -526,7 +526,7 @@ plot_exc_sst <- function(tib_chloro_sst,
 #'
 # function to plot elemental excretion vs sst for all elements with log10 transformation of the y axis
 plot_exc_sst_all_el_log10 <- function(tib_chloro_sst, 
-                         output_tib) {
+                                      output_tib) {
   
   tib_chloro_sst |>
     dplyr::left_join(output_tib |>
@@ -563,13 +563,13 @@ plot_exc_sst_all_el_log10 <- function(tib_chloro_sst,
     ggplot2::geom_smooth(method = "lm", se = FALSE) +
     ggplot2::scale_y_continuous(trans = "log10" ) +
     ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
-                                  "#94A323", "#F7D42A", "#26897E", 
-                                  "#CF3E53")) +
+                                           "#94A323", "#F7D42A", "#26897E", 
+                                           "#CF3E53")) +
     ggplot2::ylab("Nutrient excretion (t/km2/yr)") +
     ggplot2::xlab("Mean sea surface temperature") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
                    legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-    
+  
 }
 
 
@@ -581,7 +581,7 @@ plot_exc_sst_all_el_log10 <- function(tib_chloro_sst,
 #'
 # function to plot elemental excretion vs sst for all elements with no transformation of the y axis
 plot_exc_sst_all_el <- function(tib_chloro_sst, 
-                                      output_tib) {
+                                output_tib) {
   
   tib_chloro_sst |>
     dplyr::left_join(output_tib |>
@@ -636,7 +636,7 @@ plot_exc_sst_all_el <- function(tib_chloro_sst,
 #'
 # function to plot elemental excretion vs sst with normalized excretion data, so with no transformation of the y axis again
 plot_exc_sst_all_el_norm <- function(tib_chloro_sst, 
-                                output_tib) {
+                                     output_tib) {
   
   tib_chloro_sst |>
     dplyr::left_join(output_tib |>
@@ -682,4 +682,702 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
                    legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
   
+}
+
+
+#'
+#'
+#'
+#'
+#'
+#'
+# function to plot elemental excretion vs chloro for all elements with log10 transformation of the y axis
+plot_exc_chloro_all_el_log10 <- function(tib_chloro_sst, 
+                                         output_tib) {
+  
+  tib_chloro_sst |>
+    dplyr::left_join(output_tib |>
+                       dplyr::group_by(Geo_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion/Surf
+                       )  |>
+                       dplyr::filter(Element != "As") |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::summarize(min_exc = min(Excretion), 
+                                        `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                                        `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
+                                        mean_exc = mean(Excretion), 
+                                        median_exc = median(Excretion), 
+                                        `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
+                                        `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                                        max_exc = max(Excretion))) |>
+    dplyr::mutate(Geo_area = factor(Geo_area, 
+                                    levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
+    ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = mean_exc, colour = Element)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::scale_y_continuous(trans = "log10" ) +
+    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
+                                           "#94A323", "#F7D42A", "#26897E", 
+                                           "#CF3E53")) +
+    ggplot2::ylab("Nutrient excretion (t/km2/yr)") +
+    ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+  
+}
+
+
+#'
+#'
+#'
+#'
+#'
+#'
+# function to plot elemental excretion vs chloro for all elements with no transformation of the y axis
+plot_exc_chloro_all_el <- function(tib_chloro_sst, 
+                                   output_tib) {
+  
+  tib_chloro_sst |>
+    dplyr::left_join(output_tib |>
+                       dplyr::group_by(Geo_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion/Surf
+                       )  |>
+                       dplyr::filter(Element != "As") |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::summarize(min_exc = min(Excretion), 
+                                        `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                                        `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
+                                        mean_exc = mean(Excretion), 
+                                        median_exc = median(Excretion), 
+                                        `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
+                                        `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                                        max_exc = max(Excretion))) |>
+    dplyr::mutate(Geo_area = factor(Geo_area, 
+                                    levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
+    ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = mean_exc, colour = Element)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
+                                           "#94A323", "#F7D42A", "#26897E", 
+                                           "#CF3E53")) +
+    ggplot2::ylab("Nutrient excretion (t/km2/yr)") +
+    ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+  
+}
+
+
+
+#'
+#'
+#'
+#'
+#'
+#'
+# function to plot elemental excretion vs chloro with normalized excretion data, so with no transformation of the y axis again
+plot_exc_chloro_all_el_norm <- function(tib_chloro_sst, 
+                                        output_tib) {
+  
+  tib_chloro_sst |>
+    dplyr::left_join(output_tib |>
+                       dplyr::group_by(Geo_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion/Surf
+                       )  |>
+                       dplyr::filter(Element != "As") |>
+                       # normalize excretion data 
+                       dplyr::group_by(Element) |>
+                       dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::summarize(min_exc = min(Excretion), 
+                                        `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                                        `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
+                                        mean_exc = mean(Excretion), 
+                                        median_exc = median(Excretion), 
+                                        `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
+                                        `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                                        max_exc = max(Excretion))) |>
+    dplyr::mutate(Geo_area = factor(Geo_area, 
+                                    levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
+    ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = mean_exc, colour = Element)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
+                                           "#94A323", "#F7D42A", "#26897E", 
+                                           "#CF3E53")) +
+    ggplot2::ylab("Normalized Nutrient excretion (t/km2/yr)") +
+    ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+  
+}
+
+
+#'
+#'
+#'
+#'
+#'
+#'
+# function to plot elemental excretion vs chloro with relative excretion data (fold change ratio), so with no transformation of the y axis again
+plot_exc_chloro_all_el_fold <- function(tib_chloro_sst, 
+                                        output_tib) {
+  
+  # build fold change table 
+  table <- output_tib |>
+    dplyr::group_by(Geo_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = Excretion*1e3/Surf # from tons to kg/km2
+    )  |>
+    dplyr::group_by(Geo_area, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
+    dplyr::filter(Element != "As")
+  
+  minimum_df <- table |> 
+    dplyr::group_by(Element) |>
+    dplyr::summarize(min_all_mean = min(mean), 
+                     max_all_mean = max(mean))
+  
+  fold_df <- table |>
+    dplyr::left_join(minimum_df, by = "Element", keep = FALSE) |>
+    dplyr::mutate(fold = round(mean/min_all_mean) )
+  
+  
+  tib_chloro_sst |>
+    dplyr::left_join(fold_df, by = "Geo_area") |>
+    dplyr::filter(Geo_area != "French Guyana") |>
+    ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = fold, colour = Element)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
+                                           "#94A323", "#F7D42A", "#26897E", 
+                                           "#CF3E53")) +
+    ggplot2::ylab("Relative nutrient excretion (fold-change, t/km2/yr)") +
+    ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+  
+}
+
+
+#'
+#'
+#'
+#'
+#'
+#'
+# function to plot elemental excretion vs sst with relative excretion data (fold change ratio), so with no transformation of the y axis again
+plot_exc_sst_all_el_fold <- function(tib_chloro_sst, 
+                                     output_tib) {
+  
+  # build fold change table 
+  table <- output_tib |>
+    dplyr::group_by(Geo_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = Excretion*1e3/Surf # from tons to kg/km2
+    )  |>
+    dplyr::group_by(Geo_area, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
+    dplyr::filter(Element != "As")
+  
+  minimum_df <- table |> 
+    dplyr::group_by(Element) |>
+    dplyr::summarize(min_all_mean = min(mean), 
+                     max_all_mean = max(mean))
+  
+  fold_df <- table |>
+    dplyr::left_join(minimum_df, by = "Element", keep = FALSE) |>
+    dplyr::mutate(fold = round(mean/min_all_mean) )
+  
+  rm(minimum_df, table)
+  
+  
+  tib_chloro_sst |>
+    dplyr::left_join(fold_df, by = "Geo_area") |>
+    dplyr::filter(Geo_area != "French Guyana") |>
+    ggplot2::ggplot(ggplot2::aes(x = mean_sst, y = fold, colour = Element)) +
+    ggplot2::geom_point() +
+    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
+                                           "#94A323", "#F7D42A", "#26897E", 
+                                           "#CF3E53")) +
+    ggplot2::ylab("Relative nutrient excretion (fold-change, t/km2/yr)") +
+    ggplot2::xlab("Mean sea surface temperature") +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+  
+}
+
+
+#'
+#'
+#'
+#'
+#' function to run models of relation between sst and chloro and fold change ratios
+run_models_fold <- function(tib_chloro_sst, 
+                            output_tib) {
+  
+  # build fold change table 
+  table <- output_tib |>
+    dplyr::group_by(Geo_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = Excretion*1e3/Surf # from tons to kg/km2
+    )  |>
+    dplyr::group_by(Geo_area, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
+    dplyr::filter(Element != "As")
+  
+  minimum_df <- table |> 
+    dplyr::group_by(Element) |>
+    dplyr::summarize(min_all_mean = min(mean), 
+                     max_all_mean = max(mean))
+  
+  fold_df <- table |>
+    dplyr::left_join(minimum_df, by = "Element", keep = FALSE) |>
+    dplyr::mutate(fold = round(mean/min_all_mean) )
+  
+  rm(minimum_df, table)
+  
+  # df used for the modelling
+  summary_df <- tib_chloro_sst |>
+    dplyr::left_join(output_tib |>
+                       dplyr::group_by(Geo_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion/Surf
+                       )  |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::filter(Element != "As") |>
+                       dplyr::summarize(min_exc = min(Excretion), 
+                                        `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                                        mean_exc = mean(Excretion), 
+                                        median_exc = median(Excretion), 
+                                        `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                                        max_exc = max(Excretion))) |>
+    dplyr::left_join(fold_df, by = c("Geo_area", "Element"))
+  
+  # table to store results
+  table_mod <- tibble::tibble(element = NA, 
+                              variable = NA, 
+                              slope = NA, 
+                              R2 = NA)
+  
+  # run models
+  modsstN <- lm(fold ~ mean_sst, data = summary_df |>
+                  dplyr::filter(Element == "N")) 
+  
+  table_mod$element[1] <- "N"
+  table_mod$variable[1] <- "sst"
+  table_mod$slope[1] <- modsstN$coefficients[2]
+  table_mod$R2[1] <- 0.8007
+  
+  modchloroN <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
+                     dplyr::filter(Element == "N") |>
+                     dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("N", "chloro", modchloroN$coefficients[2], 0.8153))
+  
+  modsstP <- lm(fold ~ mean_sst, data = summary_df |>
+                  dplyr::filter(Element == "P")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("P", "sst", modsstP$coefficients[2], 0.7875))
+  
+  modchloroP <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
+                     dplyr::filter(Element == "P") |>
+                     dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("P", "chloro", modchloroP$coefficients[2], 0.83))
+  
+  modsstFe <- lm(fold ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Fe")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Fe", "sst", modsstFe $coefficients[2], 0.7935))
+  
+  modchloroFe  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Fe") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Fe", "chloro", modchloroFe$coefficients[2], 0.8304))
+  
+  modsstCu <- lm(fold ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Cu")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Cu", "sst", modsstCu$coefficients[2], 0.7292))
+  
+  modchloroCu  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Cu") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Cu", "chloro", modchloroCu$coefficients[2], 0.6934))
+  
+  modsstMn <- lm(fold ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Mn")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Mn", "sst", modsstMn$coefficients[2], 0.7608))
+  
+  modchloroMn  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Mn") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Mn", "chloro", modchloroMn$coefficients[2], 0.828))
+  
+  modsstSe <- lm(fold ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Se")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Se", "sst", modsstSe$coefficients[2], 0.8018))
+  
+  modchloroSe  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Se") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Se", "chloro", modchloroSe$coefficients[2], 0.8193))
+  
+  modsstZn <- lm(fold ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Zn")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Zn", "sst", modsstZn$coefficients[2], 0.799))
+  
+  modchloroZn  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Zn") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Zn", "chloro", modchloroZn$coefficients[2], 0.8265))
+  
+  modsstCo <- lm(fold ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Co")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Co", "sst", modsstCo$coefficients[2], 0.7808))
+  
+  modchloroCo  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Co") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Co", "chloro", modchloroCo$coefficients[2], 0.7934))
+  
+  table_mod
+}
+
+
+#'
+#'
+#'
+#'
+#' function to run models of relation between sst and chloro and fold change ratios
+run_models_norm <- function(tib_chloro_sst, 
+                            output_tib) {
+  
+  # build fold change table 
+  table <- output_tib |>
+    dplyr::group_by(Geo_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = Excretion*1e3/Surf # from tons to kg/km2
+    )  |>
+    dplyr::group_by(Geo_area, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
+    dplyr::filter(Element != "As")
+  
+  minimum_df <- table |> 
+    dplyr::group_by(Element) |>
+    dplyr::summarize(min_all_mean = min(mean), 
+                     max_all_mean = max(mean))
+  
+  fold_df <- table |>
+    dplyr::left_join(minimum_df, by = "Element", keep = FALSE) |>
+    dplyr::mutate(fold = round(mean/min_all_mean) )
+  
+  rm(minimum_df, table)
+  
+  # df used for the modelling
+  summary_df <- tib_chloro_sst |>
+    dplyr::left_join(output_tib |>
+                       dplyr::group_by(Geo_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion/Surf
+                       )  |>
+                       dplyr::filter(Element != "As") |>
+                       # normalize excretion data 
+                       dplyr::group_by(Element) |>
+                       dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::summarize(min_exc = min(Excretion), 
+                                        `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                                        `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
+                                        mean_exc = mean(Excretion), 
+                                        median_exc = median(Excretion), 
+                                        `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
+                                        `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                                        max_exc = max(Excretion))) 
+  
+  # table to store results
+  table_mod <- tibble::tibble(element = NA, 
+                              variable = NA, 
+                              slope = NA, 
+                              R2 = NA)
+  
+  # run models
+  modsstN <- lm(mean_exc ~ mean_sst, data = summary_df |>
+                  dplyr::filter(Element == "N")) 
+  
+  table_mod$element[1] <- "N"
+  table_mod$variable[1] <- "sst"
+  table_mod$slope[1] <- modsstN$coefficients[2]
+  table_mod$R2[1] <- 0.8239
+  
+  modchloroN <- lm(log(mean_exc) ~ log(mean_chloro), data = summary_df |>
+                     dplyr::filter(Element == "N") |>
+                     dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("N", "chloro", modchloroN$coefficients[2], 0.8268))
+  
+  modsstP <- lm(mean_exc ~ mean_sst, data = summary_df |>
+                  dplyr::filter(Element == "P")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("P", "sst", modsstP$coefficients[2], 0.8189))
+  
+  modchloroP <- lm(log(mean_exc) ~ log(mean_chloro), data = summary_df |>
+                     dplyr::filter(Element == "P") |>
+                     dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("P", "chloro", modchloroP$coefficients[2], 0.851))
+  
+  modsstFe <- lm(mean_exc ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Fe")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Fe", "sst", modsstFe $coefficients[2], 0.8293))
+  
+  modchloroFe  <- lm(log(mean_exc) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Fe") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Fe", "chloro", modchloroFe$coefficients[2], 0.8722))
+  
+  modsstCu <- lm(mean_exc ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Cu")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Cu", "sst", modsstCu$coefficients[2], 0.7577))
+  
+  modchloroCu  <- lm(log(mean_exc) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Cu") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Cu", "chloro", modchloroCu$coefficients[2], 0.7417))
+  
+  modsstMn <- lm(mean_exc ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Mn")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Mn", "sst", modsstMn$coefficients[2], 0.8017))
+  
+  modchloroMn  <- lm(log(mean_exc) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Mn") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Mn", "chloro", modchloroMn$coefficients[2], 0.876))
+  
+  modsstSe <- lm(mean_exc ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Se")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Se", "sst", modsstSe$coefficients[2], 0.8319))
+  
+  modchloroSe  <- lm(log(mean_exc) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Se") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Se", "chloro", modchloroSe$coefficients[2], 0.8491))
+  
+  modsstZn <- lm(mean_exc ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Zn")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Zn", "sst", modsstZn$coefficients[2], 0.8243))
+  
+  modchloroZn  <- lm(log(mean_exc) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Zn") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Zn", "chloro", modchloroZn$coefficients[2], 0.8348))
+  
+  modsstCo <- lm(mean_exc ~ mean_sst, data = summary_df |>
+                   dplyr::filter(Element == "Co")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Co", "sst", modsstCo$coefficients[2], 0.8155))
+  
+  modchloroCo  <- lm(log(mean_exc) ~ log(mean_chloro), data = summary_df |>
+                       dplyr::filter(Element == "Co") |>
+                       dplyr::filter(Geo_area != "French Guyana")) 
+  
+  table_mod <- rbind(table_mod, 
+                     c("Co", "chloro", modchloroCo$coefficients[2], 0.8554))
+  
+  table_mod
+}
+
+
+#'
+#'
+#'
+#'
+#' graph plotting models with data results 
+graph_models_sst <- function(model_output_tib) {
+  model_output_tib |>
+    tidyr::pivot_longer(cols = c("slope", "R2"),
+                 names_to = "Var_mod", 
+                 values_to = "value") |>
+    dplyr::mutate(value = as.numeric(value)) |>
+    dplyr::filter(variable == "sst") |>
+    ggplot2::ggplot() +
+    ggplot2::geom_point(ggplot2::aes(x = Var_mod, y = value, color = element)) +
+    ggplot2::facet_wrap(~ Var_mod, scales = "free") +
+    ggplot2::ggtitle("sst")
+}
+
+#'
+#'
+#'
+#'
+#' graph plotting models with data results 
+graph_models_chloro <- function(model_output_tib) {
+  model_output_tib |>
+    tidyr::pivot_longer(cols = c("slope", "R2"),
+                 names_to = "Var_mod", 
+                 values_to = "value") |>
+    dplyr::mutate(value = as.numeric(value)) |>
+    dplyr::filter(variable == "chloro") |>
+    ggplot2::ggplot() +
+    ggplot2::geom_point(ggplot2::aes(x = Var_mod, y = value, color = element)) +
+    ggplot2::facet_wrap(~ Var_mod, scales = "free") +
+    ggplot2::ggtitle("Mean chlorophyll concentration")
 }
