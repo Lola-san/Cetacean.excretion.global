@@ -1,0 +1,216 @@
+---
+title: "Results - area per area for areas with only oceanic habitat"
+author: "Lola Gilbert"
+date: "31/03/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+# California current
+
+Survey area only covered oceanic habitats here, so we just look at the contribution of taxa. 
+
+## Excretion per taxa
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_contrib_taxa_Calif)
+```
+
+Are the differences significant ?
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_Calif), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+What are there relative contribution to total excretion in this area ? 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_Calif), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+# Gulf of Mexico
+Survey area only included oceanic habitat here, so we just look at the contributions of taxa. 
+
+## Excretion per taxa
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_contrib_taxa_GoMex)
+```
+
+Are the differences significant ?
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_GoMex), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+What are there relative contribution to total excretion in this area ? 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_GoMex), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+# New Caledonia
+
+Survey area only included oceanic habitat here, so we just look at the contributions of taxa. 
+
+## Excretion per taxa
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_contrib_taxa_NCal)
+```
+
+Are the differences significant ?
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_NCal), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+What are there relative contribution to total excretion in this area ? 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_NCal), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+
+# Hawaii
+
+Survey area only included oceanic habitat here, so we just look at the contributions of taxa. 
+
+## Excretion per taxa
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_contrib_taxa_Haw)
+```
+
+Are the differences significant ?
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_Haw), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+What are there relative contribution to total excretion in this area ? 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_Haw), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+
+# Wallis & Futuna
+
+Survey area only included oceanic habitat here, so we just look at the contributions of taxa. 
+
+## Excretion per taxa
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_contrib_taxa_WFu)
+```
+
+Are the differences significant ?
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_WFu), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+What are there relative contribution to total excretion in this area ? 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_WFu), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+
+# French Polynesia
+
+Survey area only included oceanic habitat here, so we just look at the contributions of taxa. 
+
+## Excretion per taxa
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_contrib_taxa_FPol)
+```
+
+Are the differences significant ?
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_FPol), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+What are there relative contribution to total excretion in this area ? 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_FPol), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```

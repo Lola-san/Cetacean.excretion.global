@@ -2,7 +2,7 @@
 ## SCRIPT : Compute mean nutrient contents of cetaceans diets
 ##
 ## Authors : Lola Gilbert 
-## Last update : 2021-06
+## Last update : 2021-12
 ## R version 4.0.3 (2020-10-10) -- "Bunny-Wunnies Freak Out"
 ##--------------------------------------------------------------------------------------------------------
 

@@ -657,6 +657,7 @@ list(
   # generate Rmd reports
   tarchetypes::tar_render(rmd_report1, "manuscript/01_Results_all-areas.Rmd"), 
   tarchetypes::tar_render(rmd_report2, "manuscript/02_Results_all-areas_prod.Rmd"), 
-  tarchetypes::tar_render(rmd_report_per_areas, "manuscript/03_Results_per-area.Rmd")
+  tarchetypes::tar_render(rmd_report_per_areas_O, "manuscript/03a_Results_per-area_oceanic.Rmd"),
+  tarchetypes::tar_render(rmd_report_per_areas_NO, "manuscript/03b_Results_per-area_NO.Rmd")
   
 )
