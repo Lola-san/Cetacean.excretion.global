@@ -1,0 +1,124 @@
+---
+title: "Results - area per area"
+author: "Lola Gilbert"
+date: "31/03/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+## Northeast Atlantic
+
+# Excretion in neritic and oceanic waters
+
+In absolute value, is there more excretion in an habitat than in the other ? 
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_hab_abs_NEA)
+```
+ 
+The full results being: 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(est_stat_hab_tns_yr_NEA), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+And per unit area, so considering the respective size of each of the habitat ? 
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_hab_km2_NEA)
+```
+
+The details being: 
+
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(est_stat_hab_kg_km2_yr_NEA), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+
+Are the differences between the two areas significant ? (per surface unit)
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(test_diff_hab_NEA), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+# Excretion per taxa
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_contrib_taxa_NEA)
+```
+
+Are the differences significant ?
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_NEA), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+What are there relative contribution to total excretion in this area ? 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_NEA), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+# Excretion per taxa and per habitat
+
+```{r  echo=FALSE, fig.align="center"}
+targets::tar_read(fig_hab_taxa_NEA)
+```
+
+Are the differences significant ? 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(test_diff_taxa_hab_NEA), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
+
+What is the relative contribution to total excretion in each habitat ? 
+
+```{r  echo=FALSE, fig.align="center"}
+# to disable scientific notations
+options(scipen = 999)
+
+kableExtra::kable(targets::tar_read(taxa_contrib_hab_NEA), 
+                  align = 'c' , 
+                  booktabs = TRUE) |>
+  kableExtra::kable_styling()
+```
