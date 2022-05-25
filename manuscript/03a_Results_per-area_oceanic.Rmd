@@ -16,7 +16,7 @@ Survey area only covered oceanic habitats here, so we just look at the contribut
 ## Excretion per taxa
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_contrib_taxa_Calif)
+imager::load.image(targets::tar_read(fig_contrib_taxa_Calif))
 ```
 
 Are the differences significant ?
