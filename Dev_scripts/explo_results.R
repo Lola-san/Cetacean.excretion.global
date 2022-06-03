@@ -487,3 +487,70 @@ profile_excretion |>
   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
         #legend.spacing.y = unit(2, "cm"), 
         legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+
+
+
+
+
+####################################################################################################################
+################################ relative contribution of each taxa in nutrients excretion #########################
+
+# we aim to see the deviation to the mean contribution per area depending on the nutrient 
+# so per area, we want to center contribution
+
+
+table <- model_output_clean |>
+  dplyr::group_by(Geo_area, Eco_gp) |>
+  dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                   sum = list(sum_tibb(excrete_nut))) |>
+  tidyr::unnest(sum) |>
+  tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                      names_to = "Element", 
+                      values_to = "Excretion") |> 
+  dplyr::mutate(Element = factor(Element, 
+                                 levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                            "Se", "Zn", "Co", "As")), 
+                Excretion = Excretion,
+                Geo_area = factor(Geo_area, 
+                                  levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
+                                             "Northwest Atlantic", "California current", 
+                                             "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                             "New Caledonia", "Hawaii",  
+                                             "French Guyana", "Wallis & Futuna", "French Polynesia"))
+  )  |>
+  dplyr::filter(Element != "As") |>
+  dplyr::group_by(Geo_area, Eco_gp, Element) |>
+  dplyr::summarize(mean = mean(Excretion)) |>
+  dplyr::left_join(model_output_clean |> 
+                     dplyr::group_by(Geo_area) |>
+                     dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                      sum = list(sum_tibb(excrete_nut))) |>
+                     tidyr::unnest(sum) |>
+                     tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                         names_to = "Element", 
+                                         values_to = "Excretion") |> 
+                     dplyr::mutate(Element = factor(Element, 
+                                                    levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                               "Se", "Zn", "Co", "As")), 
+                                   Excretion = Excretion, 
+                                   Geo_area = factor(Geo_area, 
+                                                     levels = c("Gulf of Alaska", "Central North Atlantic", "Northeast Atlantic", 
+                                                                "Northwest Atlantic", "California current", 
+                                                                "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                                                "New Caledonia", "Hawaii",  
+                                                                "French Guyana", "Wallis & Futuna", "French Polynesia"))
+                     )  |>
+                     dplyr::filter(Element != "As") |>
+                     dplyr::group_by(Geo_area, Element) |>
+                     dplyr::summarize(mean_total = mean(Excretion))) |>
+  dplyr::mutate(ratio_contribution = mean/mean_total) |>
+  dplyr::ungroup() |>
+  dplyr::group_by(Geo_area, Eco_gp) |>
+  dplyr::mutate(mean_ratio = mean(ratio_contribution), 
+                contrib_norm = round((ratio_contribution - min(ratio_contribution))/(max(ratio_contribution) - min(ratio_contribution)), 2))
+
+
+table |>
+  ggplot2::ggplot(ggplot2::aes(x = contrib_norm, y = Geo_area, fill = Element)) +
+  ggplot2::geom_point() +
+  ggplot2::facet_wrap(~ Eco_gp)

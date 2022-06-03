@@ -30,6 +30,7 @@ join_clean_compo_tib <- function(compo_tib, preygps_tib) {
   # - Gelatinous pelagic cephalopod with species of Muscular pelagic cephalopods
   # - Fish undetermined with all species of fish
   # - Cephalopod undetermined with all species of cephalopods 
+  # - Zooplankton with all samples of crustaceans (plus the one of zooplankton)
   rbind(nutri_df,
         nutri_df |>
           dplyr::filter(Prey_group == "Muscular pelagic cephalopods") |>
@@ -39,7 +40,10 @@ join_clean_compo_tib <- function(compo_tib, preygps_tib) {
           dplyr::mutate(Prey_group = "Fish undetermined"),
         nutri_df |>
           dplyr::filter(Taxa == "Cephalopod") |>
-          dplyr::mutate(Prey_group = "Cephalopod undetermined")
+          dplyr::mutate(Prey_group = "Cephalopod undetermined"), 
+        nutri_df |>
+          dplyr::filter(Prey_group  == "Crustaceans") |>
+          dplyr::mutate(Prey_group = "Zooplankton")
   )
   
   
@@ -47,22 +51,68 @@ join_clean_compo_tib <- function(compo_tib, preygps_tib) {
 
 
 ######################## bootstrapping ########################################
+# function to perform kernel based inversion using Nicolas Bousquet (Sorbonnes University) procedure 
+boot_kernel_inv <- function(compo_tib, x, nutrient, nsim, kernel="gaussian") {
+  nut_all <- compo_tib |>
+    dplyr::ungroup() |>
+    dplyr::select(nutrient)
+  
+  # approche par noyaux ===========================================
+  min = floor(min(nut_all, na.rm = TRUE))
+  max = ceiling(max(nut_all, na.rm = TRUE))
+  
+  dens.old <- density(x,from=min,to=max,kernel=kernel) 
+  dens = kdensity::kdensity(x, support=c(min,max), kernel = kernel) # on utilise des noyaux gaussiens par defaut
+  
+  xo=c(0.9*min(x),1.1*max(x))
+  yo=c(0,1.2*max(dens.old$y))
+  
+  #==================== GENERATION BOOTSTRAP =================================
+  #==================== GENERATION PAR INVERSION KERNEL-BASED ===================
+  # construction "lisse" de la fonction de repartition
+  cdf.lisse <- function(y)
+  {
+    integrate(function(x) dens(x), lower = min, upper = y)$value
+  }	 
+  # inverse "lisse" de la fonction de repartition
+  # attention y est ici une valeur scalaire dans [0,1]
+  inv.cdf.lisse <- function(y)
+  {
+    f.to.min <- function(x){abs(cdf.lisse(x)-y)}
+    optimize(f.to.min,interval=c(min(xo),max(xo)))$minimum
+  }
+  
+  # generation iid (on ne resimule pas dans les donnees mais dans la distribution)
+  gen.sample.kernel = replicate(nsim,inv.cdf.lisse(runif(1)))	 # long à tourner
+  
+  gen.sample.kernel
+}
+
 # function to bootstrap the composition of each prey group
-# i.e sample with replacement samples of each prey group 
-# to simulate a larger dataset that we have, 
-# here we artificially generate nsim sample per prey group
+# 
 bootstrap_compo_pg <- function(compo_tib, nsim) {
   
   compo_tib |>
     dplyr::filter(!is.na(Prey_group)) |> # should be just one sample jellyfish
     dplyr::group_by(Prey_group) |>
-    # bootstrap : sample nsim species from each prey group
+    # artificially generate nsim sample per prey group
     dplyr::slice_sample(n = nsim, replace = TRUE) |>
     # replace NA values for N concentration by the mean of associated prey group
     dplyr::mutate(N = dplyr::case_when(is.na(N) ~ mean(N, na.rm = TRUE),
                                        TRUE ~ N)) |>
     # and get rid of useless columns
-    dplyr::select(-c(Sp_prey, Genus, Family, Order, Taxa, Habitat))
+    dplyr::select(-c(Sp_prey, Genus, Family, Order, Taxa, Habitat)) |>
+    # perform the bootstrapping 
+    dplyr::mutate(NRJ = boot_kernel_inv(compo_tib, NRJ, "NRJ", nsim), 
+                  N = boot_kernel_inv(compo_tib, N, "N", nsim),
+                  P = boot_kernel_inv(compo_tib, P, "P", nsim),
+                  Fe = boot_kernel_inv(compo_tib, Fe, "Fe", nsim),
+                  Cu = boot_kernel_inv(compo_tib, Cu, "Cu", nsim),
+                  Mn = boot_kernel_inv(compo_tib, Mn, "Mn", nsim),
+                  Se = boot_kernel_inv(compo_tib, Se, "Se", nsim),
+                  Zn = boot_kernel_inv(compo_tib, Zn, "Zn", nsim),
+                  Co = boot_kernel_inv(compo_tib, Co, "Co", nsim),
+                  As = boot_kernel_inv(compo_tib, As, "As", nsim))
   
 }
 

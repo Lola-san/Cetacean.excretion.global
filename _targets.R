@@ -503,28 +503,28 @@ list(
                                               "output",
                                               "tib_models_norm")),
   # figures with results of models 
-  tar_target(graph_models_sst_fold_file, graph_models_sst(tib_models_fold, 
+  tar_target(graph_models_sst_fold_file, graph_models_sst(tib_models_fold_output, 
                                                           "file",
                                                           "graph_models_sst_fold")),
-  tar_target(graph_models_sst_fold_output, graph_models_sst(tib_models_fold,
+  tar_target(graph_models_sst_fold_output, graph_models_sst(tib_models_fold_output,
                                                             "output",
                                                             "graph_models_sst_fold")),
-  tar_target(graph_models_chloro_fold_file, graph_models_chloro(tib_models_fold, 
+  tar_target(graph_models_chloro_fold_file, graph_models_chloro(tib_models_fold_output, 
                                                                 "file",
                                                                 "graph_models_chloro_fold")),
-  tar_target(graph_models_chloro_fold_output, graph_models_chloro(tib_models_fold,
+  tar_target(graph_models_chloro_fold_output, graph_models_chloro(tib_models_fold_output,
                                                                   "output",
                                                                   "graph_models_chloro_fold")),
-  tar_target(graph_models_sst_norm_file, graph_models_sst(tib_models_norm, 
+  tar_target(graph_models_sst_norm_file, graph_models_sst(tib_models_norm_output, 
                                                           "file",
                                                           "graph_models_sst_norm")),
-  tar_target(graph_models_sst_norm_output, graph_models_sst(tib_models_norm,
+  tar_target(graph_models_sst_norm_output, graph_models_sst(tib_models_norm_output,
                                                             "output",
                                                             "graph_models_sst_norm")),
-  tar_target(graph_models_chloro_norm_file, graph_models_chloro(tib_models_norm, 
+  tar_target(graph_models_chloro_norm_file, graph_models_chloro(tib_models_norm_output, 
                                                                 "file",
                                                                 "graph_models_chloro_norm")),
-  tar_target(graph_models_chloro_norm_output, graph_models_chloro(tib_models_norm,
+  tar_target(graph_models_chloro_norm_output, graph_models_chloro(tib_models_norm_output,
                                                                   "output",
                                                                   "graph_models_chloro_norm")),
   
@@ -1032,12 +1032,12 @@ list(
   tar_target(fig_hab_taxa_GoAl_output, fig_exc_hab_taxa_log10(model_output_clean,
                                                        "Gulf of Alaska", 
                                                        "output",
-                                                       "GoAl_exc_hab_taxa")), 
+                                                       "GoAl_exc_hab_taxa")) 
   
   # # generate Rmd reports
   # tarchetypes::tar_render(rmd_report1, "manuscript/01_Results_all-areas.Rmd"), 
   # tarchetypes::tar_render(rmd_report2, "manuscript/02_Results_all-areas_prod.Rmd"), 
-   tarchetypes::tar_render(rmd_report_per_areas_O, "manuscript/03a_Results_per-area_oceanic.Rmd")
+  # tarchetypes::tar_render(rmd_report_per_areas_O, "manuscript/03a_Results_per-area_oceanic.Rmd")
   # tarchetypes::tar_render(rmd_report_per_areas_NO, "manuscript/03b_Results_per-area_NO.Rmd")
   
 )
