@@ -161,3 +161,122 @@ create_sobol_index_tib <- function(data_tib,
 
 
 
+### small functions for the sensitivity analysis 
+# create function to compute y from mat 
+compute_y_sensi <- function(param_mat) {
+  # param_mat is the matrix of parameters of which the sensitivity is analyzed
+  # for parameters on which we did bootstrap (ie.NRJ in diet and nutrient in diet), we can't analyze sensitivity as we did not infer about the distribution of these parameters)
+  ADMR <- param_mat[, 3]*293.1*(param_mat[, 2]^0.737)
+  Ration <- ADMR / (param_mat[, 7]*param_mat[, 5])
+  conso_pop <- param_mat[, 1]*param_mat[, 4]*Ration
+  conso_nut <- (conso_pop*param_mat[, 6])/1e9
+  excrete_nut <- conso_nut*param_mat[, 8]
+  
+  return(excrete_nut)
+}
+
+
+# function to:
+# compute the sensitivity analysis index for all lines of the result table
+# each line being a species in an Eco_area in a Geo_area
+create_sobol_index_tib_sensi <- function(results_tib, 
+                                         nsim) {
+  
+  # tibble where results we be stored
+  df_Si_Sti <- tibble::tibble(Code_sp = NA, 
+                              Geo_area = NA, 
+                              Eco_area = NA, 
+                              Analysis = NA,
+                              Input = NA,
+                              Sensitivity = NA, # wether it's first order or total sobol indices
+                              original = NA, #mean
+                              bias = NA,
+                              "std. error" = NA, 
+                              "min. c.i." = NA,
+                              "max. c.i." = NA)
+  
+  
+  for (rw in 1:nrow(results_tib)) {
+    
+    # sampling matrix 
+    # change distributions of inputs according to data or bibliography/assumptions
+    parammatX1 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, "N"), size = nsim/10, replace = FALSE), 
+                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, "N"), size = nsim/10, replace = FALSE)), 
+                         ncol = 8, nrow = nsim/10) 
+    
+    parammatX2 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, "N"), size = nsim/10, replace = FALSE), 
+                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/10, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, "N"), size = nsim/10, replace = FALSE)), 
+                         ncol = 8, nrow = nsim/10)
+    
+    output <- sample(purrr::pluck(results_tib, "excrete_nut", rw, "N"), size = nsim/10, replace = FALSE)
+    
+    sens <- sensitivity::sobolSalt(model = compute_y_sensi, X1 = parammatX1, X2 = parammatX2, 
+                                   scheme = "A", nboot = 1e2, conf = 0.95)
+    
+    
+    df_Si_first <- tibble::tibble(Code_sp = purrr::pluck(results_tib, "Code_sp", rw), 
+                                  Geo_area = purrr::pluck(results_tib, "Geo_area", rw), 
+                                  Eco_area = purrr::pluck(results_tib, "Eco_area", rw), 
+                                  Analysis = "N", 
+                                  Input = rownames(sens$S),
+                                  Sensitivity = "First order indices", 
+                                  original = purrr::pluck(sens$S, "original"), 
+                                  bias = purrr::pluck(sens$S, "bias"),
+                                  "std. error" = purrr::pluck(sens$S, "std. error"),
+                                  "min. c.i." = purrr::pluck(sens$S, "min. c.i."),
+                                  "max. c.i." = purrr::pluck(sens$S, "max. c.i.")) |>
+      dplyr::mutate(Input = dplyr::case_when(Input == "X1" ~ "abundance", 
+                                             Input == "X2" ~ "mass",
+                                             Input == "X3" ~ "beta",
+                                             Input == "X4" ~ "ndays",
+                                             Input == "X5" ~ "nrj_in_diet",
+                                             Input == "X6" ~ "nut_in_diet",
+                                             Input == "X7" ~ "assi_rate",
+                                             Input == "X8" ~ "nut_abs_rate"
+                                             ))
+    
+    df_Si_tot <- tibble::tibble(Code_sp = purrr::pluck(results_tib, "Code_sp", rw), 
+                                Geo_area = purrr::pluck(results_tib, "Geo_area", rw), 
+                                Eco_area = purrr::pluck(results_tib, "Eco_area", rw),
+                                Analysis = "N", 
+                                Input = rownames(sens$T),
+                                Sensitivity = "Total order indices", 
+                                original = purrr::pluck(sens$T, "original"), 
+                                bias = purrr::pluck(sens$S, "bias"),
+                                "std. error" = purrr::pluck(sens$T, "std. error"),
+                                "min. c.i." = purrr::pluck(sens$T, "min. c.i."),
+                                "max. c.i." = purrr::pluck(sens$T, "max. c.i.")) |>
+      dplyr::mutate(Input = dplyr::case_when(Input == "X1" ~ "abundance", 
+                                             Input == "X2" ~ "mass",
+                                             Input == "X3" ~ "beta",
+                                             Input == "X4" ~ "ndays",
+                                             Input == "X5" ~ "nrj_in_diet",
+                                             Input == "X6" ~ "nut_in_diet",
+                                             Input == "X7" ~ "assi_rate",
+                                             Input == "X8" ~ "nut_abs_rate"
+      ))
+    
+    
+    df_Si_Sti <- rbind(df_Si_Sti, 
+                       df_Si_first, 
+                       df_Si_tot)
+    
+    
+  }
+  
+  df_Si_Sti <- df_Si_Sti[-1, ]
+  
+  df_Si_Sti
+}

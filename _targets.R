@@ -296,6 +296,8 @@ list(
   tar_target(sobol_index_all, create_sobol_index_tib(model_input, 
                                                      model_output, 
                                                      nsim = 1e2)), #NSIM HERE!
+  tar_target(sobol_index_all_sensi, create_sobol_index_tib_sensi(model_output, 
+                                                                 nsim = 900)), #NSIM HERE!
   
   ##############################################################################
   #################### generate outputs (fig + tables) #########################
