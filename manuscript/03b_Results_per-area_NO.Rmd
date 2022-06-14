@@ -818,7 +818,7 @@ kableExtra::kable(targets::tar_read(taxa_contrib_hab_Ant),
 In absolute value, is there more excretion in an habitat than in the other ? 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_hab_abs_Ant)
+targets::tar_read(fig_hab_abs_Guy)
 ```
  
 The full results being: 
@@ -827,7 +827,7 @@ The full results being:
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(est_stat_hab_tns_yr_Ant), 
+kableExtra::kable(targets::tar_read(est_stat_hab_tns_yr_Guy), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -836,7 +836,7 @@ kableExtra::kable(targets::tar_read(est_stat_hab_tns_yr_Ant),
 And per unit area, so considering the respective size of each of the habitat ? 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_hab_km2_Ant)
+targets::tar_read(fig_hab_km2_Guy)
 ```
 
 The details being: 
@@ -846,7 +846,7 @@ The details being:
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(est_stat_hab_kg_km2_yr_Ant), 
+kableExtra::kable(targets::tar_read(est_stat_hab_kg_km2_yr_Guy), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -859,7 +859,7 @@ Are the differences between the two areas significant ? (per surface unit)
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(test_diff_hab_Ant), 
+kableExtra::kable(targets::tar_read(test_diff_hab_Guy), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -868,7 +868,7 @@ kableExtra::kable(targets::tar_read(test_diff_hab_Ant),
 ## Excretion per taxa
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_contrib_taxa_Ant)
+targets::tar_read(fig_contrib_taxa_Guy)
 ```
 
 Are the differences significant ?
@@ -877,7 +877,7 @@ Are the differences significant ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(test_diff_taxa_tot_Ant), 
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_Guy), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -889,7 +889,7 @@ What are there relative contribution to total excretion in this area ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(taxa_contrib_tot_Ant), 
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_Guy), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -898,7 +898,7 @@ kableExtra::kable(targets::tar_read(taxa_contrib_tot_Ant),
 ## Excretion per taxa and per habitat
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_hab_taxa_Ant)
+targets::tar_read(fig_hab_taxa_Guy)
 ```
 
 Are the differences significant ? 
@@ -907,7 +907,7 @@ Are the differences significant ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(test_diff_taxa_hab_Ant), 
+kableExtra::kable(targets::tar_read(test_diff_taxa_hab_Guy), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -919,7 +919,7 @@ What is the relative contribution to total excretion in each habitat ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(taxa_contrib_hab_Ant), 
+kableExtra::kable(targets::tar_read(taxa_contrib_hab_Guy), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()

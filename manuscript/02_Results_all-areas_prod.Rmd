@@ -90,7 +90,7 @@ We summarize results using R^2^ and slope estimates, the slope estimate being an
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(tib_models_fold), 
+kableExtra::kable(targets::tar_read(tib_models_fold_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -99,8 +99,8 @@ kableExtra::kable(targets::tar_read(tib_models_fold),
 And to visualize this on a graph: 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(graph_models_sst_fold) -> p7
-targets::tar_read(graph_models_chloro_fold) -> p8
+targets::tar_read(graph_models_sst_fold_output) -> p7
+targets::tar_read(graph_models_chloro_fold_output) -> p8
 gridExtra::grid.arrange(p7, p8, ncol = 2)
 ```
 
@@ -110,14 +110,14 @@ Just to see if it makes a big difference, we did the same with normalized excret
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(tib_models_norm), 
+kableExtra::kable(targets::tar_read(tib_models_norm_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
 ```
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(graph_models_sst_norm) -> p9
-targets::tar_read(graph_models_chloro_norm) -> p10
+targets::tar_read(graph_models_sst_norm_output) -> p9
+targets::tar_read(graph_models_chloro_norm_output) -> p10
 gridExtra::grid.arrange(p9, p10, ncol = 2)
 ```

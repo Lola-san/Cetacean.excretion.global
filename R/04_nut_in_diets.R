@@ -30,7 +30,7 @@ join_clean_compo_tib <- function(compo_tib, preygps_tib) {
   # - Gelatinous pelagic cephalopod with species of Muscular pelagic cephalopods
   # - Fish undetermined with all species of fish
   # - Cephalopod undetermined with all species of cephalopods 
-  # - Zooplankton with all samples of crustaceans (plus the one of zooplankton)
+  # - Zooplankton with samples of shrimps of crustaceans (plus the one of zooplankton)
   rbind(nutri_df,
         nutri_df |>
           dplyr::filter(Prey_group == "Muscular pelagic cephalopods") |>
@@ -42,7 +42,9 @@ join_clean_compo_tib <- function(compo_tib, preygps_tib) {
           dplyr::filter(Taxa == "Cephalopod") |>
           dplyr::mutate(Prey_group = "Cephalopod undetermined"), 
         nutri_df |>
-          dplyr::filter(Prey_group  == "Crustaceans") |>
+          dplyr::filter(Prey_group  == "Crustaceans", !(Sp_prey %in% c("Necora puber", 
+                                                                       "Pachygrapsus marmoratus",
+                                                                       "Polybius henslowii")) ) |>
           dplyr::mutate(Prey_group = "Zooplankton")
   )
   

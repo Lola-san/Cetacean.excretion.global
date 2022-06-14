@@ -275,7 +275,7 @@ list(
   tar_target(prey_compo, join_clean_compo_tib(data_prey_compo, 
                                               data_prey_gps)), 
   # bootstrap composition of prey groups
-  tar_target(prey_compo_boot, bootstrap_compo_pg(prey_compo, nsim = 1e4)), #NSIM HERE!
+  tar_target(prey_compo_boot, bootstrap_compo_pg(prey_compo, nsim = 1e2)), #NSIM HERE!
   # can not go above 1e4 on my laptop
   # compute mean nutrient concentration of diets
   tar_target(diet_nut_input, compute_nut_in_diet(diet_input, prey_compo_boot)), 
@@ -288,14 +288,14 @@ list(
   ##############################################################################
   ############################### RUN MODEL ####################################
   ############## refers to functions of 06_run_model.R ################
-  tar_target(model_output, run_model(model_input, nsim = 1e4)), #NSIM HERE!
+  tar_target(model_output, run_model(model_input, nsim = 1e2)), #NSIM HERE!
   
   ##############################################################################
   #################### RUN sensitivity analysis ################################
   ############## refers to functions of 07_sensitivity_ana.R ###################
   tar_target(sobol_index_all, create_sobol_index_tib(model_input, 
                                                      model_output, 
-                                                     nsim = 1e4)), #NSIM HERE!
+                                                     nsim = 1e2)), #NSIM HERE!
   
   ##############################################################################
   #################### generate outputs (fig + tables) #########################
@@ -462,12 +462,24 @@ list(
                                                               "exc_all_el_vs_sst_norm")),
   tar_target(fig_all_el_vs_chloro_norm_file, plot_exc_chloro_all_el_norm(chloro_sst_tib,
                                                               model_output_clean, 
+                                                              guyana = "YES",
                                                               "file",
                                                               "exc_all_el_vs_chloro_norm")),
   tar_target(fig_all_el_vs_chloro_norm_output, plot_exc_chloro_all_el_norm(chloro_sst_tib,
                                                                     model_output_clean,
+                                                                    guyana = "YES",
                                                                     "output",
                                                                     "exc_all_el_vs_chloro_norm")),
+  tar_target(fig_all_el_vs_chloro_norm_noGuy_file, plot_exc_chloro_all_el_norm(chloro_sst_tib,
+                                                                         model_output_clean, 
+                                                                         guyana = "NO",
+                                                                         "file",
+                                                                         "exc_all_el_vs_chloro_norm_noGuy")),
+  tar_target(fig_all_el_vs_chloro_norm_noGuy_output, plot_exc_chloro_all_el_norm(chloro_sst_tib,
+                                                                           model_output_clean,
+                                                                           guyana = "NO",
+                                                                           "output",
+                                                                           "exc_all_el_vs_chloro_norm_noGuy")),
   # figure with all elements, one facet no log10 scale but relative, fold-change excretion
   tar_target(fig_all_el_vs_sst_fold_file, plot_exc_sst_all_el_fold(chloro_sst_tib,
                                                               model_output_clean, 
@@ -540,13 +552,13 @@ list(
                                                                   "Northwest Atlantic")),
   tar_target(est_stat_hab_tns_yr_Med, create_hab_stat_tab_tons_yr(model_output_clean, 
                                                                   "Mediterranean Sea")),
-  tar_target(est_stat_hab_tns_yr_Anti, create_hab_stat_tab_tons_yr(model_output_clean, 
+  tar_target(est_stat_hab_tns_yr_Ant, create_hab_stat_tab_tons_yr(model_output_clean, 
                                                                    "French Antilles")),
   tar_target(est_stat_hab_tns_yr_Guy, create_hab_stat_tab_tons_yr(model_output_clean, 
                                                                   "French Guyana")),
   tar_target(est_stat_hab_tns_yr_WIO, create_hab_stat_tab_tons_yr(model_output_clean, 
                                                                   "West Indian ocean")),
-  tar_target(est_stat_hab_tns_yr_GoAla, create_hab_stat_tab_tons_yr(model_output_clean, 
+  tar_target(est_stat_hab_tns_yr_GoAl, create_hab_stat_tab_tons_yr(model_output_clean, 
                                                                     "Gulf of Alaska")),
   # table with estimates and statistics for habitats - just for 8 of the areas with 2 habitats
   # kg/km2/yr
@@ -558,13 +570,13 @@ list(
                                                                        "Northwest Atlantic")),
   tar_target(est_stat_hab_kg_km2_yr_Med, create_hab_stat_tab_kg_km2_yr(model_output_clean, 
                                                                        "Mediterranean Sea")),
-  tar_target(est_stat_hab_kg_km2_yr_Anti, create_hab_stat_tab_kg_km2_yr(model_output_clean, 
+  tar_target(est_stat_hab_kg_km2_yr_Ant, create_hab_stat_tab_kg_km2_yr(model_output_clean, 
                                                                         "French Antilles")),
   tar_target(est_stat_hab_kg_km2_yr_Guy, create_hab_stat_tab_kg_km2_yr(model_output_clean, 
                                                                        "French Guyana")),
   tar_target(est_stat_hab_kg_km2_yr_WIO, create_hab_stat_tab_kg_km2_yr(model_output_clean, 
                                                                        "West Indian ocean")),
-  tar_target(est_stat_hab_kg_km2_yr_GoAla, create_hab_stat_tab_kg_km2_yr(model_output_clean, 
+  tar_target(est_stat_hab_kg_km2_yr_GoAl, create_hab_stat_tab_kg_km2_yr(model_output_clean, 
                                                                          "Gulf of Alaska")),
   # table with stat test of difference between habitats - just for 8 of the areas with 2 habitats
   tar_target(test_diff_hab_NEA, test_differences_hab(model_output_clean, 
@@ -575,13 +587,13 @@ list(
                                                      "Northwest Atlantic")),
   tar_target(test_diff_hab_Med, test_differences_hab(model_output_clean, 
                                                      "Mediterranean Sea")),
-  tar_target(test_diff_hab_Anti, test_differences_hab(model_output_clean, 
+  tar_target(test_diff_hab_Ant, test_differences_hab(model_output_clean, 
                                                       "French Antilles")),
   tar_target(test_diff_hab_Guy, test_differences_hab(model_output_clean, 
                                                      "French Guyana")),
   tar_target(test_diff_hab_WIO, test_differences_hab(model_output_clean, 
                                                      "West Indian ocean")),
-  tar_target(test_diff_hab_GoAla, test_differences_hab(model_output_clean, 
+  tar_target(test_diff_hab_GoAl, test_differences_hab(model_output_clean, 
                                                        "Gulf of Alaska")),
   # table with relative contribution of taxa in total 
   tar_target(taxa_contrib_tot_NEA, taxa_contribution_total(model_output_clean, 
@@ -594,7 +606,7 @@ list(
                                                            "Mediterranean Sea")),
   tar_target(taxa_contrib_tot_GoMex, taxa_contribution_total(model_output_clean,
                                                              "Gulf of Mexico")),
-  tar_target(taxa_contrib_tot_Anti, taxa_contribution_total(model_output_clean,
+  tar_target(taxa_contrib_tot_Ant, taxa_contribution_total(model_output_clean,
                                                             "French Antilles")),
   tar_target(taxa_contrib_tot_Guy, taxa_contribution_total(model_output_clean,
                                                            "French Guyana")),
@@ -608,7 +620,7 @@ list(
                                                             "French Polynesia")),
   tar_target(taxa_contrib_tot_Haw, taxa_contribution_total(model_output_clean,
                                                            "Hawaii")),
-  tar_target(taxa_contrib_tot_GoAla, taxa_contribution_total(model_output_clean,
+  tar_target(taxa_contrib_tot_GoAl, taxa_contribution_total(model_output_clean,
                                                              "Gulf of Alaska")),
   tar_target(taxa_contrib_tot_Calif, taxa_contribution_total(model_output_clean,
                                                              "California current")),
@@ -623,7 +635,7 @@ list(
                                                            "Mediterranean Sea")),
   tar_target(test_diff_taxa_tot_GoMex, test_differences_taxa(model_output_clean,
                                                              "Gulf of Mexico")),
-  tar_target(test_diff_taxa_tot_Anti, test_differences_taxa(model_output_clean,
+  tar_target(test_diff_taxa_tot_Ant, test_differences_taxa(model_output_clean,
                                                             "French Antilles")),
   tar_target(test_diff_taxa_tot_Guy, test_differences_taxa(model_output_clean,
                                                            "French Guyana")),
@@ -637,7 +649,7 @@ list(
                                                             "French Polynesia")),
   tar_target(test_diff_taxa_tot_Haw, test_differences_taxa(model_output_clean,
                                                            "Hawaii")),
-  tar_target(test_diff_taxa_tot_GoAla, test_differences_taxa(model_output_clean,
+  tar_target(test_diff_taxa_tot_GoAl, test_differences_taxa(model_output_clean,
                                                              "Gulf of Alaska")),
   tar_target(test_diff_taxa_tot_Calif, test_differences_taxa(model_output_clean,
                                                              "California current")),
@@ -652,7 +664,7 @@ list(
                                                          "Mediterranean Sea")),
   tar_target(taxa_contrib_hab_GoMex, taxa_contribution_hab(model_output_clean,
                                                            "Gulf of Mexico")),
-  tar_target(taxa_contrib_hab_Anti, taxa_contribution_hab(model_output_clean,
+  tar_target(taxa_contrib_hab_Ant, taxa_contribution_hab(model_output_clean,
                                                           "French Antilles")),
   tar_target(taxa_contrib_hab_Guy, taxa_contribution_hab(model_output_clean,
                                                          "French Guyana")),
@@ -679,13 +691,13 @@ list(
                                                                "Northwest Atlantic")),
   tar_target(test_diff_taxa_hab_Med, test_differences_taxa_hab(model_output_clean,
                                                                "Mediterranean Sea")),
-  tar_target(test_diff_taxa_hab_Anti, test_differences_taxa_hab(model_output_clean,
+  tar_target(test_diff_taxa_hab_Ant, test_differences_taxa_hab(model_output_clean,
                                                                 "French Antilles")),
   tar_target(test_diff_taxa_hab_Guy, test_differences_taxa_hab(model_output_clean,
                                                                "French Guyana")),
   tar_target(test_diff_taxa_hab_WIO, test_differences_taxa_hab(model_output_clean,
                                                                "West Indian ocean")),
-  tar_target(test_diff_taxa_hab_GoAla, test_differences_taxa_hab(model_output_clean,
+  tar_target(test_diff_taxa_hab_GoAl, test_differences_taxa_hab(model_output_clean,
                                                                  "Gulf of Alaska")), 
   
   ########## area per area - figures
@@ -1032,12 +1044,12 @@ list(
   tar_target(fig_hab_taxa_GoAl_output, fig_exc_hab_taxa_log10(model_output_clean,
                                                        "Gulf of Alaska", 
                                                        "output",
-                                                       "GoAl_exc_hab_taxa")) 
+                                                       "GoAl_exc_hab_taxa")), 
   
   # # generate Rmd reports
-  # tarchetypes::tar_render(rmd_report1, "manuscript/01_Results_all-areas.Rmd"), 
-  # tarchetypes::tar_render(rmd_report2, "manuscript/02_Results_all-areas_prod.Rmd"), 
-  # tarchetypes::tar_render(rmd_report_per_areas_O, "manuscript/03a_Results_per-area_oceanic.Rmd")
-  # tarchetypes::tar_render(rmd_report_per_areas_NO, "manuscript/03b_Results_per-area_NO.Rmd")
+   tarchetypes::tar_render(rmd_report1, "manuscript/01_Results_all-areas.Rmd"), 
+   tarchetypes::tar_render(rmd_report2, "manuscript/02_Results_all-areas_prod.Rmd"), 
+   tarchetypes::tar_render(rmd_report_per_areas_O, "manuscript/03a_Results_per-area_oceanic.Rmd"),
+   tarchetypes::tar_render(rmd_report_per_areas_NO, "manuscript/03b_Results_per-area_NO.Rmd")
   
 )
