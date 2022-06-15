@@ -26,7 +26,7 @@ Table with all results, with 95% CI intervals limits, with results as quantities
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(tot_est_stat_tns_yr), 
+kableExtra::kable(targets::tar_read(tot_est_stat_tns_yr_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -38,7 +38,7 @@ And with densities (kg per km^2^ and per year):
 options(scipen = 999)
 
 
-kableExtra::kable(targets::tar_read(tot_est_stat_kg_km2_yr), 
+kableExtra::kable(targets::tar_read(tot_est_stat_kg_km2_yr_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -519,7 +519,7 @@ To compare levels of excretion between areas, we computed a fold-change ratio: w
 options(scipen = 999)
 
 
-kableExtra::kable(targets::tar_read(table_fold), 
+kableExtra::kable(targets::tar_read(table_fold_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()

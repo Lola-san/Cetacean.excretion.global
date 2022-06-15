@@ -26,11 +26,11 @@ We can compare mean values and distribution of excretion, sst and chlorophyll in
 ```{r  echo=FALSE, fig.align="center"}
 memory.limit(size = 25000)
 
-targets::tar_read(fig_N_vs_sst)
+targets::tar_read(fig_N_vs_sst_output)
 ```
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_N_vs_chloro_Guy)
+targets::tar_read(fig_N_vs_chloro_Guy_output)
 ```
 
 There seems to be a negative relation between excretion and sst, for the chlorophyll also but less intense, and there is something happening with Guyana. Chlorophyll concentration esitmates are from satellite data, Guyana may pop out as an outlier because of the high turbidity of the water due to the Amazon River plume. 
@@ -38,7 +38,7 @@ There seems to be a negative relation between excretion and sst, for the chlorop
 Being an outlier, we can simply take it out: 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_N_vs_chloro_noGuy)
+targets::tar_read(fig_N_vs_chloro_noGuy_output)
 ```
 
 It looks a lot better, and the relation seems to be quite strong between the two variables. 
@@ -48,36 +48,27 @@ We included 8 nutrients in our analysis, so it would be interesting to see if th
 We can look at it with a log10 transformation on the y axis first: 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_all_el_log10_vs_sst) -> p1
-targets::tar_read(fig_all_el_log10_vs_chloro) -> p2
+targets::tar_read(fig_all_el_log10_vs_sst_output) -> p1
+targets::tar_read(fig_all_el_log10_vs_chloro_output) -> p2
 gridExtra::grid.arrange(p1, p2, ncol = 2)
 ```
 
 Without the log10 transformation: 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_all_el_vs_sst) -> p1
-targets::tar_read(fig_all_el_vs_chloro) -> p2
+targets::tar_read(fig_all_el_vs_sst_output) -> p1
+targets::tar_read(fig_all_el_vs_chloro_output) -> p2
 gridExtra::grid.arrange(p1, p2, ncol = 2)
 ```
 
 And without the log10 transformation but with normalized excretion value (normalization per element across all areas, on all raw values, then we computed means on these normalized values): 
 
 ```{r  echo=FALSE, fig.align="center"}
-#targets::tar_read(fig_all_el_vs_sst_norm) -> p3
-#targets::tar_read(fig_all_el_vs_chloro_norm) -> p4
+#targets::tar_read(fig_all_el_vs_sst_norm_output) -> p3
+#targets::tar_read(fig_all_el_vs_chloro_norm_output) -> p4
 #gridExtra::grid.arrange(p3, p4, ncol = 2)
 ```
 
-As we compared levels of excretion between areas using a relative excretion value and fold-change ratios (as fold-change between excretion in one area compared to the excretion where the area is the lowest - French Polynesia), we think this would be interesting to test the correlation with these fold-change ratios. This is a a sort of normalization somewhat. 
-
-```{r  echo=FALSE, fig.align="center"}
-#targets::tar_read(fig_all_el_vs_sst_fold) -> p5
-#targets::tar_read(fig_all_el_vs_chloro_fold) -> p6
-#gridExtra::grid.arrange(p5, p6, ncol = 2)
-```
-
-We can see the pattern is the same: there are some correlations for all elements, but the intensity of the relation varies between elements. However, there are some differences compared to results with the "true" normalization. See the order of the elements lines. This can be because if French Polynesia are always minimum values (so all min are for the same areas for the normalization), maximum values are not all for the same area. The maximum values are in the Northeast Atlantic area for N, P, Fe, Mn, Se and Zn but in the Central North Atlantic for Cu and Co. 
 
 To have more quantitative results about these correlations between levels of excretion and indicators of productivity of ecosystems, we did a bit of modelling, using simple linear models. For each element, we ran two models: 
 - $$ F_{el} = f(sst)$$
@@ -85,26 +76,6 @@ To have more quantitative results about these correlations between levels of exc
 $$F_{el}$$ being the fold-change ratio for nutrient *el*. 
 
 We summarize results using R^2^ and slope estimates, the slope estimate being an indicator of the intensity of the relation between the fold-change ratio and the variable, and R^2^ being an indicator of the strength of the relation between the fold-change ratio and the variable. Guyana was still considered as an outlier when working on chlorophyll concentration data, so it was excluded from the modelling. We used a log transformation for the chlorophyll concentration variable and the fold-change excretion ratio for the model with chlorophyll concentration as a covariate. 
-
-```{r  echo=FALSE, fig.align="center"}
-# to disable scientific notations
-options(scipen = 999)
-
-kableExtra::kable(targets::tar_read(tib_models_fold_output), 
-                  align = 'c' , 
-                  booktabs = TRUE) |>
-  kableExtra::kable_styling()
-```
-
-And to visualize this on a graph: 
-
-```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(graph_models_sst_fold_output) -> p7
-targets::tar_read(graph_models_chloro_fold_output) -> p8
-gridExtra::grid.arrange(p7, p8, ncol = 2)
-```
-
-Just to see if it makes a big difference, we did the same with normalized excretion data:
 
 ```{r  echo=FALSE, fig.align="center"}
 # to disable scientific notations

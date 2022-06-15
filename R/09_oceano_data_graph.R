@@ -449,7 +449,7 @@ plot_exc_chloro <- function(tib_chloro_sst,
   }
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -645,7 +645,7 @@ plot_exc_sst <- function(tib_chloro_sst,
     )
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -764,7 +764,7 @@ plot_exc_sst_all_el_log10 <- function(tib_chloro_sst,
                    legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -869,7 +869,7 @@ plot_exc_sst_all_el <- function(tib_chloro_sst,
                    legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -966,21 +966,31 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
                                                "New Caledonia", "Hawaii",  
                                                "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
     ggplot2::ggplot(ggplot2::aes(x = mean_sst, y = mean_exc, colour = Element)) +
-    ggplot2::geom_point() +
-    ggplot2::geom_smooth(method = "lm", se = FALSE) +
+    ggplot2::geom_point(size = 2) +
+    ggplot2::geom_smooth(method = "lm", se = FALSE, size = 2) +
     ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
                                            "#94A323", "#F7D42A", "#26897E", 
                                            "#CF3E53")) +
-    ggplot2::ylab("Normalized Nutrient excretion (t/km2/yr)") +
+    ggplot2::ylab("Normalized Nutrient \n release (t/km2/yr)") +
     ggplot2::xlab("Mean sea surface temperature") +
     ggplot2::theme_classic() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
-                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(size = 14),
+                   axis.text.y = ggplot2::element_text(size = 14),
+                   axis.title.x = ggplot2::element_text(face = "bold", 
+                                                        size = 15),
+                   axis.title.y = ggplot2::element_text(face = "bold", 
+                                                        size = 15),
+                   legend.title = ggplot2::element_blank(),
+                   legend.text = ggplot2::element_text(face = "bold", 
+                                                       size = 14,
+                                                       margin = ggplot2::margin(t = 5)))
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
-                           ".jpg"), scale = 1)
+                           ".jpg"), scale = 1, 
+                    width = 5, 
+                    height = 4)
   } else {
     tib_chloro_sst |>
       dplyr::left_join(output_tib |>
@@ -1016,12 +1026,13 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
                                                  "New Caledonia", "Hawaii",  
                                                  "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
       ggplot2::ggplot(ggplot2::aes(x = mean_sst, y = mean_exc, colour = Element)) +
-      ggplot2::geom_point() +
-      ggplot2::geom_smooth(method = "lm", se = FALSE) +
+      ggplot2::geom_point(size = 2) +
+      ggplot2::geom_smooth(method = "lm", se = FALSE, 
+                           size = 2) +
       ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
                                              "#94A323", "#F7D42A", "#26897E", 
                                              "#CF3E53")) +
-      ggplot2::ylab("Normalized Nutrient excretion (t/km2/yr)") +
+      ggplot2::ylab("Normalized Nutrient \n excretion (t/km2/yr)") +
       ggplot2::xlab("Mean sea surface temperature") +
       ggplot2::theme_classic() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
@@ -1088,7 +1099,7 @@ plot_exc_chloro_all_el_log10 <- function(tib_chloro_sst,
   
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -1193,7 +1204,7 @@ plot_exc_chloro_all_el <- function(tib_chloro_sst,
                    legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else  {
@@ -1294,19 +1305,30 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                                                    "New Caledonia", "Hawaii",  
                                                    "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
         ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = mean_exc, colour = Element)) +
-        ggplot2::geom_point() +
-        ggplot2::geom_smooth(method = "lm", se = FALSE) +
+        ggplot2::geom_point(size = 2) +
+        ggplot2::geom_smooth(method = "lm", se = FALSE, 
+                             size = 2) +
         ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
                                                "#94A323", "#F7D42A", "#26897E", 
                                                "#CF3E53")) +
-        ggplot2::ylab("Normalized Nutrient excretion (t/km2/yr)") +
+        ggplot2::ylab("Normalized Nutrient \n release (t/km2/yr)") +
         ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
         ggplot2::theme_classic() +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
-                       legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-      ggplot2::ggsave(paste0("output/", 
+        ggplot2::theme(axis.text.x = ggplot2::element_text(size = 14),
+                       axis.text.y = ggplot2::element_text(size = 14),
+                       axis.title.x = ggplot2::element_text(face = "bold", 
+                                                            size = 15),
+                       axis.title.y = ggplot2::element_text(face = "bold", 
+                                                            size = 15),
+                       legend.title = ggplot2::element_blank(),
+                       legend.text = ggplot2::element_text(face = "bold", 
+                                                           size = 14,
+                                                           margin = ggplot2::margin(t = 5)))
+      ggplot2::ggsave(paste0("output/figures/", 
                              name_file, 
-                             ".jpg"), scale = 1)
+                             ".jpg"), scale = 1, 
+                      width = 5, 
+                      height = 4)
     } else {
       tib_chloro_sst |>
         dplyr::left_join(output_tib |>
@@ -1343,19 +1365,30 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                                                    "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
         dplyr::filter(Geo_area != "French Guyana") |> 
         ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = mean_exc, colour = Element)) +
-        ggplot2::geom_point() +
-        ggplot2::geom_smooth(method = "lm", se = FALSE) +
+        ggplot2::geom_point(size = 2) +
+        ggplot2::geom_smooth(method = "lm", se = FALSE, 
+                             size = 2) +
         ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
                                                "#94A323", "#F7D42A", "#26897E", 
                                                "#CF3E53")) +
-        ggplot2::ylab("Normalized Nutrient excretion (t/km2/yr)") +
+        ggplot2::ylab("Normalized Nutrient \n release (t/km2/yr)") +
         ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
         ggplot2::theme_classic() +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
-                       legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-      ggplot2::ggsave(paste0("output/", 
+        ggplot2::theme(axis.text.x = ggplot2::element_text(size = 14),
+                       axis.text.y = ggplot2::element_text(size = 14),
+                       axis.title.x = ggplot2::element_text(face = "bold", 
+                                                            size = 15),
+                       axis.title.y = ggplot2::element_text(face = "bold", 
+                                                            size = 15),
+                       legend.title = ggplot2::element_blank(),
+                       legend.text = ggplot2::element_text(face = "bold", 
+                                                           size = 14,
+                                                           margin = ggplot2::margin(t = 5)))
+      ggplot2::ggsave(paste0("output/figures/", 
                              name_file, 
-                             ".jpg"), scale = 1)
+                             ".jpg"), scale = 1, 
+                        width = 5, 
+                      height = 4)
     }
     
   } else {
@@ -1454,368 +1487,6 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
                        legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
     }
-  }
-  
-}
-
-
-#'
-#'
-#'
-#'
-#'
-#'
-# function to plot elemental excretion vs chloro with relative excretion data (fold change ratio), so with no transformation of the y axis again
-plot_exc_chloro_all_el_fold <- function(tib_chloro_sst, 
-                                        output_tib,
-                                        object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
-                                        name_file # should be a character string
-                                        ) {
-  
-  # build fold change table 
-  table <- output_tib |>
-    dplyr::group_by(Geo_area) |>
-    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
-                     sum = list(sum_tibb(excrete_nut))) |>
-    tidyr::unnest(sum) |>
-    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
-                        names_to = "Element", 
-                        values_to = "Excretion") |> 
-    dplyr::mutate(Element = factor(Element, 
-                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                              "Se", "Zn", "Co", "As")), 
-                  Excretion = Excretion*1e3/Surf # from tons to kg/km2
-    )  |>
-    dplyr::group_by(Geo_area, Element) |>
-    dplyr::summarize(min = min(Excretion), 
-                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
-                     mean = mean(Excretion), 
-                     median = median(Excretion), 
-                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
-                     max = max(Excretion)) |>
-    dplyr::filter(Element != "As")
-  
-  minimum_df <- table |> 
-    dplyr::group_by(Element) |>
-    dplyr::summarize(min_all_mean = min(mean), 
-                     max_all_mean = max(mean))
-  
-  fold_df <- table |>
-    dplyr::left_join(minimum_df, by = "Element", keep = FALSE) |>
-    dplyr::mutate(fold = round(mean/min_all_mean) )
-  
-  
-  tib_chloro_sst |>
-    dplyr::left_join(fold_df, by = "Geo_area") |>
-    dplyr::filter(Geo_area != "French Guyana") |>
-    ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = fold, colour = Element)) +
-    ggplot2::geom_point() +
-    ggplot2::geom_smooth(method = "lm", se = FALSE) +
-    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
-                                           "#94A323", "#F7D42A", "#26897E", 
-                                           "#CF3E53")) +
-    ggplot2::ylab("Relative nutrient excretion (fold-change, t/km2/yr)") +
-    ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
-                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-  
-  if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
-                           name_file, 
-                           ".jpg"), scale = 1)
-  } else {
-    tib_chloro_sst |>
-      dplyr::left_join(fold_df, by = "Geo_area") |>
-      dplyr::filter(Geo_area != "French Guyana") |>
-      ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = fold, colour = Element)) +
-      ggplot2::geom_point() +
-      ggplot2::geom_smooth(method = "lm", se = FALSE) +
-      ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
-                                             "#94A323", "#F7D42A", "#26897E", 
-                                             "#CF3E53")) +
-      ggplot2::ylab("Relative nutrient excretion (fold-change, t/km2/yr)") +
-      ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
-                     legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-  }
-  
-}
-
-
-#'
-#'
-#'
-#'
-#'
-#'
-# function to plot elemental excretion vs sst with relative excretion data (fold change ratio), so with no transformation of the y axis again
-plot_exc_sst_all_el_fold <- function(tib_chloro_sst, 
-                                     output_tib, 
-                                     object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
-                                     name_file # should be a character string
-                                     ) {
-  
-  # build fold change table 
-  table <- output_tib |>
-    dplyr::group_by(Geo_area) |>
-    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
-                     sum = list(sum_tibb(excrete_nut))) |>
-    tidyr::unnest(sum) |>
-    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
-                        names_to = "Element", 
-                        values_to = "Excretion") |> 
-    dplyr::mutate(Element = factor(Element, 
-                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                              "Se", "Zn", "Co", "As")), 
-                  Excretion = Excretion*1e3/Surf # from tons to kg/km2
-    )  |>
-    dplyr::group_by(Geo_area, Element) |>
-    dplyr::summarize(min = min(Excretion), 
-                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
-                     mean = mean(Excretion), 
-                     median = median(Excretion), 
-                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
-                     max = max(Excretion)) |>
-    dplyr::filter(Element != "As")
-  
-  minimum_df <- table |> 
-    dplyr::group_by(Element) |>
-    dplyr::summarize(min_all_mean = min(mean), 
-                     max_all_mean = max(mean))
-  
-  fold_df <- table |>
-    dplyr::left_join(minimum_df, by = "Element", keep = FALSE) |>
-    dplyr::mutate(fold = round(mean/min_all_mean) )
-  
-  rm(minimum_df, table)
-  
-  
-  tib_chloro_sst |>
-    dplyr::left_join(fold_df, by = "Geo_area") |>
-    dplyr::filter(Geo_area != "French Guyana") |>
-    ggplot2::ggplot(ggplot2::aes(x = mean_sst, y = fold, colour = Element)) +
-    ggplot2::geom_point() +
-    ggplot2::geom_smooth(method = "lm", se = FALSE) +
-    ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
-                                           "#94A323", "#F7D42A", "#26897E", 
-                                           "#CF3E53")) +
-    ggplot2::ylab("Relative nutrient excretion (fold-change, t/km2/yr)") +
-    ggplot2::xlab("Mean sea surface temperature") +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
-                   legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-  
-  if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
-                           name_file, 
-                           ".jpg"), scale = 1)
-  } else {
-    tib_chloro_sst |>
-      dplyr::left_join(fold_df, by = "Geo_area") |>
-      dplyr::filter(Geo_area != "French Guyana") |>
-      ggplot2::ggplot(ggplot2::aes(x = mean_sst, y = fold, colour = Element)) +
-      ggplot2::geom_point() +
-      ggplot2::geom_smooth(method = "lm", se = FALSE) +
-      ggplot2::scale_color_manual(values = c("#4E9F50", "#EF8A0C", "#3CA8BC", "#98D9E4", 
-                                             "#94A323", "#F7D42A", "#26897E", 
-                                             "#CF3E53")) +
-      ggplot2::ylab("Relative nutrient excretion (fold-change, t/km2/yr)") +
-      ggplot2::xlab("Mean sea surface temperature") +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
-                     legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-  }
-  
-}
-
-
-#'
-#'
-#'
-#'
-#' function to run models of relation between sst and chloro and fold change ratios
-run_models_fold <- function(tib_chloro_sst, 
-                            output_tib, 
-                            object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
-                            name_file # should be a character string
-                            ) {
-  
-  # build fold change table 
-  table <- output_tib |>
-    dplyr::group_by(Geo_area) |>
-    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
-                     sum = list(sum_tibb(excrete_nut))) |>
-    tidyr::unnest(sum) |>
-    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
-                        names_to = "Element", 
-                        values_to = "Excretion") |> 
-    dplyr::mutate(Element = factor(Element, 
-                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                              "Se", "Zn", "Co", "As")), 
-                  Excretion = Excretion*1e3/Surf # from tons to kg/km2
-    )  |>
-    dplyr::group_by(Geo_area, Element) |>
-    dplyr::summarize(min = min(Excretion), 
-                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
-                     mean = mean(Excretion), 
-                     median = median(Excretion), 
-                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
-                     max = max(Excretion)) |>
-    dplyr::filter(Element != "As")
-  
-  minimum_df <- table |> 
-    dplyr::group_by(Element) |>
-    dplyr::summarize(min_all_mean = min(mean), 
-                     max_all_mean = max(mean))
-  
-  fold_df <- table |>
-    dplyr::left_join(minimum_df, by = "Element", keep = FALSE) |>
-    dplyr::mutate(fold = round(mean/min_all_mean) )
-  
-  rm(minimum_df, table)
-  
-  # df used for the modelling
-  summary_df <- tib_chloro_sst |>
-    dplyr::left_join(output_tib |>
-                       dplyr::group_by(Geo_area) |>
-                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
-                                        sum = list(sum_tibb(excrete_nut))) |>
-                       tidyr::unnest(sum) |>
-                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
-                                           names_to = "Element", 
-                                           values_to = "Excretion") |> 
-                       dplyr::mutate(Element = factor(Element, 
-                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                                                 "Se", "Zn", "Co", "As")), 
-                                     Excretion = Excretion/Surf
-                       )  |>
-                       dplyr::group_by(Geo_area, Element) |>
-                       dplyr::filter(Element != "As") |>
-                       dplyr::summarize(min_exc = min(Excretion), 
-                                        `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
-                                        mean_exc = mean(Excretion), 
-                                        median_exc = median(Excretion), 
-                                        `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
-                                        max_exc = max(Excretion))) |>
-    dplyr::left_join(fold_df, by = c("Geo_area", "Element"))
-  
-  # table to store results
-  table_mod <- tibble::tibble(element = NA, 
-                              variable = NA, 
-                              slope = NA, 
-                              R2 = NA)
-  
-  # run models
-  modsstN <- lm(fold ~ mean_sst, data = summary_df |>
-                  dplyr::filter(Element == "N")) 
-  
-  table_mod$element[1] <- "N"
-  table_mod$variable[1] <- "sst"
-  table_mod$slope[1] <- modsstN$coefficients[2]
-  table_mod$R2[1] <- 0.8007
-  
-  modchloroN <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
-                     dplyr::filter(Element == "N") |>
-                     dplyr::filter(Geo_area != "French Guyana")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("N", "chloro", modchloroN$coefficients[2], 0.8153))
-  
-  modsstP <- lm(fold ~ mean_sst, data = summary_df |>
-                  dplyr::filter(Element == "P")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("P", "sst", modsstP$coefficients[2], 0.7875))
-  
-  modchloroP <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
-                     dplyr::filter(Element == "P") |>
-                     dplyr::filter(Geo_area != "French Guyana")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("P", "chloro", modchloroP$coefficients[2], 0.83))
-  
-  modsstFe <- lm(fold ~ mean_sst, data = summary_df |>
-                   dplyr::filter(Element == "Fe")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Fe", "sst", modsstFe $coefficients[2], 0.7935))
-  
-  modchloroFe  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
-                       dplyr::filter(Element == "Fe") |>
-                       dplyr::filter(Geo_area != "French Guyana")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Fe", "chloro", modchloroFe$coefficients[2], 0.8304))
-  
-  modsstCu <- lm(fold ~ mean_sst, data = summary_df |>
-                   dplyr::filter(Element == "Cu")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Cu", "sst", modsstCu$coefficients[2], 0.7292))
-  
-  modchloroCu  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
-                       dplyr::filter(Element == "Cu") |>
-                       dplyr::filter(Geo_area != "French Guyana")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Cu", "chloro", modchloroCu$coefficients[2], 0.6934))
-  
-  modsstMn <- lm(fold ~ mean_sst, data = summary_df |>
-                   dplyr::filter(Element == "Mn")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Mn", "sst", modsstMn$coefficients[2], 0.7608))
-  
-  modchloroMn  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
-                       dplyr::filter(Element == "Mn") |>
-                       dplyr::filter(Geo_area != "French Guyana")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Mn", "chloro", modchloroMn$coefficients[2], 0.828))
-  
-  modsstSe <- lm(fold ~ mean_sst, data = summary_df |>
-                   dplyr::filter(Element == "Se")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Se", "sst", modsstSe$coefficients[2], 0.8018))
-  
-  modchloroSe  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
-                       dplyr::filter(Element == "Se") |>
-                       dplyr::filter(Geo_area != "French Guyana")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Se", "chloro", modchloroSe$coefficients[2], 0.8193))
-  
-  modsstZn <- lm(fold ~ mean_sst, data = summary_df |>
-                   dplyr::filter(Element == "Zn")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Zn", "sst", modsstZn$coefficients[2], 0.799))
-  
-  modchloroZn  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
-                       dplyr::filter(Element == "Zn") |>
-                       dplyr::filter(Geo_area != "French Guyana")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Zn", "chloro", modchloroZn$coefficients[2], 0.8265))
-  
-  modsstCo <- lm(fold ~ mean_sst, data = summary_df |>
-                   dplyr::filter(Element == "Co")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Co", "sst", modsstCo$coefficients[2], 0.7808))
-  
-  modchloroCo  <- lm(log(fold) ~ log(mean_chloro), data = summary_df |>
-                       dplyr::filter(Element == "Co") |>
-                       dplyr::filter(Geo_area != "French Guyana")) 
-  
-  table_mod <- rbind(table_mod, 
-                     c("Co", "chloro", modchloroCo$coefficients[2], 0.7934))
-  
-  if (object_type == "file") {
-    write.table(table_mod, paste0("output/", 
-                                  name_file,
-                                  ".txt"), sep = "\t")
-  } else {
-  table_mod
   }
   
 }
@@ -1990,7 +1661,7 @@ run_models_norm <- function(tib_chloro_sst,
                        summary(modchloroCo)$r.squared))
   
   if (object_type == "file") {
-    write.table(table_mod, paste0("output/", 
+    write.table(table_mod, paste0("output/tables/", 
                                   name_file,
                                   ".txt"), sep = "\t")
   } else {
@@ -2025,7 +1696,7 @@ graph_models_sst <- function(model_output_tib,
     ggplot2::ggtitle("sst")
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -2071,7 +1742,7 @@ graph_models_chloro <- function(model_output_tib,
   
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {

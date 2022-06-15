@@ -16,7 +16,7 @@ Survey area only covered oceanic habitats here, so we just look at the contribut
 ## Excretion per taxa
 
 ```{r  echo=FALSE, fig.align="center"}
-imager::load.image(targets::tar_read(fig_contrib_taxa_Calif))
+targets::tar_read(fig_contrib_taxa_Calif)
 ```
 
 Are the differences significant ?
@@ -25,7 +25,7 @@ Are the differences significant ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(test_diff_taxa_tot_Calif), 
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_Calif_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -37,7 +37,7 @@ What are there relative contribution to total excretion in this area ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(taxa_contrib_tot_Calif), 
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_Calif_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -49,7 +49,7 @@ Survey area only included oceanic habitat here, so we just look at the contribut
 ## Excretion per taxa
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_contrib_taxa_GoMex)
+targets::tar_read(fig_contrib_taxa_GoMex_output)
 ```
 
 Are the differences significant ?
@@ -58,7 +58,7 @@ Are the differences significant ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(test_diff_taxa_tot_GoMex), 
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_GoMex_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -70,7 +70,7 @@ What are there relative contribution to total excretion in this area ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(taxa_contrib_tot_GoMex), 
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_GoMex_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -83,7 +83,7 @@ Survey area only included oceanic habitat here, so we just look at the contribut
 ## Excretion per taxa
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_contrib_taxa_NCal)
+targets::tar_read(fig_contrib_taxa_NCal_output)
 ```
 
 Are the differences significant ?
@@ -92,7 +92,7 @@ Are the differences significant ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(test_diff_taxa_tot_NCal), 
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_NCal_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -104,7 +104,7 @@ What are there relative contribution to total excretion in this area ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(taxa_contrib_tot_NCal), 
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_NCal_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -118,7 +118,7 @@ Survey area only included oceanic habitat here, so we just look at the contribut
 ## Excretion per taxa
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_contrib_taxa_Haw)
+targets::tar_read(fig_contrib_taxa_Haw_output)
 ```
 
 Are the differences significant ?
@@ -127,7 +127,7 @@ Are the differences significant ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(test_diff_taxa_tot_Haw), 
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_Haw_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -139,7 +139,7 @@ What are there relative contribution to total excretion in this area ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(taxa_contrib_tot_Haw), 
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_Haw_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -153,7 +153,7 @@ Survey area only included oceanic habitat here, so we just look at the contribut
 ## Excretion per taxa
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_contrib_taxa_WFu)
+targets::tar_read(fig_contrib_taxa_WFu_output)
 ```
 
 Are the differences significant ?
@@ -162,7 +162,7 @@ Are the differences significant ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(test_diff_taxa_tot_WFu), 
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_WFu_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -174,7 +174,7 @@ What are there relative contribution to total excretion in this area ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(taxa_contrib_tot_WFu), 
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_WFu_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -188,7 +188,7 @@ Survey area only included oceanic habitat here, so we just look at the contribut
 ## Excretion per taxa
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_contrib_taxa_FPol)
+targets::tar_read(fig_contrib_taxa_FPol_output)
 ```
 
 Are the differences significant ?
@@ -197,7 +197,7 @@ Are the differences significant ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(test_diff_taxa_tot_FPol), 
+kableExtra::kable(targets::tar_read(test_diff_taxa_tot_FPol_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()
@@ -209,7 +209,7 @@ What are there relative contribution to total excretion in this area ?
 # to disable scientific notations
 options(scipen = 999)
 
-kableExtra::kable(targets::tar_read(taxa_contrib_tot_FPol), 
+kableExtra::kable(targets::tar_read(taxa_contrib_tot_FPol_output), 
                   align = 'c' , 
                   booktabs = TRUE) |>
   kableExtra::kable_styling()

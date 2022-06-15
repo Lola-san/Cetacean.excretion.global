@@ -918,20 +918,36 @@ table |>
 # stacked bar plot relative contribution of taxa in each area 
 
 
-targets::tar_load(taxa_contrib_tot_Ant)
+targets::tar_load(taxa_contrib_tot_WFu)
 
 
-taxa_contrib_tot_Ant |> 
+taxa_contrib_tot_Med |> 
   dplyr::filter(Element != "As") |>
   dplyr::mutate(Element = factor(Element, 
                                  levels = c("Co", "Zn", "Se", "Mn",
-                                             "Cu", "Fe", "P", "N"))) |>
+                                             "Cu", "Fe", "P", "N")), 
+                ratio_contribution = ratio_contribution*100) |>
   ggplot2::ggplot(ggplot2::aes(x = Element, y = ratio_contribution, fill = Eco_gp)) +
   ggplot2::geom_col() +
   ggplot2::coord_flip() +
-  ggplot2::scale_fill_manual(values = c( "#cf7474ff", "slategray3", "#365579ff")) +
-  ggplot2::theme_classic()
-
+  ggplot2::xlab("") +
+  ggplot2::ylab("") +
+  ggplot2::scale_fill_manual(values = c(`Small delphinids` = "#365579ff", 
+                                        `Deep divers` = "slategray3", 
+                                        `Baleen whales` = "#cf7474ff")) +
+  ggplot2::theme_minimal() +
+  ggplot2::geom_text(ggplot2::aes(label = round(ratio_contribution, 0)), 
+                     #vjust = 0.5,
+                     position = "stack",
+                     hjust = 1.5,
+                     colour = "white") +
+  ggplot2::theme(legend.position = "none", 
+                 axis.text.x = ggplot2::element_text(face = "bold", size = 14),
+                 axis.text.y = ggplot2::element_text(face = "bold", size = 14)) 
+ggplot2::ggsave("output/Med_contrib_taxa.svg", 
+                scale =1, 
+                width = 3.5, 
+                height = 3, dpi = 300)
 
 
 

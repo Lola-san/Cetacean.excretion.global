@@ -63,8 +63,11 @@ format_names <- function(output_tib) {
 # statistics of estimates of total excretion per area
 # for all areas, all elements
 # in tons/yr
-create_full_stat_tab_tons_yr <- function(output_tib) {
-  output_tib |>
+create_full_stat_tab_tons_yr <- function(output_tib, 
+                                         object_type, # either "output" or "file" 
+                                         name_file
+                                         ) {
+  table <- output_tib |>
     dplyr::group_by(Geo_area) |>
     dplyr::summarise(Surf = sum(unique(Surf_tot)), 
                      sum = list(sum_tibb(excrete_nut))) |>
@@ -83,6 +86,14 @@ create_full_stat_tab_tons_yr <- function(output_tib) {
                      median = median(Excretion), 
                      `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
                      max = max(Excretion))
+  
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                                  name_file,
+                                  ".txt"), sep = "\t")
+  } else {
+    table
+  }
 }
 
 
@@ -94,8 +105,10 @@ create_full_stat_tab_tons_yr <- function(output_tib) {
 # statistics of estimates of total excretion per area per surface unit
 # for all areas, all elements
 # in kg/km2/yr
-create_full_stat_tab_kg_km2_yr <- function(output_tib) {
-  output_tib |>
+create_full_stat_tab_kg_km2_yr <- function(output_tib,
+                                           object_type, # either "output" or "file" 
+                                           name_file) {
+  table <- output_tib |>
     dplyr::group_by(Geo_area) |>
     dplyr::summarise(Surf = sum(unique(Surf_tot)), 
                      sum = list(sum_tibb(excrete_nut))) |>
@@ -114,6 +127,13 @@ create_full_stat_tab_kg_km2_yr <- function(output_tib) {
                      median = median(Excretion), 
                      `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
                      max = max(Excretion))
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    table
+  }
 }
 
 
@@ -481,7 +501,9 @@ table_tot_surf <- function(output_tib) {
 #'
 #'
 # function to create table with fold change ratio between areas
-table_fold_change <- function(output_tib) {
+table_fold_change <- function(output_tib,
+                              object_type, # either "output" or "file" 
+                              name_file) {
   inter_table <- output_tib |>
     dplyr::group_by(Geo_area) |>
     dplyr::summarise(Surf = sum(unique(Surf_tot)), 
@@ -511,9 +533,17 @@ table_fold_change <- function(output_tib) {
                      max_all_mean = max(mean))
   
   # compute the fold-change ratio
-  inter_table |>
+  table <- inter_table |>
     dplyr::left_join(minimum_df, by = "Element", keep = FALSE) |>
     dplyr::mutate(fold = round(mean/min_all_mean) )
+  
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    table
+    }
 }
 
 ################ AREA PER AREA ######################
@@ -527,9 +557,11 @@ table_fold_change <- function(output_tib) {
 # statistics of estimates of total excretion per habitat
 # for all areas, all elements
 # in tons/yr
-create_hab_stat_tab_tons_yr <- function(output_tib, 
+create_hab_stat_tab_tons_yr <- function(output_tib,
+                                        object_type, # either "output" or "file" 
+                                        name_file, 
                                         geo_area) {
-  output_tib |>
+  table <- output_tib |>
     dplyr::group_by(Geo_area, Eco_area) |>
     dplyr::filter(Geo_area == geo_area) |>
     dplyr::summarise(Surf = sum(unique(Surf_tot)), 
@@ -549,6 +581,14 @@ create_hab_stat_tab_tons_yr <- function(output_tib,
                      median = median(Excretion), 
                      `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
                      max = max(Excretion))
+  
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    table
+  }
 }
 
 
@@ -561,8 +601,10 @@ create_hab_stat_tab_tons_yr <- function(output_tib,
 # for all areas, all elements
 # in kg/km2/yr
 create_hab_stat_tab_kg_km2_yr <- function(output_tib, 
+                                          object_type, # either "output" or "file" 
+                                          name_file, 
                                           geo_area) {
-  output_tib |>
+  table <- output_tib |>
     dplyr::group_by(Geo_area, Eco_area) |>
     dplyr::filter(Geo_area == geo_area) |>
     dplyr::summarise(Surf = sum(unique(Surf_tot)), 
@@ -582,6 +624,14 @@ create_hab_stat_tab_kg_km2_yr <- function(output_tib,
                      median = median(Excretion), 
                      `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
                      max = max(Excretion))
+  
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    table
+  }
 }
 
 #'
@@ -591,6 +641,8 @@ create_hab_stat_tab_kg_km2_yr <- function(output_tib,
 #'
 # function to compute statistical test on excretion per habitat in total
 test_differences_hab <- function(output_tib, 
+                                 object_type, # either "output" or "file" 
+                                 name_file, 
                                  geo_area) {
   final_table <- tibble::tibble(Geo_area = NA, 
                                 Element = NA, 
@@ -648,7 +700,13 @@ test_differences_hab <- function(output_tib,
   
   final_table <- final_table[-1,]
   
-  return(final_table)
+  if (object_type == "file") {
+    write.table(final_table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    final_table
+  }
   
 }
 
@@ -659,9 +717,11 @@ test_differences_hab <- function(output_tib,
 #'
 # function to compute the relative contribution of cetacean taxa in each area
 taxa_contribution_total <- function(output_tib, 
+                                    object_type, # either "output" or "file" 
+                                    name_file, 
                                     geo_area # should be character string
 ){
-  output_tib |>
+  table <- output_tib |>
     dplyr::group_by(Geo_area, Eco_gp) |>
     dplyr::filter(Geo_area == geo_area) |>
     dplyr::summarise(Surf = sum(unique(Surf_tot)), 
@@ -693,6 +753,13 @@ taxa_contribution_total <- function(output_tib,
                        dplyr::group_by(Geo_area, Element) |>
                        dplyr::summarize(mean_total = mean(Excretion))) |>
     dplyr::mutate(ratio_contribution = mean/mean_total)
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    table
+  }
   
   
 }
@@ -751,7 +818,9 @@ taxa_contribution_hab <- function(output_tib,
 #'
 #'
 # function to compute statistical test on excretion per taxa in total
-test_differences_taxa <- function(output_tib, 
+test_differences_taxa <- function(output_tib,
+                                  object_type, # either "output" or "file" 
+                                  name_file, 
                                   geo_area
 ) {
   # element is a character string indicating the element for which to conduct the test
@@ -857,7 +926,13 @@ test_differences_taxa <- function(output_tib,
   
   final_table <- final_table[-1,]
   
-  return(final_table)
+  if (object_type == "file") {
+    write.table(final_table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    final_table
+  }
   
 }
 
