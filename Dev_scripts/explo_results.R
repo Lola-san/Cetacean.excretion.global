@@ -579,7 +579,10 @@ profile_excretion |>
 #'
 #'
 # statistics of estimates of the relative composition of poop of taxa
-create_stat_tab_compo_poop <- function(output_tib) {
+create_stat_tab_compo_poop <- function(output_tib, 
+                                       object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                                       name_file # should be a character string,
+                                       ) {
   
   profile_excretion <- output_tib |>
     dplyr::ungroup() |>
@@ -598,7 +601,7 @@ create_stat_tab_compo_poop <- function(output_tib) {
                                            191, 199, 201, 208,
                                            225),]
   
-  profile_excretion |>
+  table <- profile_excretion |>
     dplyr::group_by(Eco_gp) |>
     dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
                     purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
@@ -618,6 +621,14 @@ create_stat_tab_compo_poop <- function(output_tib) {
                      `97.5_quant` = quantile(Excretion_ind, probs = c(0.975)),
                      max = max(Excretion_ind))
   
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    table
+  }
+  
 }
 
 
@@ -629,7 +640,10 @@ create_stat_tab_compo_poop <- function(output_tib) {
 # statistics of estimates of the relative composition of poop of taxa 
 # with normalisation per element 
 
-create_stat_tab_compo_poop_norm <- function(output_tib) {
+create_stat_tab_compo_poop_norm <- function(output_tib, 
+                                            object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                                            name_file # should be a character string
+                                            ) {
   
   profile_excretion <- output_tib |>
     dplyr::ungroup() |>
@@ -648,7 +662,7 @@ create_stat_tab_compo_poop_norm <- function(output_tib) {
                                            191, 199, 201, 208,
                                            225),]
   
-  profile_excretion |>
+  table <- profile_excretion |>
     dplyr::group_by(Eco_gp) |>
     dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
                     purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
@@ -672,6 +686,14 @@ create_stat_tab_compo_poop_norm <- function(output_tib) {
                      `97.5_quant` = quantile(Exc_norm, probs = c(0.975)),
                      max = max(Exc_norm))
   
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                                    name_file,
+                                    ".txt"), sep = "\t")
+  } else {
+    table
+  }
+  
 }
 
 
@@ -683,7 +705,10 @@ create_stat_tab_compo_poop_norm <- function(output_tib) {
 #'
 #'
 # function to compute statistical test on the relative composition of poop of the three taxa
-test_differences_compo_poop <- function(output_tib) {
+test_differences_compo_poop <- function(output_tib, 
+                                        object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                                        name_file # should be a character string 
+                                        ) {
   
   final_table <- tibble::tibble(Element = NA, 
                                 Group1 = NA,
@@ -839,7 +864,13 @@ test_differences_compo_poop <- function(output_tib) {
   
   final_table <- final_table[-1,]
   
-  return(final_table)
+  if (object_type == "file") {
+    write.table(final_table, paste0("output/tables/", 
+                                    name_file,
+                                    ".txt"), sep = "\t")
+  } else {
+    final_table
+  }
   
 }
 
@@ -1085,3 +1116,17 @@ ggplot2::ggsave("output/Guy_neritic_vs_oceanic.svg",
                 scale =1, 
                 width = 16, 
                 height = 2, dpi = 300)
+
+
+
+
+
+############################### sensitivity analysis 
+
+targets::tar_load(sobol_index_all_sensi)
+
+sobol_index_all_sensi
+
+sobol_index_all_sensi |> 
+  ggplot2::ggplot() +
+  ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity))

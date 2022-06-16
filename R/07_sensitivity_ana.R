@@ -220,10 +220,10 @@ create_sobol_index_tib_sensi <- function(results_tib,
                                   sample(purrr::pluck(results_tib, "Nut_excrete", rw, "N"), size = nsim/10, replace = FALSE)), 
                          ncol = 8, nrow = nsim/10)
     
-    output <- sample(purrr::pluck(results_tib, "excrete_nut", rw, "N"), size = nsim/10, replace = FALSE)
+    #output <- sample(purrr::pluck(results_tib, "excrete_nut", rw, "N"), size = nsim/10, replace = FALSE)
     
     sens <- sensitivity::sobolSalt(model = compute_y_sensi, X1 = parammatX1, X2 = parammatX2, 
-                                   scheme = "A", nboot = 1e2, conf = 0.95)
+                                   scheme = "A", nboot = 1e4, conf = 0.95)
     
     
     df_Si_first <- tibble::tibble(Code_sp = purrr::pluck(results_tib, "Code_sp", rw), 

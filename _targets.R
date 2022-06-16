@@ -305,7 +305,8 @@ list(
   # format names and order of areas
   tar_target(model_output_clean, format_names(model_output)),
   
-  ######### for all areas - tables
+  
+  ############################# for all areas - tables ################
   # table with estimates and statistics for total excretion in all areas, 
   # for all elements, in tons/yr
   tar_target(tot_est_stat_tns_yr_file, create_full_stat_tab_tons_yr(model_output_clean, 
@@ -352,7 +353,7 @@ list(
                                                   "output", 
                                                   "all_table_fold")),
   
-  ######### for all areas - figures
+  ######################### for all areas - figures ##################
   tar_target(fig_tot_exc_all_areas_facetperel_file, fig_exc_all_areas_1_facet_element(model_output_clean, 
                                                                                       "file",
                                                                                       "all_fig_tot_exc_facetperel")),
@@ -519,6 +520,26 @@ list(
   tar_target(graph_models_chloro_norm_output, graph_models_chloro(tib_models_norm_output,
                                                                   "output",
                                                                   "all_graph_models_chloro_norm")),
+  
+  ###################### for all areas and for all species - poop composition
+  tar_target(tib_poop_compo_file, create_stat_tab_compo_poop(model_output_clean, 
+                                                       "file",
+                                                       "all_tib_poop_compo")),
+  tar_target(tib_poop_compo_output, create_stat_tab_compo_poop(model_output_clean,
+                                                         "output",
+                                                         "all_tib_poop_compo")),
+  tar_target(tib_poop_compo_norm_file, create_stat_tab_compo_poop_norm(model_output_clean, 
+                                                   "file",
+                                                   "all_tib_poop_compo_norm")),
+  tar_target(tib_poop_compo_norm_output, create_stat_tab_compo_poop_norm(model_output_clean,
+                                                     "output",
+                                                     "all_tib_poop_compo_norm")),
+  tar_target(tib_test_diff_poop_compo_file, test_differences_compo_poop(model_output_clean, 
+                                                                       "file",
+                                                                       "all_tib_test_diff_poop_compo")),
+  tar_target(tib_test_diff_poop_compo_output, test_differences_compo_poop(model_output_clean,
+                                                                         "output",
+                                                                         "all_tib_test_diff_poop_compo")),
   
   
   ########## area per area - tables

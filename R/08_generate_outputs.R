@@ -1058,6 +1058,314 @@ test_differences_taxa_hab <- function(output_tib,
 }
 
 
+
+############### ALL SPECIES - ALL AREAS ################ relative composition of poop 
+
+#'
+#'
+#'
+#'
+#'
+# statistics of estimates of the relative composition of poop of taxa
+create_stat_tab_compo_poop <- function(output_tib, 
+                                       object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                                       name_file # should be a character string,
+) {
+  
+  profile_excretion <- output_tib |>
+    dplyr::ungroup() |>
+    dplyr::select(c(Eco_gp, Species, Indi_data, excrete_nut_ind, Mass)) 
+  
+  
+  # select only one line per species (as there is many lines for all the places each species occurs)
+  profile_excretion <- profile_excretion[c(1, 9, 13, 15, 19, 
+                                           31, 32, 33, 40, 
+                                           42, 51, 58, 73, 
+                                           76, 80, 92, 96, 
+                                           100, 106, 107, 108, 
+                                           115, 129, 136, 146, 
+                                           149, 152, 168, 176, 
+                                           177, 179, 186, 190, 
+                                           191, 199, 201, 208,
+                                           225),]
+  
+  table <- profile_excretion |>
+    dplyr::group_by(Eco_gp) |>
+    dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
+                    purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
+    dplyr::select(-c(Indi_data, excrete_nut_ind, Mass)) |>
+    tidyr::unnest(excrete_ind_perkg_food) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+                        names_to = "Element",
+                        values_to = "Excretion_ind") |>
+    dplyr::mutate(Element = factor(Element,
+                                   levels = c("N", "P", "Fe", "Cu", "Mn",
+                                              "Se", "Zn", "Co", "As")))  |>
+    dplyr::group_by(Eco_gp, Element) |>
+    dplyr::summarize(min = min(Excretion_ind),
+                     `2.5_quant` = quantile(Excretion_ind, probs = c(0.025)),
+                     mean = mean(Excretion_ind),
+                     median = median(Excretion_ind),
+                     `97.5_quant` = quantile(Excretion_ind, probs = c(0.975)),
+                     max = max(Excretion_ind))
+  
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    table
+  }
+  
+}
+
+
+#'
+#'
+#'
+#'
+#'
+# statistics of estimates of the relative composition of poop of taxa 
+# with normalisation per element 
+
+create_stat_tab_compo_poop_norm <- function(output_tib, 
+                                            object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                                            name_file # should be a character string
+) {
+  
+  profile_excretion <- output_tib |>
+    dplyr::ungroup() |>
+    dplyr::select(c(Eco_gp, Species, Indi_data, excrete_nut_ind, Mass)) 
+  
+  
+  # select only one line per species (as there is many lines for all the places each species occurs)
+  profile_excretion <- profile_excretion[c(1, 9, 13, 15, 19, 
+                                           31, 32, 33, 40, 
+                                           42, 51, 58, 73, 
+                                           76, 80, 92, 96, 
+                                           100, 106, 107, 108, 
+                                           115, 129, 136, 146, 
+                                           149, 152, 168, 176, 
+                                           177, 179, 186, 190, 
+                                           191, 199, 201, 208,
+                                           225),]
+  
+  table <- profile_excretion |>
+    dplyr::group_by(Eco_gp) |>
+    dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
+                    purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
+    dplyr::select(-c(Indi_data, excrete_nut_ind, Mass)) |>
+    tidyr::unnest(excrete_ind_perkg_food) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+                        names_to = "Element",
+                        values_to = "Excretion_ind") |>
+    dplyr::mutate(Element = factor(Element,
+                                   levels = c("N", "P", "Fe", "Cu", "Mn",
+                                              "Se", "Zn", "Co", "As")))  |>
+    dplyr::group_by(Element) |>
+    dplyr::mutate(Exc_norm = (Excretion_ind - min(Excretion_ind))/(max(Excretion_ind) - min(Excretion_ind))) |>
+    dplyr::group_by(Eco_gp, Element) |>
+    dplyr::summarize(min = min(Exc_norm),
+                     `2.5_quant` = quantile(Exc_norm, probs = c(0.025)),
+                     `10_quant` = quantile(Exc_norm, probs = c(0.1)),
+                     mean = mean(Exc_norm),
+                     median = median(Exc_norm),
+                     `90_quant` = quantile(Exc_norm, probs = c(0.9)),
+                     `97.5_quant` = quantile(Exc_norm, probs = c(0.975)),
+                     max = max(Exc_norm))
+  
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    table
+  }
+  
+}
+
+
+
+
+#'
+#'
+#'
+#'
+#'
+# function to compute statistical test on the relative composition of poop of the three taxa
+test_differences_compo_poop <- function(output_tib, 
+                                        object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                                        name_file # should be a character string 
+) {
+  
+  final_table <- tibble::tibble(Element = NA, 
+                                Group1 = NA,
+                                Group2 = NA, 
+                                ratio_group1_superior_to_group2 = NA)
+  
+  
+  profile_excretion <- output_tib |>
+    dplyr::ungroup() |>
+    dplyr::select(c(Eco_gp, Species, Indi_data, excrete_nut_ind, Mass)) 
+  
+  
+  # select only one line per species (as there is many lines for all the places each species occurs)
+  profile_excretion <- profile_excretion[c(1, 9, 13, 15, 19, 
+                                           31, 32, 33, 40, 
+                                           42, 51, 58, 73, 
+                                           76, 80, 92, 96, 
+                                           100, 106, 107, 108, 
+                                           115, 129, 136, 146, 
+                                           149, 152, 168, 176, 
+                                           177, 179, 186, 190, 
+                                           191, 199, 201, 208,
+                                           225),]
+  
+  
+  Bw <- profile_excretion |>
+    dplyr::group_by(Eco_gp) |>
+    dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
+                    purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
+    dplyr::select(-c(Indi_data, excrete_nut_ind, Mass)) |>
+    tidyr::unnest(excrete_ind_perkg_food) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+                        names_to = "Element",
+                        values_to = "Excretion_ind") |> 
+    dplyr::filter(Eco_gp == "Baleen whales") |> 
+    tidyr::pivot_wider(names_from = Species, 
+                       values_from = Excretion_ind, 
+                       values_fn = list) |>
+    tidyr::unnest(c("Balaenoptera acutorostrata", "Balaenoptera borealis",     
+                    "Balaenoptera edeni", "Balaenoptera musculus",     
+                    "Balaenoptera physalus", "Megaptera novaeangliae")) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(mean_gp = mean(`Balaenoptera acutorostrata`, `Balaenoptera borealis`,     
+                                 `Balaenoptera edeni`, `Balaenoptera musculus`,     
+                                 `Balaenoptera physalus`, `Megaptera novaeangliae`)) |> 
+    dplyr::select(Eco_gp, Element, mean_gp)
+  
+  
+  Dd <- profile_excretion |>
+    dplyr::group_by(Eco_gp) |>
+    dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
+                    purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
+    dplyr::select(-c(Indi_data, excrete_nut_ind, Mass)) |>
+    tidyr::unnest(excrete_ind_perkg_food) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+                        names_to = "Element",
+                        values_to = "Excretion_ind") |> 
+    dplyr::filter(Eco_gp == "Deep divers") |> 
+    tidyr::pivot_wider(names_from = Species, 
+                       values_from = Excretion_ind, 
+                       values_fn = list) |>
+    tidyr::unnest(c("Berardius bairdii",          "Feresa attenuata",         
+                    "Globicephala macrorhynchus", "Globicephala melas",        
+                    "Grampus griseus",            "Hyperoodon ampullatus",     
+                    "Indopacetus pacificus",      "Kogia spp",                 
+                    "Mesoplodon spp",             "Peponocephala electra",     
+                    "Physeter macrocephalus",     "Pseudorca crassidens",      
+                    "Ziphius cavirostris")) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(mean_gp = mean(`Berardius bairdii`,          `Feresa attenuata`,         
+                                 `Globicephala macrorhynchus`, `Globicephala melas`,        
+                                 `Grampus griseus`,            `Hyperoodon ampullatus`,     
+                                 `Indopacetus pacificus`,      `Kogia spp`,                 
+                                 `Mesoplodon spp`,             `Peponocephala electra`,     
+                                 `Physeter macrocephalus`,     `Pseudorca crassidens`,      
+                                 `Ziphius cavirostris`)) |> 
+    dplyr::select(Eco_gp, Element, mean_gp)
+  
+  Sd <- profile_excretion |>
+    dplyr::group_by(Eco_gp) |>
+    dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
+                    purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
+    dplyr::select(-c(Indi_data, excrete_nut_ind, Mass)) |>
+    tidyr::unnest(excrete_ind_perkg_food) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+                        names_to = "Element",
+                        values_to = "Excretion_ind") |> 
+    dplyr::filter(Eco_gp == "Small delphinids") |> 
+    tidyr::pivot_wider(names_from = Species, 
+                       values_from = Excretion_ind, 
+                       values_fn = list) |>
+    tidyr::unnest(c("Delphinus capensis",         "Delphinus delphis",         
+                    "Lagenorhynchus acutus",      "Lagenorhynchus albirostris",
+                    "Lagenodelphis hosei",        "Lagenorhynchus obliquidens",
+                    "Lissodelphis borealis",      "Orcinus orca",              
+                    "Phocoenoides dalli",         "Phocoena phocoena",         
+                    "Sotalia guianensis",         "Sousa plumbea",             
+                    "Stenella attenuata",        "Steno bredanensis",         
+                    "Stenella clymene",           "Stenella coeruleoalba",     
+                    "Stenella frontalis",         "Stenella longirostris",     
+                    "Tursiops truncatus")) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(mean_gp = mean(`Delphinus capensis`,         `Delphinus delphis`,         
+                                 `Lagenorhynchus acutus`,      `Lagenorhynchus albirostris`,
+                                 `Lagenodelphis hosei`,        `Lagenorhynchus obliquidens`,
+                                 `Lissodelphis borealis`,      `Orcinus orca`,              
+                                 `Phocoenoides dalli`,         `Phocoena phocoena`,         
+                                 `Sotalia guianensis`,         `Sousa plumbea`,             
+                                 `Stenella attenuata`,        `Steno bredanensis`,         
+                                 `Stenella clymene`,           `Stenella coeruleoalba`,     
+                                 `Stenella frontalis`,         `Stenella longirostris`,     
+                                 `Tursiops truncatus`)) |> 
+    dplyr::select(Eco_gp, Element, mean_gp)
+  
+  
+  table_mean_col_all_gp <- rbind(Bw, Dd, Sd)
+  
+  
+  for (i in c("N", "P", "Fe", "Cu", "Mn", 
+              "Se", "Zn", "Co")) {
+    
+    el_table <- table_mean_col_all_gp |>
+      tidyr::pivot_wider(names_from = Eco_gp, 
+                         values_from = mean_gp, 
+                         values_fn = list) |>
+      dplyr::filter(Element == i) |>
+      tidyr::unnest(cols = c(`Baleen whales`, `Deep divers`, `Small delphinids`)) |>
+      dplyr::mutate(t_baleen_deep = dplyr::case_when(`Baleen whales` > `Deep divers` ~ 1,
+                                                     TRUE ~ 0), 
+                    t_baleen_delphi = dplyr::case_when(`Baleen whales` > `Small delphinids` ~ 1,
+                                                       TRUE ~ 0),
+                    t_deep_delphi = dplyr::case_when(`Deep divers` > `Small delphinids` ~ 1,
+                                                     TRUE ~ 0),
+      ) |>
+      dplyr::summarise(t_baleen_deep = mean(t_baleen_deep), 
+                       t_baleen_delphi = mean(t_baleen_delphi),
+                       t_deep_delphi = mean(t_deep_delphi)) |>
+      tidyr::pivot_longer(cols = c("t_baleen_deep":"t_deep_delphi"),
+                          names_to = "Test", 
+                          values_to = "ratio_group1_superior_to_group2") |>
+      dplyr::mutate(Element = i, 
+                    Group1 = dplyr::case_when(stringr::str_starts(Test, "t_baleen") ~ "Baleen whales",
+                                              stringr::str_starts(Test, "t_deep") ~ "Deep divers"), 
+                    Group2 = dplyr::case_when(stringr::str_ends(Test, "_deep") ~ "Deep divers",
+                                              stringr::str_ends(Test, "_delphi") ~ "Small delphinids")) |>
+      dplyr::select(-Test) 
+    
+    final_table <- rbind(final_table, el_table)
+    
+    rm(el_table)
+    
+  }
+  
+  final_table <- final_table[-1,]
+  
+  if (object_type == "file") {
+    write.table(final_table, paste0("output/tables/", 
+                                    name_file,
+                                    ".txt"), sep = "\t")
+  } else {
+    final_table
+  }
+  
+}
+
+
+
+
+
 ######################## functions to create figures #############################
 
 ################ ALL AREAS #######################
