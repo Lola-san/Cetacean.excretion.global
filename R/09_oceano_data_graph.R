@@ -1437,9 +1437,7 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
         ggplot2::theme_classic() +
         ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
                        legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-      ggplot2::ggsave(paste0("output/", 
-                             name_file, 
-                             ".jpg"), scale = 1)
+
     } else {
       tib_chloro_sst |>
         dplyr::left_join(output_tib |>

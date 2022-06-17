@@ -48,13 +48,13 @@ We can take a look at this on a graph, with densities to be able to compare betw
 
 ```{r  echo=FALSE, fig.align="center"}
 
-targets::tar_read(fig_tot_exc_all_areas_facetperel)
+targets::tar_read(fig_tot_exc_all_areas_facetperel_output)
 ```
 
 We can visualize better with all elements on one facet, using a log10 transformation on the y scale 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_tot_exc_all_areas_log10)
+targets::tar_read(fig_tot_exc_all_areas_log10_output)
 ```
 
 However, this raise the question of weather or not the differences between areas are significant or not. Basic statistical test would not work in our case as we have a high number of "observations", so that it would always come out as statistically different even if there is small overlap. So instead, we conducted a test "by hand", and quantified in how many cases the excretion in area A was superior to that of area B. If it was in more than 98% of cases, we considered it significantly different (and the test was positive). This test should be conducted for all elements, ideally. But as we can see on the above graphs, differences between areas tend to follow the same pattern for each elements, with small variations. So here are te results of the test for N excretion:
@@ -507,7 +507,7 @@ kableExtra::kable(targets::tar_read(surf_tot_areas),
 It does not seem so, but we can take a look at it on a graph, for instance for N excretion:
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_tot_exc_vs_surfaces)
+targets::tar_read(fig_tot_exc_vs_surfaces_output)
 ```
 
 It does not look like results are so tied to the surfaces or the surveyed areas. 
@@ -532,7 +532,7 @@ Also, considering the results overall areas, we can wonder if the order of the a
 So what happens if we look only at the contribution of small delphinids ? 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_tot_exc_all_areas_facetperel_SD)
+targets::tar_read(fig_tot_exc_all_areas_facetperel_SD_output)
 ```
 
 
@@ -543,7 +543,7 @@ Also, something specific seems to be happening for Cu. Maybe it depends on speci
 And what happens if we look only at the contributions of deep divers ? 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_tot_exc_all_areas_facetperel_DD)
+targets::tar_read(fig_tot_exc_all_areas_facetperel_DD_output)
 ```
 
 Then it suggests that it's probably baleen whales that are the main contributors in the Gulf of Alaska, whereas in the North Atlantic deep divers are significant contributors that tend to rank the area higher. In the Northwest Atlantic and the California current however, the contribution of deep divers seems to be rather small compared to other groups. 
@@ -551,7 +551,7 @@ Then it suggests that it's probably baleen whales that are the main contributors
 Finally, if we look only at the contribution of baleen whales ? 
 
 ```{r  echo=FALSE, fig.align="center"}
-targets::tar_read(fig_tot_exc_all_areas_facetperel_BW)
+targets::tar_read(fig_tot_exc_all_areas_facetperel_BW_output)
 ```
 
 First, we note that baleen whales are not present in all areas, whereas small delphinids and deep divers are. Second, we see the order is quite that of the one where we considered all ecological groups. In Hawaii, in the Mediterranean Sea and in the Gulf of Mexico, the contribution of baleen whales is rather small.

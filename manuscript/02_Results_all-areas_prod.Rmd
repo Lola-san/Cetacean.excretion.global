@@ -64,18 +64,18 @@ gridExtra::grid.arrange(p1, p2, ncol = 2)
 And without the log10 transformation but with normalized excretion value (normalization per element across all areas, on all raw values, then we computed means on these normalized values): 
 
 ```{r  echo=FALSE, fig.align="center"}
-#targets::tar_read(fig_all_el_vs_sst_norm_output) -> p3
-#targets::tar_read(fig_all_el_vs_chloro_norm_output) -> p4
-#gridExtra::grid.arrange(p3, p4, ncol = 2)
+targets::tar_read(fig_all_el_vs_sst_norm_output) -> p3
+targets::tar_read(fig_all_el_vs_chloro_norm_output) -> p4
+gridExtra::grid.arrange(p3, p4, ncol = 2)
 ```
 
 
 To have more quantitative results about these correlations between levels of excretion and indicators of productivity of ecosystems, we did a bit of modelling, using simple linear models. For each element, we ran two models: 
 - $$ F_{el} = f(sst)$$
 - $$ F_{el} = f(chloro)$$
-$$F_{el}$$ being the fold-change ratio for nutrient *el*. 
+$$F_{el}$$ being the normalized released amount for nutrient *el*. 
 
-We summarize results using R^2^ and slope estimates, the slope estimate being an indicator of the intensity of the relation between the fold-change ratio and the variable, and R^2^ being an indicator of the strength of the relation between the fold-change ratio and the variable. Guyana was still considered as an outlier when working on chlorophyll concentration data, so it was excluded from the modelling. We used a log transformation for the chlorophyll concentration variable and the fold-change excretion ratio for the model with chlorophyll concentration as a covariate. 
+We summarize results using R^2^ and slope estimates, the slope estimate being an indicator of the intensity of the relation between the fold-change ratio and the variable, and R^2^ being an indicator of the strength of the relation between the fold-change ratio and the variable. Guyana was still considered as an outlier when working on chlorophyll concentration data, so it was excluded from the modelling.  
 
 ```{r  echo=FALSE, fig.align="center"}
 # to disable scientific notations

@@ -81,7 +81,7 @@ kableExtra::kable(targets::tar_read(test_diff_taxa_tot_NEA_output),
   kableExtra::kable_styling()
 ```
 
-What are there relative contribution to total excretion in this area ? 
+What are their relative contribution to total excretion in this area ? 
 
 ```{r  echo=FALSE, fig.align="center"}
 # to disable scientific notations
@@ -196,7 +196,7 @@ kableExtra::kable(targets::tar_read(test_diff_taxa_tot_CNA_output),
   kableExtra::kable_styling()
 ```
 
-What are there relative contribution to total excretion in this area ? 
+What are their relative contribution to total excretion in this area ? 
 
 ```{r  echo=FALSE, fig.align="center"}
 # to disable scientific notations
@@ -311,7 +311,7 @@ kableExtra::kable(targets::tar_read(test_diff_taxa_tot_GoAl_output),
   kableExtra::kable_styling()
 ```
 
-What are there relative contribution to total excretion in this area ? 
+What are their relative contribution to total excretion in this area ? 
 
 ```{r  echo=FALSE, fig.align="center"}
 # to disable scientific notations
@@ -425,7 +425,7 @@ kableExtra::kable(targets::tar_read(test_diff_taxa_tot_NWA_output),
   kableExtra::kable_styling()
 ```
 
-What are there relative contribution to total excretion in this area ? 
+What are their relative contribution to total excretion in this area ? 
 
 ```{r  echo=FALSE, fig.align="center"}
 # to disable scientific notations
@@ -540,7 +540,7 @@ kableExtra::kable(targets::tar_read(test_diff_taxa_tot_Med_output),
   kableExtra::kable_styling()
 ```
 
-What are there relative contribution to total excretion in this area ? 
+What are their relative contribution to total excretion in this area ? 
 
 ```{r  echo=FALSE, fig.align="center"}
 # to disable scientific notations

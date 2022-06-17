@@ -1185,6 +1185,54 @@ create_stat_tab_compo_poop_norm <- function(output_tib,
 }
 
 
+#'
+#'
+#'
+#'
+#'
+# statistics of estimates of the relative composition of poop of taxa 
+# with normalisation per element 
+
+create_tab_full_compo_poop_norm <- function(output_tib) {
+  
+  profile_excretion <- output_tib |>
+    dplyr::ungroup() |>
+    dplyr::select(c(Eco_gp, Species, Indi_data, excrete_nut_ind, Mass)) 
+  
+  
+  # select only one line per species (as there is many lines for all the places each species occurs)
+  profile_excretion <- profile_excretion[c(1, 9, 13, 15, 19, 
+                                           31, 32, 33, 40, 
+                                           42, 51, 58, 73, 
+                                           76, 80, 92, 96, 
+                                           100, 106, 107, 108, 
+                                           115, 129, 136, 146, 
+                                           149, 152, 168, 176, 
+                                           177, 179, 186, 190, 
+                                           191, 199, 201, 208,
+                                           225),]
+  
+  profile_excretion |>
+    dplyr::group_by(Eco_gp) |>
+    dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
+                    purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
+    dplyr::select(-c(Indi_data, excrete_nut_ind, Mass)) |>
+    tidyr::unnest(excrete_ind_perkg_food) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+                        names_to = "Element",
+                        values_to = "Excretion_ind") |>
+    dplyr::mutate(Element = factor(Element,
+                                   levels = c("N", "P", "Fe", "Cu", "Mn",
+                                              "Se", "Zn", "Co", "As")))  |>
+    dplyr::group_by(Element) |>
+    dplyr::mutate(Exc_norm = (Excretion_ind - min(Excretion_ind))/(max(Excretion_ind) - min(Excretion_ind)))
+  
+  
+  
+}
+
+
+
 
 
 #'

@@ -200,27 +200,27 @@ create_sobol_index_tib_sensi <- function(results_tib,
     
     # sampling matrix 
     # change distributions of inputs according to data or bibliography/assumptions
-    parammatX1 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, "N"), size = nsim/10, replace = FALSE), 
-                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, "N"), size = nsim/10, replace = FALSE)), 
-                         ncol = 8, nrow = nsim/10) 
+    parammatX1 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, "N"), size = nsim/5, replace = FALSE), 
+                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, "N"), size = nsim/5, replace = FALSE)), 
+                         ncol = 8, nrow = nsim/5) 
     
-    parammatX2 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, "N"), size = nsim/10, replace = FALSE), 
-                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/10, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, "N"), size = nsim/10, replace = FALSE)), 
-                         ncol = 8, nrow = nsim/10)
+    parammatX2 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, "N"), size = nsim/5, replace = FALSE), 
+                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, "N"), size = nsim/5, replace = FALSE)), 
+                         ncol = 8, nrow = nsim/5)
     
-    #output <- sample(purrr::pluck(results_tib, "excrete_nut", rw, "N"), size = nsim/10, replace = FALSE)
+    #output <- sample(purrr::pluck(results_tib, "excrete_nut", rw, "N"), size = nsim/5, replace = FALSE)
     
     sens <- sensitivity::sobolSalt(model = compute_y_sensi, X1 = parammatX1, X2 = parammatX2, 
                                    scheme = "A", nboot = 1e4, conf = 0.95)
