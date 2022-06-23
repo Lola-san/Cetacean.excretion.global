@@ -40,6 +40,8 @@ renv::install("ncdf4")
 renv::install("tarchetypes")
 renv::install("kableExtra")
 renv::install("imager")
+renv::install("ghibli")
+
 
 ############################### renv update
 # check renv status

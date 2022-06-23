@@ -597,3 +597,277 @@ sobol_index_all_sensi
 sobol_index_all_sensi |> 
   ggplot2::ggplot() +
   ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity))
+
+
+
+############################## figures for ISEC ######################
+sum_tibb <- function(list_of_tibb) {
+  summed_tibb <- matrix(0, 
+                        nrow = nrow(list_of_tibb[[1]]), 
+                        ncol = ncol(list_of_tibb[[1]]))
+  colnames(summed_tibb) <- colnames(list_of_tibb[[1]])
+  
+  for (j in seq_along(list_of_tibb)) {
+    summed_tibb <- summed_tibb + list_of_tibb[[j]]
+  }
+  return(tibble::as_tibble(summed_tibb))
+}
+
+
+targets::tar_load(model_output_clean)
+
+
+options(scipen = 999)
+
+# results of total nutrient release for two areas 
+model_output_clean |>
+  dplyr::group_by(Geo_area) |>
+  dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                   sum = list(sum_tibb(excrete_nut))) |>
+  tidyr::unnest(sum) |>
+  tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                      names_to = "Element", 
+                      values_to = "Excretion") |> 
+  dplyr::mutate(Excretion = Excretion*1e3/Surf, # from tons to kg/km2
+                Element = factor(Element, 
+                                 levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                            "Se", "Zn", "Co", "As"))) |>
+  dplyr::filter(Geo_area %in% c("Northeast Atlantic", 
+                                "Northwest Atlantic"), 
+                Element %in% c("N", "P", "Fe", "Cu", "Mn", "Se")) |>
+  ggplot2::ggplot() +
+  ggplot2::geom_boxplot(ggplot2::aes(x = Element, 
+                                     y = Excretion, 
+                                     fill = Geo_area)) +
+  ggplot2::scale_y_log10() +
+  ggplot2::ylab("Total amounts of nutrients released \nby cetacean communities \n(kg/km2/yr)") +
+  ggplot2::theme_minimal() +
+  ggplot2::scale_fill_manual(values = c("#278B9AFF", 
+                                        "#E75B64FF")) +
+  ggplot2::theme(legend.title = ggplot2::element_blank(), 
+                 legend.position = "bottom", 
+                 legend.text = ggplot2::element_text(size = 14, 
+                                                     face = "bold"),
+                 axis.title.x = ggplot2::element_blank(), 
+                 axis.title.y = ggplot2::element_text(face = "bold", 
+                                                      size = 15),
+                 axis.text.x = ggplot2::element_text(size = 14), 
+                 axis.text.y = ggplot2::element_text(size = 14))
+ggplot2::ggsave("output/ISEC_1.jpg", 
+                #scale =1, 
+                width = 6, 
+                height = 5)
+
+
+# Sensitivity analysis
+#do the analysis for all nutrients
+# create function to compute y from mat 
+compute_y_sensi <- function(param_mat) {
+  # param_mat is the matrix of parameters of which the sensitivity is analyzed
+  # for parameters on which we did bootstrap (ie.NRJ in diet and nutrient in diet), we can't analyze sensitivity as we did not infer about the distribution of these parameters)
+  ADMR <- param_mat[, 3]*293.1*(param_mat[, 2]^0.737)
+  Ration <- ADMR / (param_mat[, 7]*param_mat[, 5])
+  conso_pop <- param_mat[, 1]*param_mat[, 4]*Ration
+  conso_nut <- (conso_pop*param_mat[, 6])/1e9
+  excrete_nut <- conso_nut*param_mat[, 8]
+  
+  return(excrete_nut)
+}
+
+create_sobol_index_tib_sensi <- function(results_tib, 
+                                         nutrient, # character string
+                                         nsim) {
+  
+  # tibble where results we be stored
+  df_Si_Sti <- tibble::tibble(Code_sp = NA, 
+                              Geo_area = NA, 
+                              Eco_area = NA, 
+                              Analysis = NA,
+                              Input = NA,
+                              Sensitivity = NA, # wether it's first order or total sobol indices
+                              original = NA, #mean
+                              bias = NA,
+                              "std. error" = NA, 
+                              "min. c.i." = NA,
+                              "max. c.i." = NA)
+  
+  # for micronutrients, filter out migratory species 
+  if (nutrient %in% c("Fe", "Cu", "Mn", "Se", "Zn", "Co")) {
+    results_tib <- results_tib |>
+      dplyr::filter(Geo_area != "Hawaii" & !(Code_sp %in% c("Bala_ede", "Bala_phy")))
+  }
+  
+  for (rw in 1:nrow(results_tib)) {
+    
+    # sampling matrix 
+    # change distributions of inputs according to data or bibliography/assumptions
+    parammatX1 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, nutrient), size = nsim/5, replace = FALSE), 
+                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, nutrient), size = nsim/5, replace = FALSE)), 
+                         ncol = 8, nrow = nsim/5) 
+    
+    parammatX2 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, nutrient), size = nsim/5, replace = FALSE), 
+                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/5, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, nutrient), size = nsim/5, replace = FALSE)), 
+                         ncol = 8, nrow = nsim/5)
+    
+    #output <- sample(purrr::pluck(results_tib, "excrete_nut", rw, "N"), size = nsim/5, replace = FALSE)
+    
+    sens <- sensitivity::sobolSalt(model = compute_y_sensi, X1 = parammatX1, X2 = parammatX2, 
+                                   scheme = "A", nboot = 1e3, conf = 0.95)
+    
+    
+    df_Si_first <- tibble::tibble(Code_sp = purrr::pluck(results_tib, "Code_sp", rw), 
+                                  Geo_area = purrr::pluck(results_tib, "Geo_area", rw), 
+                                  Eco_area = purrr::pluck(results_tib, "Eco_area", rw), 
+                                  Analysis = nutrient, 
+                                  Input = rownames(sens$S),
+                                  Sensitivity = "First order indices", 
+                                  original = purrr::pluck(sens$S, "original"), 
+                                  bias = purrr::pluck(sens$S, "bias"),
+                                  "std. error" = purrr::pluck(sens$S, "std. error"),
+                                  "min. c.i." = purrr::pluck(sens$S, "min. c.i."),
+                                  "max. c.i." = purrr::pluck(sens$S, "max. c.i.")) |>
+      dplyr::mutate(Input = dplyr::case_when(Input == "X1" ~ "abundance", 
+                                             Input == "X2" ~ "mass",
+                                             Input == "X3" ~ "beta",
+                                             Input == "X4" ~ "ndays",
+                                             Input == "X5" ~ "nrj_in_diet",
+                                             Input == "X6" ~ "nut_in_diet",
+                                             Input == "X7" ~ "assi_rate",
+                                             Input == "X8" ~ "nut_abs_rate"
+      ))
+    
+    df_Si_tot <- tibble::tibble(Code_sp = purrr::pluck(results_tib, "Code_sp", rw), 
+                                Geo_area = purrr::pluck(results_tib, "Geo_area", rw), 
+                                Eco_area = purrr::pluck(results_tib, "Eco_area", rw),
+                                Analysis = nutrient, 
+                                Input = rownames(sens$T),
+                                Sensitivity = "Total order indices", 
+                                original = purrr::pluck(sens$T, "original"), 
+                                bias = purrr::pluck(sens$S, "bias"),
+                                "std. error" = purrr::pluck(sens$T, "std. error"),
+                                "min. c.i." = purrr::pluck(sens$T, "min. c.i."),
+                                "max. c.i." = purrr::pluck(sens$T, "max. c.i.")) |>
+      dplyr::mutate(Input = dplyr::case_when(Input == "X1" ~ "abundance", 
+                                             Input == "X2" ~ "mass",
+                                             Input == "X3" ~ "beta",
+                                             Input == "X4" ~ "ndays",
+                                             Input == "X5" ~ "nrj_in_diet",
+                                             Input == "X6" ~ "nut_in_diet",
+                                             Input == "X7" ~ "assi_rate",
+                                             Input == "X8" ~ "nut_abs_rate"
+      ))
+    
+    
+    df_Si_Sti <- rbind(df_Si_Sti, 
+                       df_Si_first, 
+                       df_Si_tot)
+    
+    
+  }
+  
+  df_Si_Sti <- df_Si_Sti[-1, ]
+  
+  df_Si_Sti
+}
+
+tab_N <- create_sobol_index_tib_sensi(model_output_clean, 
+                                      "N", 
+                                      1e2)
+tab_N_old <- create_sobol_index_tib_sensi(computed_data,
+                                      "N",
+                                      1e5)
+
+tab_P <- create_sobol_index_tib_sensi(model_output_clean, 
+                                      "P", 
+                                      1e2)
+tab_Fe <- create_sobol_index_tib_sensi(model_output_clean, 
+                                      "Fe", 
+                                      1e2)
+
+tab_Fe_old <- create_sobol_index_tib_sensi(computed_data,
+                                       "Fe",
+                                       1e5)
+
+tab_Cu <- create_sobol_index_tib_sensi(model_output_clean, 
+                                       "Cu", 
+                                       1e2)
+
+
+rbind(tab_N, tab_P, tab_Fe, tab_Cu) |> 
+  ggplot2::ggplot() +
+  ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity))
+
+sobol_index_all_sensi |> 
+  ggplot2::ggplot() +
+  ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity))
+
+
+rbind(tab_N_old, tab_Fe_old) |> 
+  #dplyr::filter(Geo_area %in% c("Northeast Atlantic",
+  #                              "Northwest Atlantic")) |>
+  dplyr::filter(Geo_area %in% c("NEAtlantic", 
+                               "NWAtlantic")) |>
+  dplyr::mutate(Analysis = factor(Analysis, 
+                                  levels = c("N", "Fe")), 
+                Input = factor(Input, 
+                                  levels = c("beta",  
+                                             "mass", 
+                                             "assi_rate",      
+                                             "nrj_in_diet",
+                                             "nut_in_diet",
+                                             "nut_abs_rate",        
+                                             "abundance",         
+                                             "ndays"))) |>
+  ggplot2::ggplot() +
+  ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity)) +
+  ggplot2::facet_wrap(~ Analysis, nrow = 2) +
+  ghibli::scale_fill_ghibli_d("YesterdayMedium", 
+                              direction = - 1) +
+  ggplot2::ylab("Sobol sensitivity indices") +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(legend.title = ggplot2::element_blank(), 
+                 legend.position = "bottom", 
+                 legend.text = ggplot2::element_text(size = 14, 
+                                                     face = "bold"),
+                 axis.title.x = ggplot2::element_blank(), 
+                 axis.title.y = ggplot2::element_text(face = "bold", 
+                                                      size = 15),
+                 axis.text.x = ggplot2::element_blank(), 
+                 axis.text.y = ggplot2::element_text(size = 14), 
+                 strip.text.x = ggplot2::element_text(face = "bold", 
+                                                      size = 15)
+                 )
+ggplot2::ggsave("output/ISEC_2_old-data.jpg", 
+                #scale =1, 
+                width = 6, 
+                height = 5)
+
+
+#### excretion for just one species in one place
+purrr::pluck(model_output_clean, "excrete_nut", 102)|>
+  tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                      names_to = "Element", 
+                      values_to = "Excretion") |> 
+  dplyr::mutate(Element = factor(Element, 
+                                 levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                            "Se", "Zn", "Co", "As"))
+  ) |>
+  ggplot2::ggplot() +
+  ggplot2::geom_boxplot(ggplot2::aes(x = Element, y = Excretion, fill = Element)) +
+  ggplot2::scale_y_continuous(trans = "log10", 
+                              breaks = c(0.0001, 0.001, 0.01, 0.1, 1, 10, 100)) 
+
+
+

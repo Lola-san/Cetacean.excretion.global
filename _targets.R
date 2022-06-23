@@ -275,7 +275,7 @@ list(
   tar_target(prey_compo, join_clean_compo_tib(data_prey_compo, 
                                               data_prey_gps)), 
   # bootstrap composition of prey groups
-  tar_target(prey_compo_boot, bootstrap_compo_pg(prey_compo, nsim = 1e2)), #NSIM HERE!
+  tar_target(prey_compo_boot, bootstrap_compo_pg(prey_compo, nsim = 1e3)), #NSIM HERE!
   # can not go above 1e4 on my laptop
   # compute mean nutrient concentration of diets
   tar_target(diet_nut_input, compute_nut_in_diet(diet_input, prey_compo_boot)), 
@@ -288,16 +288,16 @@ list(
   ##############################################################################
   ############################### RUN MODEL ####################################
   ############## refers to functions of 06_run_model.R ################
-  tar_target(model_output, run_model(model_input, nsim = 1e2)), #NSIM HERE!
+  tar_target(model_output, run_model(model_input, nsim = 1e3)), #NSIM HERE!
   
   ##############################################################################
   #################### RUN sensitivity analysis ################################
   ############## refers to functions of 07_sensitivity_ana.R ###################
-  tar_target(sobol_index_all, create_sobol_index_tib(model_input, 
-                                                     model_output, 
-                                                     nsim = 1e2)), #NSIM HERE!
+  # tar_target(sobol_index_all, create_sobol_index_tib(model_input, 
+  #                                                    model_output, 
+  #                                                    nsim = 1e4)), #NSIM HERE!
   tar_target(sobol_index_all_sensi, create_sobol_index_tib_sensi(model_output, 
-                                                                 nsim = 900)), #NSIM HERE!
+                                                                 nsim = 1e3)), #NSIM HERE!
   
   ##############################################################################
   #################### generate outputs (fig + tables) #########################

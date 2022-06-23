@@ -175,7 +175,10 @@ compute_y_sensi <- function(param_mat) {
   return(excrete_nut)
 }
 
-
+#'
+#'
+#'
+#'
 # function to:
 # compute the sensitivity analysis index for all lines of the result table
 # each line being a species in an Eco_area in a Geo_area
@@ -223,7 +226,7 @@ create_sobol_index_tib_sensi <- function(results_tib,
     #output <- sample(purrr::pluck(results_tib, "excrete_nut", rw, "N"), size = nsim/5, replace = FALSE)
     
     sens <- sensitivity::sobolSalt(model = compute_y_sensi, X1 = parammatX1, X2 = parammatX2, 
-                                   scheme = "A", nboot = 1e4, conf = 0.95)
+                                   scheme = "A", nboot = 1e3, conf = 0.95)
     
     
     df_Si_first <- tibble::tibble(Code_sp = purrr::pluck(results_tib, "Code_sp", rw), 

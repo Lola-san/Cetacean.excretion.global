@@ -21,7 +21,7 @@ join_clean_compo_tib <- function(compo_tib, preygps_tib) {
     dplyr::mutate(Se = dplyr::case_when(Sp_prey == "Hyperoplus lanceolatus" ~ 2.95, 
                                         TRUE ~ Se)) |>
     dplyr::left_join(preygps_tib, key = c("Sp_prey", "Genus", 
-                                    "Family", "Order", "Taxa"), 
+                                          "Family", "Order", "Taxa"), 
                      keep = FALSE) |>
     # get rid of elements of no interest here, ie non essential ones 
     dplyr::select(-c(Pb, Ag, Cd))
@@ -40,12 +40,7 @@ join_clean_compo_tib <- function(compo_tib, preygps_tib) {
           dplyr::mutate(Prey_group = "Fish undetermined"),
         nutri_df |>
           dplyr::filter(Taxa == "Cephalopod") |>
-          dplyr::mutate(Prey_group = "Cephalopod undetermined"), 
-        nutri_df |>
-          dplyr::filter(Prey_group  == "Crustaceans", !(Sp_prey %in% c("Necora puber", 
-                                                                       "Pachygrapsus marmoratus",
-                                                                       "Polybius henslowii")) ) |>
-          dplyr::mutate(Prey_group = "Zooplankton")
+          dplyr::mutate(Prey_group = "Cephalopod undetermined")
   )
   
   
@@ -105,16 +100,48 @@ bootstrap_compo_pg <- function(compo_tib, nsim) {
     # and get rid of useless columns
     dplyr::select(-c(Sp_prey, Genus, Family, Order, Taxa, Habitat)) |>
     # perform the bootstrapping 
-    dplyr::mutate(NRJ = boot_kernel_inv(compo_tib, NRJ, "NRJ", nsim), 
-                  N = boot_kernel_inv(compo_tib, N, "N", nsim),
-                  P = boot_kernel_inv(compo_tib, P, "P", nsim),
-                  Fe = boot_kernel_inv(compo_tib, Fe, "Fe", nsim),
-                  Cu = boot_kernel_inv(compo_tib, Cu, "Cu", nsim),
-                  Mn = boot_kernel_inv(compo_tib, Mn, "Mn", nsim),
-                  Se = boot_kernel_inv(compo_tib, Se, "Se", nsim),
-                  Zn = boot_kernel_inv(compo_tib, Zn, "Zn", nsim),
-                  Co = boot_kernel_inv(compo_tib, Co, "Co", nsim),
-                  As = boot_kernel_inv(compo_tib, As, "As", nsim))
+    dplyr::mutate(NRJ = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, NRJ, "NRJ", nsim), 
+                                         TRUE ~ rnorm(n = nsim,  
+                                                      mean = mean(NRJ), 
+                                                      sd = 0.15*mean(NRJ))), 
+                  N = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, N, "N", nsim),
+                                       TRUE ~ rnorm(n = nsim,    
+                                                    mean = mean(N), 
+                                                    sd = 0.15*mean(N))), 
+                  P = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, P, "P", nsim),
+                                       TRUE ~ rnorm(n = nsim,     
+                                                    mean = mean(P), 
+                                                    sd = 0.15*mean(P))), 
+                  Fe = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, Fe, "Fe", nsim),
+                                        TRUE ~ rnorm(n = nsim,    
+                                                     mean = mean(Fe), 
+                                                     sd = 0.15*mean(Fe))), 
+                  Cu = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, Cu, "Cu", nsim),
+                                        TRUE ~ rnorm(n = nsim,     
+                                                     mean = mean(Cu), 
+                                                     sd = 0.15*mean(Cu))), 
+                  Mn = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, Mn, "Mn", nsim),
+                                        TRUE ~ rnorm(n = nsim,   
+                                                     mean = mean(Mn), 
+                                                     sd = 0.15*mean(Mn))), 
+                  Se = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, Se, "Se", nsim),
+                                        TRUE ~ rnorm(n = nsim,     
+                                                     mean = mean(Se), 
+                                                     sd = 0.15*mean(Se))), 
+                  Zn = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, Zn, "Zn", nsim),
+                                        TRUE ~ rnorm(n = nsim,    
+                                                     mean = mean(Zn), 
+                                                     sd = 0.15*mean(Zn))), 
+                  Co = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, Co, "Co", nsim),
+                                        TRUE ~ rnorm(n = nsim,    
+                                                     mean = mean(Co), 
+                                                     sd = 0.15*mean(Co))),
+                  As = dplyr::case_when(Prey_group != "Zooplankton" ~ boot_kernel_inv(compo_tib, As, "As", nsim), 
+                                        TRUE ~ rnorm(n = nsim,    
+                                                     mean = mean(As), 
+                                                     sd = 0.15*mean(As)) 
+                  ))
+  
   
 }
 
@@ -177,7 +204,7 @@ compute_nut_in_diet <- function(diet_tib, compo_tib_boot) {
       Nut_diet = seq_along(Nut_diet) |>
         purrr::map(~ purrr::pluck(Nut_diet, .) |>
                      dplyr::select(-NRJ))
-      ) |>
+    ) |>
     # delete now unused (and very heavy!) column
     dplyr::select(-c(Nut_W))
   

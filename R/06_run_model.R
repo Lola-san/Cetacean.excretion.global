@@ -51,12 +51,14 @@ run_model <- function(input_tib, nsim) {
                                Abund[[.]]$Abund_CV, 
                                nsim)), 
       Mass = seq_along(Mass) |>
-        purrr::map(~ tibble::as_tibble_col(rnorm(nsim, Mass[[.]]$Mass, 
-                                                 approx_se(Mass[[.]]$Mass_min,
+        purrr::map(~ tibble::as_tibble_col(rnorm(n = nsim, 
+                                                 mean = Mass[[.]]$Mass, 
+                                                 sd = approx_se(Mass[[.]]$Mass_min,
                                                            Mass[[.]]$Mass_max)))), 
       Beta = seq_along(Beta) |>
-        purrr::map(~ tibble::as_tibble_col(rnorm(nsim, Beta[[.]]$Beta, 
-                                                 approx_se(Beta[[.]]$Beta_min,
+        purrr::map(~ tibble::as_tibble_col(rnorm(n = nsim, 
+                                                 mean = Beta[[.]]$Beta, 
+                                                 sd = approx_se(Beta[[.]]$Beta_min,
                                                            Beta[[.]]$Beta_max)))), 
       Nut_excrete = seq_along(Nut_excrete) |> # nutrient excretion rate
         purrr::map(~ tibble::tibble(N = runif(n = nsim,

@@ -327,6 +327,73 @@ nutri_df %>%
   summarise(n = n())
 # OK # remaining NA is jellyfish
 
+mins_max <- nutri_df %>%
+  summarise(minNRJ = min(NRJ), 
+            minN = min(N, na.rm = TRUE),
+            minP = min(P),
+            minFe = min(Fe),
+            minCu = min(Cu),
+            minMn = min(Mn),
+            minSe = min(Se),
+            minZn = min(Zn),
+            minCo = min(Co),
+            minAs = min(As),
+            maxNRJ = max(NRJ), 
+            maxN = max(N, na.rm = TRUE),
+            maxP = max(P),
+            maxFe = max(Fe),
+            maxCu = max(Cu),
+            maxMn = max(Mn),
+            maxSe = max(Se),
+            maxZn = max(Zn),
+            maxCo = max(Co),
+            maxAs = max(As)
+            )
+
+variation <- nutri_df %>%
+  group_by(Prey_group) %>%
+  summarise(meanNRJ = mean(NRJ), 
+            meanN = mean(N, na.rm = TRUE), 
+            meanP = mean(P), 
+            meanFe = mean(Fe), 
+            meanCu = mean(Cu), 
+            meanMn = mean(Mn), 
+            meanSe = mean(Se), 
+            meanZn = mean(Zn), 
+            meanCo = mean(Co), 
+            meanAs = mean(As),
+            sdNRJ = sd(NRJ), 
+            sdN = sd(N, na.rm = TRUE), 
+            sdP = sd(P), 
+            sdFe = sd(Fe), 
+            sdCu = sd(Cu), 
+            sdMn = sd(Mn), 
+            sdSe = sd(Se), 
+            sdZn = sd(Zn), 
+            sdCo = sd(Co), 
+            sdAs = sd(As)) |>
+  dplyr::mutate(var_NRJ = sdNRJ/meanNRJ, 
+                var_N = sdN/meanN,
+                var_P = sdP/meanP,
+                var_Fe = sdFe/meanFe,
+                var_Cu = sdCu/meanCu,
+                var_Mn = sdMn/meanMn,
+                var_Se = sdSe/meanSe,
+                var_Zn = sdZn/meanZn,
+                var_Co = sdCo/meanCo,
+                var_As = sdAs/meanAs) 
+
+mean(variation$var_NRJ, na.rm = TRUE)
+mean(variation$var_N, na.rm = TRUE)
+mean(variation$var_P, na.rm = TRUE)
+mean(variation$var_Fe, na.rm = TRUE)
+mean(variation$var_Cu, na.rm = TRUE)
+mean(variation$var_Mn, na.rm = TRUE)
+mean(variation$var_Se, na.rm = TRUE)
+mean(variation$var_Zn, na.rm = TRUE)
+mean(variation$var_Co, na.rm = TRUE)
+mean(variation$var_As, na.rm = TRUE)
+
 
 nutri_df %>%
   group_by(Prey_group) %>%
