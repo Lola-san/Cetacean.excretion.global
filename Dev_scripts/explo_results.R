@@ -419,14 +419,14 @@ table |>
 targets::tar_load(taxa_contrib_tot_WFu)
 
 
-taxa_contrib_tot_Med |> 
+taxa_contrib_tot_WFu |> 
   dplyr::filter(Element != "As") |>
   dplyr::mutate(Element = factor(Element, 
                                  levels = c("Co", "Zn", "Se", "Mn",
                                              "Cu", "Fe", "P", "N")), 
                 ratio_contribution = ratio_contribution*100) |>
   ggplot2::ggplot(ggplot2::aes(x = Element, y = ratio_contribution, fill = Eco_gp)) +
-  ggplot2::geom_col() +
+  ggplot2::geom_col(width = .65) +
   ggplot2::coord_flip() +
   ggplot2::xlab("") +
   ggplot2::ylab("") +
@@ -442,11 +442,10 @@ taxa_contrib_tot_Med |>
   ggplot2::theme(legend.position = "none", 
                  axis.text.x = ggplot2::element_text(face = "bold", size = 14),
                  axis.text.y = ggplot2::element_text(face = "bold", size = 14)) 
-ggplot2::ggsave("output/Med_contrib_taxa.svg", 
+ggplot2::ggsave("output/article/WFu_contrib_taxa.svg", 
                 scale =1, 
                 width = 3.5, 
-                height = 3, dpi = 300)
-
+                height = 3.2, dpi = 300)
 
 
 

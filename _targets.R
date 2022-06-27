@@ -863,7 +863,7 @@ list(
   # table with stat test of difference between taxa's contribution in total
   tar_target(test_diff_taxa_tot_NEA_file, test_differences_taxa(model_output_clean,
                                                                 "file",
-                                                                "test_diff_taxa_tot",
+                                                                "NEA_test_diff_taxa_tot",
                                                                 "Northeast Atlantic")),
   tar_target(test_diff_taxa_tot_NEA_output, test_differences_taxa(model_output_clean,
                                                                   "output",
