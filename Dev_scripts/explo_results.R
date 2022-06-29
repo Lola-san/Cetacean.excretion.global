@@ -454,8 +454,10 @@ ggplot2::ggsave("output/article/WFu_contrib_taxa.svg",
 
 ################# oceanic vs neritic spatial variation
 
-############ new try again with standardization by element
+############ standardization by element
 # and then diff so each diff is between -1 and 1 
+targets::tar_load(model_output_clean)
+
 
 table_oceanic <- model_output_clean |>
   # keep only areas with both neritic and oceanic waters
@@ -544,7 +546,7 @@ table_diff <- table_oceanic |>
 
 
 table_diff |>
-dplyr::filter(Geo_area %in% c("French Guyana")) |>
+dplyr::filter(Geo_area %in% c("French Antilles")) |>
   dplyr::mutate(Element = factor(Element, 
                                  levels = c("N", "P", "Fe", "Cu", "Mn", 
                                             "Se", "Zn", "Co")), 
@@ -564,21 +566,24 @@ dplyr::filter(Geo_area %in% c("French Guyana")) |>
   ggplot2::scale_x_continuous(minor_breaks = seq(-1, 1, 0.1),
                               limits = c(-1, 
                                          1)) +
-  ggplot2::theme_classic() +
+  ggplot2::theme_minimal() +
   ggplot2::theme(panel.grid.major.x = ggplot2::element_line(color = "gray", 
                                                             size = 0.5), 
                  panel.grid.minor.x = ggplot2::element_line(color = "gray", 
                                                             size = 0.2, 
                                                             linetype = "dashed"), 
                  panel.grid.major.y = ggplot2::element_line(color = "gray", 
-                                                            size = 0.5)) 
+                                                            size = 0.5),
+                 axis.title.x = ggplot2::element_blank(),
+                 axis.title.y = ggplot2::element_blank(), 
+                 axis.text.y = ggplot2::element_blank()) 
   
-ggplot2::ggsave("output/NEA_neritic_vs_oceanic.jpg", 
-       scale =1, 
-       width = 16, 
-       height = 2)
+# ggplot2::ggsave("output/NEA_neritic_vs_oceanic.jpg", 
+#        scale =1, 
+#        width = 16, 
+#        height = 2)
 
-ggplot2::ggsave("output/Guy_neritic_vs_oceanic.svg", 
+ggplot2::ggsave("output/article/Guy_neritic_vs_oceanic.svg", 
                 scale =1, 
                 width = 16, 
                 height = 2, dpi = 300)
@@ -700,27 +705,27 @@ create_sobol_index_tib_sensi <- function(results_tib,
     
     # sampling matrix 
     # change distributions of inputs according to data or bibliography/assumptions
-    parammatX1 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, nutrient), size = nsim/5, replace = FALSE), 
-                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, nutrient), size = nsim/5, replace = FALSE)), 
-                         ncol = 8, nrow = nsim/5) 
+    parammatX1 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, nutrient), size = nsim/2, replace = FALSE), 
+                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, nutrient), size = nsim/2, replace = FALSE)), 
+                         ncol = 8, nrow = nsim/2) 
     
-    parammatX2 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, nutrient), size = nsim/5, replace = FALSE), 
-                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/5, replace = FALSE), 
-                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, nutrient), size = nsim/5, replace = FALSE)), 
-                         ncol = 8, nrow = nsim/5)
+    parammatX2 <- matrix(data = c(sample(purrr::pluck(results_tib, "Abund", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Mass", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Beta", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Ndays", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "NRJ_diet", rw, 1), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_diet", rw, nutrient), size = nsim/2, replace = FALSE), 
+                                  sample(rnorm(mean = 0.8, sd = 0.05, n = 1e5), size = nsim/2, replace = FALSE), 
+                                  sample(purrr::pluck(results_tib, "Nut_excrete", rw, nutrient), size = nsim/2, replace = FALSE)), 
+                         ncol = 8, nrow = nsim/2)
     
-    #output <- sample(purrr::pluck(results_tib, "excrete_nut", rw, "N"), size = nsim/5, replace = FALSE)
+    #output <- sample(purrr::pluck(results_tib, "excrete_nut", rw, "N"), size = nsim/2, replace = FALSE)
     
     sens <- sensitivity::sobolSalt(model = compute_y_sensi, X1 = parammatX1, X2 = parammatX2, 
                                    scheme = "A", nboot = 1e3, conf = 0.95)
@@ -783,7 +788,7 @@ create_sobol_index_tib_sensi <- function(results_tib,
 
 tab_N <- create_sobol_index_tib_sensi(model_output_clean, 
                                       "N", 
-                                      1e2)
+                                      1e3)
 tab_N_old <- create_sobol_index_tib_sensi(computed_data,
                                       "N",
                                       1e5)
@@ -793,7 +798,7 @@ tab_P <- create_sobol_index_tib_sensi(model_output_clean,
                                       1e2)
 tab_Fe <- create_sobol_index_tib_sensi(model_output_clean, 
                                       "Fe", 
-                                      1e2)
+                                      1e3)
 
 tab_Fe_old <- create_sobol_index_tib_sensi(computed_data,
                                        "Fe",
@@ -812,12 +817,12 @@ sobol_index_all_sensi |>
   ggplot2::ggplot() +
   ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity))
 
-
-rbind(tab_N_old, tab_Fe_old) |> 
+rbind(tab_N, tab_Fe) |> 
+#rbind(tab_N_old, tab_Fe_old) |> 
   #dplyr::filter(Geo_area %in% c("Northeast Atlantic",
   #                              "Northwest Atlantic")) |>
-  dplyr::filter(Geo_area %in% c("NEAtlantic", 
-                               "NWAtlantic")) |>
+  # dplyr::filter(Geo_area %in% c("NEAtlantic", 
+  #                              "NWAtlantic")) |>
   dplyr::mutate(Analysis = factor(Analysis, 
                                   levels = c("N", "Fe")), 
                 Input = factor(Input, 
@@ -843,7 +848,7 @@ rbind(tab_N_old, tab_Fe_old) |>
                  axis.title.x = ggplot2::element_blank(), 
                  axis.title.y = ggplot2::element_text(face = "bold", 
                                                       size = 15),
-                 axis.text.x = ggplot2::element_blank(), 
+                 #axis.text.x = ggplot2::element_blank(), 
                  axis.text.y = ggplot2::element_text(size = 14), 
                  strip.text.x = ggplot2::element_text(face = "bold", 
                                                       size = 15)

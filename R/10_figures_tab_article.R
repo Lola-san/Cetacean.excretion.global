@@ -141,3 +141,178 @@ fig_taxa_contrib_stacked_barplot <- function(output_tib,
                      axis.text.y = ggplot2::element_text(face = "bold", size = 14))
   }
 }
+
+
+
+############ differences between oceanic and neritic nutrient release ##########
+
+#'
+#'
+#'
+#'
+#'
+#
+
+fig_neritic_vs_oceanic_diff <- function(output_tib, 
+                                        geo_area,
+                                        object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                                        name_file) # should be a character string) 
+  {
+  
+  table_oceanic <- output_tib |>
+    # keep only areas with both neritic and oceanic waters
+    dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",  
+                                    "New Caledonia", "Hawaii",  
+                                    "Wallis & Futuna",
+                                    "French Polynesia"))) |>
+    dplyr::group_by(Geo_area, Eco_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = Excretion*1e3/Surf, # from tons to kg/km2
+                  Geo_area = factor(Geo_area, 
+                                    levels = c("Gulf of Alaska", "Central North Atlantic", "Northeast Atlantic", 
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))
+    )  |>
+    dplyr::group_by(Geo_area, Eco_area, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
+    dplyr::group_by(Element) |>
+    dplyr::mutate(mean_norm = (mean - min(mean))/(max(mean) - min(mean))) |> # normalize between zero and 1 across all areas
+    dplyr::filter(Eco_area == "oceanic") |>
+    dplyr::group_by(Geo_area, Element) |>
+    tidyr::pivot_wider(names_from = Eco_area, 
+                       values_from = mean_norm) |>
+    dplyr::select(Geo_area, Element, oceanic)
+  
+  table_shelf <- output_tib |>
+    # keep only areas with both neritic and oceanic waters
+    dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",  
+                                    "New Caledonia", "Hawaii",  
+                                    "Wallis & Futuna",
+                                    "French Polynesia"))) |>
+    dplyr::group_by(Geo_area, Eco_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = Excretion*1e3/Surf, # from tons to kg/km2
+                  Geo_area = factor(Geo_area, 
+                                    levels = c("Gulf of Alaska", "Central North Atlantic", "Northeast Atlantic", 
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))
+    )  |>
+    dplyr::group_by(Geo_area, Eco_area, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
+    dplyr::group_by(Element) |>
+    dplyr::mutate(mean_norm = (mean - min(mean))/(max(mean) - min(mean))) |> # normalize between zero and 1 across all areas
+    dplyr::filter(Eco_area == "shelf") |>
+    dplyr::group_by(Geo_area, Element) |>
+    tidyr::pivot_wider(names_from = Eco_area, 
+                       values_from = mean_norm) |>
+    dplyr::select(Geo_area, Element, shelf) 
+  
+  table_diff <- table_oceanic |>
+    dplyr::left_join(table_shelf, 
+                     by = c("Geo_area", "Element")) |>
+    dplyr::mutate(diff = (oceanic - shelf)) |> 
+    dplyr::filter(Element != "As") 
+  
+  
+  
+  table_diff |>
+    dplyr::filter(Geo_area == geo_area) |>
+    dplyr::mutate(Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co"))) |>
+    ggplot2::ggplot(ggplot2::aes(x = diff, y = Geo_area)) +
+    ggplot2::geom_violin(fill = "#69b3a2", 
+                         color = "#69b3a2", 
+                         alpha = 0.5, 
+                         size = 1) +
+    ggplot2::geom_point(ggplot2::aes(color = Element), size = 8) + 
+    ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
+                                           "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
+    ggplot2::scale_x_continuous(minor_breaks = seq(-1, 1, 0.1),
+                                limits = c(-1, 
+                                           1)) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(panel.grid.major.x = ggplot2::element_line(color = "gray", 
+                                                              size = 0.5), 
+                   panel.grid.minor.x = ggplot2::element_line(color = "gray", 
+                                                              size = 0.2, 
+                                                              linetype = "dashed"), 
+                   panel.grid.major.y = ggplot2::element_line(color = "gray", 
+                                                              size = 0.5),
+                   axis.title.x = ggplot2::element_blank(),
+                   axis.title.y = ggplot2::element_blank(), 
+                   axis.text.y = ggplot2::element_blank()) 
+  
+  if (object_type == "file") {
+    ggplot2::ggsave(paste0("output/article", 
+                           name_file, 
+                           ".svg"), 
+                    scale =1, 
+                    width = 16, 
+                    height = 2, dpi = 300)
+  } else {
+    table_diff |>
+      dplyr::filter(Geo_area == geo_area) |>
+      dplyr::mutate(Element = factor(Element, 
+                                     levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                "Se", "Zn", "Co"))) |>
+      ggplot2::ggplot(ggplot2::aes(x = diff, y = Geo_area)) +
+      ggplot2::geom_violin(fill = "#69b3a2", 
+                           color = "#69b3a2", 
+                           alpha = 0.5, 
+                           size = 1) +
+      ggplot2::geom_point(ggplot2::aes(color = Element), size = 8) + 
+      ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
+                                             "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
+      ggplot2::scale_x_continuous(minor_breaks = seq(-1, 1, 0.1),
+                                  limits = c(-1, 
+                                             1)) +
+      ggplot2::theme_minimal() +
+      ggplot2::theme(panel.grid.major.x = ggplot2::element_line(color = "gray", 
+                                                                size = 0.5), 
+                     panel.grid.minor.x = ggplot2::element_line(color = "gray", 
+                                                                size = 0.2, 
+                                                                linetype = "dashed"), 
+                     panel.grid.major.y = ggplot2::element_line(color = "gray", 
+                                                                size = 0.5),
+                     axis.title.x = ggplot2::element_blank(),
+                     axis.title.y = ggplot2::element_blank(), 
+                     axis.text.y = ggplot2::element_blank()) 
+  }
+  
+}
+
+
+
+
+
