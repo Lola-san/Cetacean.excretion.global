@@ -236,6 +236,33 @@ list(
                                  abund_sp_REMMOA_largeglobi) |> 
                dplyr::arrange(Code_sp, Species, Geo_area, Eco_area)), 
   
+  ##### for abundances for SUMMER project only
+  tar_target(abund_Bala_phy_SUMMER, build_sp_tib_SUMMER(original_tib_Bala_phy, 
+                                                 "Balaenoptera physalus", 
+                                                 "Bala_phy")),
+  tar_target(abund_Glob_mel_SUMMER, build_sp_tib_SUMMER(original_tib_Glob_mel, 
+                                                 "Globicephala melas", 
+                                                 "Glob_mel")),
+  tar_target(abund_Gram_gri_SUMMER, build_sp_tib_SUMMER(original_tib_Gram_gri, 
+                                                        "Grampus griseus", 
+                                                        "Gram_gri")),
+  tar_target(abund_Phys_mac_SUMMER, build_sp_tib_SUMMER(original_tib_Phys_mac, 
+                                                        "Physeter macrocephalus", 
+                                                        "Phys_mac")),
+  tar_target(abund_Turs_tru_SUMMER, build_sp_tib_SUMMER(original_tib_Turs_tru, 
+                                                        "Tursiops truncatus", 
+                                                        "Turs_tru")),
+  tar_target(abund_Dd_Dc_Sc_SUMMER, build_sp_tib_Dd_Dc_Sc_SUMMER(ratio_full_others)),
+  tar_target(abund_BW_sp_SUMMER, build_sp_tib_BW_SUMMER(ratio_full_REMMOAs, ratio_full_others)),
+  tar_target(abund_sp_all_SUMMER, rbind(abund_Bala_phy_SUMMER, 
+                                 abund_Glob_mel_SUMMER, 
+                                 abund_Gram_gri_SUMMER, 
+                                 abund_Phys_mac_SUMMER, 
+                                 abund_Turs_tru_SUMMER, 
+                                 abund_Dd_Dc_Sc_SUMMER, 
+                                 abund_BW_sp_SUMMER) |> 
+               dplyr::arrange(Code_sp, Species, Geo_area, Eco_area)),
+  
   ##############################################################################
   ###################### add species-specific energetic data ###################
   ################# refers to function of 02_add_energetic_data.R ##############
