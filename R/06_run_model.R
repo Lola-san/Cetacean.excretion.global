@@ -9,8 +9,6 @@
 ################################################################################
 
 ####################### PRELIMINARY FUNCTIONS ##################################
-# to compute standard error from a min and a max
-approx_se <- function(lower, upper) { return((upper-lower)/4) }
 
 # to simulate abundance uncertainty
 abundance <- function(abund_bar, abund_cv,
@@ -53,13 +51,11 @@ run_model <- function(input_tib, nsim) {
       Mass = seq_along(Mass) |>
         purrr::map(~ tibble::as_tibble_col(rnorm(n = nsim, 
                                                  mean = Mass[[.]]$Mass, 
-                                                 sd = approx_se(Mass[[.]]$Mass_min,
-                                                           Mass[[.]]$Mass_max)))), 
+                                                 sd = 0.1*Mass[[.]]$Mass))), 
       Beta = seq_along(Beta) |>
         purrr::map(~ tibble::as_tibble_col(rnorm(n = nsim, 
                                                  mean = Beta[[.]]$Beta, 
-                                                 sd = approx_se(Beta[[.]]$Beta_min,
-                                                           Beta[[.]]$Beta_max)))), 
+                                                 sd = 0.5*Beta[[.]]$Beta))), 
       Nut_excrete = seq_along(Nut_excrete) |> # nutrient excretion rate
         purrr::map(~ tibble::tibble(N = runif(n = nsim,
                                               min = Nut_excrete[[.]]$N - 0.1, 
