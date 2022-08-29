@@ -214,10 +214,10 @@ build_sp_tib <- function(original_tib, species, code_sp) {
                      CV_tot = sqrt(Var_tot)/Abund_tot) |>
     dplyr::mutate(Code_sp = code_sp, 
                   Species = species, 
-                  Surf_tot = dplyr::case_when(Geo_area == "NEAtlantic" & Eco_area == "shelf" ~ 1084226 # SCANS III
-                                              , # Observe Ireland
-                                              Geo_area == "NEAtlantic" & Eco_area == "oceanic" ~ 543235 # SCANS III
-                                              , # Observe Ireland
+                  Surf_tot = dplyr::case_when(Geo_area == "NEAtlantic" & Eco_area == "shelf" ~ 1084226 + # SCANS III
+                                                63162 + 15766 + 17261 + 9707 + 30177 + 35464 + 80009, # Observe Ireland
+                                              Geo_area == "NEAtlantic" & Eco_area == "oceanic" ~ 543235 + # SCANS III
+                                                31875 + 24703 + 20743, # Observe Ireland
                                               Geo_area == "Med" & Eco_area == "shelf" ~ 507965,
                                               Geo_area == "Med" & Eco_area == "oceanic" ~ 1361063,
                                               Geo_area == "NAtlantic" & Eco_area == "shelf" ~ 743874,
