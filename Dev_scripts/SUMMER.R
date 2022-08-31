@@ -58,6 +58,34 @@ SUMMER |>
 targets::tar_load(abund_sp_all_SUMMER)
 
 abund_sp_all_SUMMER |> 
-  dplyr::filter(Geo_area %in% c("Med_E", "Med_W")) |>
-  dplyr::select(Species, Surf_tot, Abund) |>
-  tidyr::unnest(Abund)
+  dplyr::filter(Geo_area %in% c("Med_E", "Med_W")) 
+
+
+############### SPECIES CHARACTERISTICS ########################
+SUMMER$Species
+
+# select only one line per species (as there is many lines for all the places each species occurs)
+SUMMER <- SUMMER[c(1, 4, 6, 7, 8, 12, 15, 16, 18, 
+                   22, 27, 28, 32, 34, 36, 37, 39,
+                   44, 45, 48, 49, 55, 57, 58, 59, 
+                   63, 65, 66, 72),]
+
+colnames(SUMMER)
+
+# Body mass
+SUMMER |>
+  dplyr::ungroup() |>
+  dplyr::select(Species, Mass) |>
+  tidyr::unnest(Mass) |>
+  print(n = Inf)
+
+colnames(SUMMER)
+
+# Mean Diet Quality
+SUMMER |>
+  dplyr::ungroup() |>
+  dplyr::select(Species, NRJ_diet) |>
+  tidyr::unnest(NRJ_diet) |>
+  dplyr::group_by(Species) |>
+  dplyr::summarise(mean_diet_quali = mean(value)) |>
+  print(n = Inf)
