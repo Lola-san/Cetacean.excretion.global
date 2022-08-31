@@ -159,13 +159,12 @@ create_sobol_index_tib <- function(data_tib,
   df_Si_Sti
 }
 
-
+############################ WITH SENSITIVITY PACKAGE 
 
 ### small functions for the sensitivity analysis 
 # create function to compute y from mat 
 compute_y_sensi <- function(param_mat) {
-  # param_mat is the matrix of parameters of which the sensitivity is analyzed
-  # for parameters on which we did bootstrap (ie.NRJ in diet and nutrient in diet), we can't analyze sensitivity as we did not infer about the distribution of these parameters)
+  # param_mat is the matrix of parameters
   ADMR <- param_mat[, 3]*293.1*(param_mat[, 2]^0.737)
   Ration <- ADMR / (param_mat[, 7]*param_mat[, 5])
   conso_pop <- param_mat[, 1]*param_mat[, 4]*Ration

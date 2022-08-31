@@ -89,3 +89,38 @@ SUMMER |>
   dplyr::group_by(Species) |>
   dplyr::summarise(mean_diet_quali = mean(value)) |>
   print(n = Inf)
+<<<<<<< HEAD
+=======
+
+
+# for other parameters it's part of output
+targets::tar_load(model_output)
+
+SUMMER2 <- model_output |>
+  dplyr::filter(Geo_area %in% c("NAtlantic", "NEAtlantic", "NWAtlantic", 
+                                "GoMexico", "Antilles", "Guyana", "Med"), 
+                Eco_area == "oceanic")
+
+
+# select only one line per species (as there is many lines for all the places each species occurs)
+SUMMER2 <- SUMMER2[c(1, 4, 6, 7, 8, 12, 15, 16, 18, 
+                   22, 27, 28, 32, 34, 36, 37, 39,
+                   44, 45, 48, 49, 55, 57, 58, 59, 
+                   63, 65, 66, 72),]
+
+colnames(SUMMER2)
+
+# Mean Diet Quality
+SUMMER2 |>
+  dplyr::ungroup() |>
+  dplyr::select(Species, Indi_data) |>
+  tidyr::unnest(Indi_data) |>
+  dplyr::group_by(Species) |>
+  dplyr::summarise(ADMR_mean = mean(ADMR), 
+                   ADMR_min = min(ADMR), 
+                   ADMR_max = max(ADMR), 
+                   ration_mean = mean(Ration), 
+                   ration_min = min(Ration), 
+                   ration_max = max(Ration)) |>
+  print(n = Inf)
+>>>>>>> d70392add860461217787b5d8658eee5cfde0e2c
