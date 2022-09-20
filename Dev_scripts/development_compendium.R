@@ -41,6 +41,11 @@ renv::install("tarchetypes")
 renv::install("kableExtra")
 renv::install("imager")
 renv::install("ghibli")
+renv::install("rmarkdown")
+renv::install("here")
+renv::install("kdensity")
+renv::install("sensitivity")
+renv::install("wesanderson")
 
 
 ############################### renv update

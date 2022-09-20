@@ -89,8 +89,7 @@ SUMMER |>
   dplyr::group_by(Species) |>
   dplyr::summarise(mean_diet_quali = mean(value)) |>
   print(n = Inf)
-<<<<<<< HEAD
-=======
+
 
 
 # for other parameters it's part of output
@@ -123,4 +122,4 @@ SUMMER2 |>
                    ration_min = min(Ration), 
                    ration_max = max(Ration)) |>
   print(n = Inf)
->>>>>>> d70392add860461217787b5d8658eee5cfde0e2c
+

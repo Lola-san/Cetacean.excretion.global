@@ -1,0 +1,25 @@
+"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
+"1"	"Northwest Atlantic"	"N"	"Baleen whales"	"Deep divers"	0.49
+"2"	"Northwest Atlantic"	"N"	"Baleen whales"	"Small delphinids"	0.15
+"3"	"Northwest Atlantic"	"N"	"Deep divers"	"Small delphinids"	0.15
+"4"	"Northwest Atlantic"	"P"	"Baleen whales"	"Deep divers"	0.67
+"5"	"Northwest Atlantic"	"P"	"Baleen whales"	"Small delphinids"	0.12
+"6"	"Northwest Atlantic"	"P"	"Deep divers"	"Small delphinids"	0
+"7"	"Northwest Atlantic"	"Fe"	"Baleen whales"	"Deep divers"	0.59
+"8"	"Northwest Atlantic"	"Fe"	"Baleen whales"	"Small delphinids"	0.18
+"9"	"Northwest Atlantic"	"Fe"	"Deep divers"	"Small delphinids"	0.13
+"10"	"Northwest Atlantic"	"Cu"	"Baleen whales"	"Deep divers"	0.07
+"11"	"Northwest Atlantic"	"Cu"	"Baleen whales"	"Small delphinids"	0.44
+"12"	"Northwest Atlantic"	"Cu"	"Deep divers"	"Small delphinids"	0.98
+"13"	"Northwest Atlantic"	"Mn"	"Baleen whales"	"Deep divers"	0.65
+"14"	"Northwest Atlantic"	"Mn"	"Baleen whales"	"Small delphinids"	0.06
+"15"	"Northwest Atlantic"	"Mn"	"Deep divers"	"Small delphinids"	0.02
+"16"	"Northwest Atlantic"	"Se"	"Baleen whales"	"Deep divers"	0.57
+"17"	"Northwest Atlantic"	"Se"	"Baleen whales"	"Small delphinids"	0.22
+"18"	"Northwest Atlantic"	"Se"	"Deep divers"	"Small delphinids"	0.15
+"19"	"Northwest Atlantic"	"Zn"	"Baleen whales"	"Deep divers"	0.34
+"20"	"Northwest Atlantic"	"Zn"	"Baleen whales"	"Small delphinids"	0.17
+"21"	"Northwest Atlantic"	"Zn"	"Deep divers"	"Small delphinids"	0.28
+"22"	"Northwest Atlantic"	"Co"	"Baleen whales"	"Deep divers"	0.35
+"23"	"Northwest Atlantic"	"Co"	"Baleen whales"	"Small delphinids"	0.18
+"24"	"Northwest Atlantic"	"Co"	"Deep divers"	"Small delphinids"	0.44

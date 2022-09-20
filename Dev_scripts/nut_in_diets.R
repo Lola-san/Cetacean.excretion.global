@@ -559,47 +559,6 @@ Full_diets <- Full_diets %>%
   ) %>%
   select(-c(Nut_W))
 
-# length(unique(pluck(Full_diet, "Nut_diet", 20, "N"))) # 79 549
-# length(unique(pluck(Full_diet, "Nut_W", 1, 1, 1, "N"))) # 13 Large demersal nrj lean fish
-# length(unique(pluck(Full_diet, "Nut_W", 1, 3, 1, "N"))) # 26 Small schooling nrj lean fish
-# length(unique(pluck(Full_diet, "Nut_W", 1, 4, 1, "N"))) # 39 Small schooling nrj rich fish
-# length(unique(pluck(Full_diet, "Nut_W", 1, 5, 1, "N"))) # 17 Miscellanous benthodemersal fish
-# length(unique(pluck(Full_diet, "Nut_W", 1, 13, 1, "N"))) # 1 Zooplankton
-# # 13*26*39*17*1 = 224 094 so I don't get it
-# 
-# length(unique(pluck(Full_diet, "Nut_W", 1, 1, 1, "N") +
-#   pluck(Full_diet, "Nut_W", 1, 3, 1, "N") +
-#   pluck(Full_diet, "Nut_W", 1, 4, 1, "N") +
-#   pluck(Full_diet, "Nut_W", 1, 5, 1, "N") +
-#   pluck(Full_diet, "Nut_W", 1, 13, 1, "N")
-# ))
-# 
-# length(unique(pluck(Full_diet, "Nut_W", 1, 1, 1, "N") +
-#                 pluck(Full_diet, "Nut_W", 1, 3, 1, "N"))) # 338 = 13*26 OK
-# 
-# length(unique(pluck(Full_diet, "Nut_W", 1, 1, 1, "N") +
-#                 pluck(Full_diet, "Nut_W", 1, 3, 1, "N") +
-#                 pluck(Full_diet, "Nut_W", 1, 4, 1, "N"))) # 13173 different from 13*26*39 = 13182 # difference of 8
-# 
-# length(unique(pluck(Full_diet, "Nut_W", 1, 1, 1, "N") +
-#                 pluck(Full_diet, "Nut_W", 1, 3, 1, "N") +
-#                 pluck(Full_diet, "Nut_W", 1, 4, 1, "N")+
-#                 pluck(Full_diet, "Nut_W", 1, 5, 1, "N") # 79 549 different from 13*26*39*17 = 224 094 #difference of 144 545! but we have only 100 000  values
-# ))
 
-
-######################################################################################################
-############################################ 4 - Save RData ##########################################
-######################################################################################################
-
-rm(list = setdiff(ls(), c("wd", "Full_diets")))
-
-setwd(paste0(wd, "/data/model/"))
-save.image("Diet_data_complete_20211011_n1e5.RData")
-
-# final_diet_df %>%
-#   group_by(Block) %>%
-#   summarise(SumWN = list(sum_vec(WN_diet))) %>%
-# unnest(SumWN)
 
 
