@@ -1,0 +1,17 @@
+"Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
+"1"	"French Guyana"	"N"	"Neritic waters"	"Oceanic waters"	0.9924
+"2"	"French Guyana"	"N"	"Oceanic waters"	"Neritic waters"	0.0076
+"3"	"French Guyana"	"P"	"Neritic waters"	"Oceanic waters"	0.9936
+"4"	"French Guyana"	"P"	"Oceanic waters"	"Neritic waters"	0.0064
+"5"	"French Guyana"	"Fe"	"Neritic waters"	"Oceanic waters"	0.994
+"6"	"French Guyana"	"Fe"	"Oceanic waters"	"Neritic waters"	0.006
+"7"	"French Guyana"	"Cu"	"Neritic waters"	"Oceanic waters"	0.9622
+"8"	"French Guyana"	"Cu"	"Oceanic waters"	"Neritic waters"	0.0378
+"9"	"French Guyana"	"Mn"	"Neritic waters"	"Oceanic waters"	0.9935
+"10"	"French Guyana"	"Mn"	"Oceanic waters"	"Neritic waters"	0.0065
+"11"	"French Guyana"	"Se"	"Neritic waters"	"Oceanic waters"	0.9934
+"12"	"French Guyana"	"Se"	"Oceanic waters"	"Neritic waters"	0.0066
+"13"	"French Guyana"	"Zn"	"Neritic waters"	"Oceanic waters"	0.9927
+"14"	"French Guyana"	"Zn"	"Oceanic waters"	"Neritic waters"	0.0073
+"15"	"French Guyana"	"Co"	"Neritic waters"	"Oceanic waters"	0.9923
+"16"	"French Guyana"	"Co"	"Oceanic waters"	"Neritic waters"	0.0077

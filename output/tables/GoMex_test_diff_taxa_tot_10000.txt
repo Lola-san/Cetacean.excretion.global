@@ -1,0 +1,25 @@
+"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
+"1"	"Gulf of Mexico"	"N"	"Baleen whales"	"Deep divers"	0.0077
+"2"	"Gulf of Mexico"	"N"	"Baleen whales"	"Small delphinids"	0.0022
+"3"	"Gulf of Mexico"	"N"	"Deep divers"	"Small delphinids"	0.592
+"4"	"Gulf of Mexico"	"P"	"Baleen whales"	"Deep divers"	0.0089
+"5"	"Gulf of Mexico"	"P"	"Baleen whales"	"Small delphinids"	0.0024
+"6"	"Gulf of Mexico"	"P"	"Deep divers"	"Small delphinids"	0.4414
+"7"	"Gulf of Mexico"	"Fe"	"Baleen whales"	"Deep divers"	0.0109
+"8"	"Gulf of Mexico"	"Fe"	"Baleen whales"	"Small delphinids"	0.0031
+"9"	"Gulf of Mexico"	"Fe"	"Deep divers"	"Small delphinids"	0.396
+"10"	"Gulf of Mexico"	"Cu"	"Baleen whales"	"Deep divers"	0.0062
+"11"	"Gulf of Mexico"	"Cu"	"Baleen whales"	"Small delphinids"	0.0025
+"12"	"Gulf of Mexico"	"Cu"	"Deep divers"	"Small delphinids"	0.9383
+"13"	"Gulf of Mexico"	"Mn"	"Baleen whales"	"Deep divers"	0.0146
+"14"	"Gulf of Mexico"	"Mn"	"Baleen whales"	"Small delphinids"	0.0028
+"15"	"Gulf of Mexico"	"Mn"	"Deep divers"	"Small delphinids"	0.3422
+"16"	"Gulf of Mexico"	"Se"	"Baleen whales"	"Deep divers"	0.009
+"17"	"Gulf of Mexico"	"Se"	"Baleen whales"	"Small delphinids"	0.0025
+"18"	"Gulf of Mexico"	"Se"	"Deep divers"	"Small delphinids"	0.5924
+"19"	"Gulf of Mexico"	"Zn"	"Baleen whales"	"Deep divers"	0.0075
+"20"	"Gulf of Mexico"	"Zn"	"Baleen whales"	"Small delphinids"	0.0028
+"21"	"Gulf of Mexico"	"Zn"	"Deep divers"	"Small delphinids"	0.6744
+"22"	"Gulf of Mexico"	"Co"	"Baleen whales"	"Deep divers"	0.0055
+"23"	"Gulf of Mexico"	"Co"	"Baleen whales"	"Small delphinids"	0.0024
+"24"	"Gulf of Mexico"	"Co"	"Deep divers"	"Small delphinids"	0.7363

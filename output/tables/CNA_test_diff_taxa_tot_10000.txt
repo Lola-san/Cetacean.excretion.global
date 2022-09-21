@@ -1,0 +1,25 @@
+"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
+"1"	"Central North Atlantic"	"N"	"Baleen whales"	"Deep divers"	0.779
+"2"	"Central North Atlantic"	"N"	"Baleen whales"	"Small delphinids"	0.9991
+"3"	"Central North Atlantic"	"N"	"Deep divers"	"Small delphinids"	0.996
+"4"	"Central North Atlantic"	"P"	"Baleen whales"	"Deep divers"	0.8706
+"5"	"Central North Atlantic"	"P"	"Baleen whales"	"Small delphinids"	0.9989
+"6"	"Central North Atlantic"	"P"	"Deep divers"	"Small delphinids"	0.988
+"7"	"Central North Atlantic"	"Fe"	"Baleen whales"	"Deep divers"	0.8035
+"8"	"Central North Atlantic"	"Fe"	"Baleen whales"	"Small delphinids"	0.9981
+"9"	"Central North Atlantic"	"Fe"	"Deep divers"	"Small delphinids"	0.9875
+"10"	"Central North Atlantic"	"Cu"	"Baleen whales"	"Deep divers"	0.1875
+"11"	"Central North Atlantic"	"Cu"	"Baleen whales"	"Small delphinids"	0.9938
+"12"	"Central North Atlantic"	"Cu"	"Deep divers"	"Small delphinids"	0.9994
+"13"	"Central North Atlantic"	"Mn"	"Baleen whales"	"Deep divers"	0.8309
+"14"	"Central North Atlantic"	"Mn"	"Baleen whales"	"Small delphinids"	0.9939
+"15"	"Central North Atlantic"	"Mn"	"Deep divers"	"Small delphinids"	0.9723
+"16"	"Central North Atlantic"	"Se"	"Baleen whales"	"Deep divers"	0.7543
+"17"	"Central North Atlantic"	"Se"	"Baleen whales"	"Small delphinids"	0.9976
+"18"	"Central North Atlantic"	"Se"	"Deep divers"	"Small delphinids"	0.9969
+"19"	"Central North Atlantic"	"Zn"	"Baleen whales"	"Deep divers"	0.6537
+"20"	"Central North Atlantic"	"Zn"	"Baleen whales"	"Small delphinids"	0.9976
+"21"	"Central North Atlantic"	"Zn"	"Deep divers"	"Small delphinids"	0.9986
+"22"	"Central North Atlantic"	"Co"	"Baleen whales"	"Deep divers"	0.4915
+"23"	"Central North Atlantic"	"Co"	"Baleen whales"	"Small delphinids"	0.996
+"24"	"Central North Atlantic"	"Co"	"Deep divers"	"Small delphinids"	0.9962

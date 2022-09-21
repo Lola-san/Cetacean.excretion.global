@@ -1,0 +1,17 @@
+"Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
+"1"	"Northeast Atlantic"	"N"	"Neritic waters"	"Oceanic waters"	0.005
+"2"	"Northeast Atlantic"	"N"	"Oceanic waters"	"Neritic waters"	0.995
+"3"	"Northeast Atlantic"	"P"	"Neritic waters"	"Oceanic waters"	0.0072
+"4"	"Northeast Atlantic"	"P"	"Oceanic waters"	"Neritic waters"	0.9928
+"5"	"Northeast Atlantic"	"Fe"	"Neritic waters"	"Oceanic waters"	0.0095
+"6"	"Northeast Atlantic"	"Fe"	"Oceanic waters"	"Neritic waters"	0.9905
+"7"	"Northeast Atlantic"	"Cu"	"Neritic waters"	"Oceanic waters"	9e-04
+"8"	"Northeast Atlantic"	"Cu"	"Oceanic waters"	"Neritic waters"	0.9991
+"9"	"Northeast Atlantic"	"Mn"	"Neritic waters"	"Oceanic waters"	0.017
+"10"	"Northeast Atlantic"	"Mn"	"Oceanic waters"	"Neritic waters"	0.983
+"11"	"Northeast Atlantic"	"Se"	"Neritic waters"	"Oceanic waters"	0.0076
+"12"	"Northeast Atlantic"	"Se"	"Oceanic waters"	"Neritic waters"	0.9924
+"13"	"Northeast Atlantic"	"Zn"	"Neritic waters"	"Oceanic waters"	0.0049
+"14"	"Northeast Atlantic"	"Zn"	"Oceanic waters"	"Neritic waters"	0.9951
+"15"	"Northeast Atlantic"	"Co"	"Neritic waters"	"Oceanic waters"	0.0058
+"16"	"Northeast Atlantic"	"Co"	"Oceanic waters"	"Neritic waters"	0.9942

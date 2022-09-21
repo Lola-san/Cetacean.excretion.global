@@ -161,95 +161,96 @@ boot_kernel_inv <- function(compo_tib, nsim) {
 #'
 #'
 #'
-# function to perform gaussian mixture bootstrap using Nicolas Bousquet (Sorbonnes University) procedure
-boot_gauss_mix <- function(compo_tib, nsim) {
-  
-  gauss_mix <- function(x, nsim) {
-    # approche par modele de melange de gaussiennes ===========================================
-    dens2 = mixtools::normalmixEM(x) # estimation menee par algo EM
-    weights <- dens2$lambda
-    mu <- dens2$mu
-    sigma <- dens2$sigma
-    d <- length(weights)
-    dens2 <- function(x)
-    {
-      y <- 0
-      for (i in c(1:d))
-      {
-        y <- y + weights[i]*dnorm(x,mu[i],sigma[i])
-      }
-      return(y)
-    }
-    # simulation d'un melange de gaussiennes
-    r.dens2 <- function(n)
-    {
-      components <- sample(1:d,prob=weights,size=n,replace=TRUE)
-      rnorm(n)*sigma[components]+mu[components]
-    }
-    
-    #==================== GENERATION PAR MODELE DE MELANGE ===================
-    gen.sample.mixture = r.dens2(nsim) 
-  }
-  
-  # there is only one sample in the prey group of zooplankton, so instead of doing bootstrapping we used Monte-Carlo simulations 
-  # based on the mean concentration of that sample avec a % of this mean as a standard deviation
-  # for all other groups sd seems to be higher for micronutrients than for N and P, so we set 20% of sd for N, P and 40% for micronutrients
-  rbind(compo_tib |> 
-          dplyr::group_by(Prey_group) |>
-          dplyr::filter(Prey_group !="Zooplankton") |>
-          tidyr::nest(compo = c(NRJ, N, P, Fe, Cu, Mn, Se, Zn, Co, As)) |>
-          dplyr::mutate(compo = seq_along(compo) |> # nutrient excretion rate
-                          purrr::map(~ tibble::tibble(NRJ = gauss_mix(purrr::pluck(compo, ., "NRJ"), nsim), 
-                                                      N = gauss_mix(purrr::pluck(compo, ., "N"), nsim),
-                                                      P = gauss_mix(purrr::pluck(compo, ., "P"), nsim),
-                                                      Fe = gauss_mix(purrr::pluck(compo, ., "Fe"), nsim),
-                                                      Cu = gauss_mix(purrr::pluck(compo, ., "Cu"), nsim),
-                                                      Mn = gauss_mix(purrr::pluck(compo, ., "Mn"), nsim),
-                                                      Se = gauss_mix(purrr::pluck(compo, ., "Se"), nsim),
-                                                      Zn = gauss_mix(purrr::pluck(compo, ., "Zn"), nsim),
-                                                      Co = gauss_mix(purrr::pluck(compo, ., "Co"), nsim),
-                                                      As = gauss_mix(purrr::pluck(compo, ., "As"), nsim)
-                          ))), 
-        compo_tib |> 
-          dplyr::group_by(Prey_group) |>
-          dplyr::filter(Prey_group =="Zooplankton") |>
-          tidyr::nest(compo = c(NRJ, N, P, Fe, Cu, Mn, Se, Zn, Co, As)) |>
-          dplyr::mutate(compo = seq_along(compo) |> # nutrient excretion rate
-                          purrr::map(~ tibble::tibble(NRJ = rnorm(n = nsim, 
-                                                                  mean = purrr::pluck(compo, ., "NRJ", 1), 
-                                                                  sd = 0.2*purrr::pluck(compo, ., "NRJ", 1)), 
-                                                      N = rnorm(n = nsim, 
-                                                                mean = purrr::pluck(compo, ., "N", 1), 
-                                                                sd = 0.2*purrr::pluck(compo, ., "N", 1)),
-                                                      P = rnorm(n = nsim, 
-                                                                mean = purrr::pluck(compo, ., "P", 1), 
-                                                                sd = 0.2*purrr::pluck(compo, ., "P", 1)),
-                                                      Fe = rnorm(n = nsim, 
-                                                                 mean = purrr::pluck(compo, ., "Fe", 1), 
-                                                                 sd = 0.4*purrr::pluck(compo, ., "Fe", 1)),
-                                                      Cu = rnorm(n = nsim, 
-                                                                 mean = purrr::pluck(compo, ., "Cu", 1), 
-                                                                 sd = 0.4*purrr::pluck(compo, ., "Cu", 1)),
-                                                      Mn = rnorm(n = nsim, 
-                                                                 mean = purrr::pluck(compo, ., "Mn", 1), 
-                                                                 sd = 0.4*purrr::pluck(compo, ., "Mn", 1)),
-                                                      Se = rnorm(n = nsim, 
-                                                                 mean = purrr::pluck(compo, ., "Se", 1), 
-                                                                 sd = 0.4*purrr::pluck(compo, ., "Se", 1)),
-                                                      Zn = rnorm(n = nsim, 
-                                                                 mean = purrr::pluck(compo, ., "Zn", 1), 
-                                                                 sd = 0.4*purrr::pluck(compo, ., "Zn", 1)),
-                                                      Co = rnorm(n = nsim, 
-                                                                 mean = purrr::pluck(compo, ., "Co", 1), 
-                                                                 sd = 0.4*purrr::pluck(compo, ., "Co", 1)),
-                                                      As = rnorm(n = nsim, 
-                                                                 mean = purrr::pluck(compo, ., "As", 1), 
-                                                                 sd = 0.4*purrr::pluck(compo, ., "As", 1))
-                          )))) |>
-    tidyr::unnest(compo)
-  
-  
-}
+# doesn't work where the number of sample per prey group is low, which is for most....
+# # function to perform gaussian mixture bootstrap using Nicolas Bousquet (Sorbonnes University) procedure
+# boot_gauss_mix <- function(compo_tib, nsim) {
+#   
+#   gauss_mix <- function(x, nsim) {
+#     # approche par modele de melange de gaussiennes ===========================================
+#     dens2 = mixtools::normalmixEM(x) # estimation menee par algo EM
+#     weights <- dens2$lambda
+#     mu <- dens2$mu
+#     sigma <- dens2$sigma
+#     d <- length(weights)
+#     dens2 <- function(x)
+#     {
+#       y <- 0
+#       for (i in c(1:d))
+#       {
+#         y <- y + weights[i]*dnorm(x,mu[i],sigma[i])
+#       }
+#       return(y)
+#     }
+#     # simulation d'un melange de gaussiennes
+#     r.dens2 <- function(n)
+#     {
+#       components <- sample(1:d,prob=weights,size=n,replace=TRUE)
+#       rnorm(n)*sigma[components]+mu[components]
+#     }
+#     
+#     #==================== GENERATION PAR MODELE DE MELANGE ===================
+#     gen.sample.mixture = r.dens2(nsim) 
+#   }
+#   
+#   # there is only one sample in the prey group of zooplankton, so instead of doing bootstrapping we used Monte-Carlo simulations 
+#   # based on the mean concentration of that sample avec a % of this mean as a standard deviation
+#   # for all other groups sd seems to be higher for micronutrients than for N and P, so we set 20% of sd for N, P and 40% for micronutrients
+#   rbind(compo_tib |> 
+#           dplyr::group_by(Prey_group) |>
+#           dplyr::filter(Prey_group !="Zooplankton") |>
+#           tidyr::nest(compo = c(NRJ, N, P, Fe, Cu, Mn, Se, Zn, Co, As)) |>
+#           dplyr::mutate(compo = seq_along(compo) |> # nutrient excretion rate
+#                           purrr::map(~ tibble::tibble(NRJ = gauss_mix(purrr::pluck(compo, ., "NRJ"), nsim), 
+#                                                       N = gauss_mix(purrr::pluck(compo, ., "N"), nsim),
+#                                                       P = gauss_mix(purrr::pluck(compo, ., "P"), nsim),
+#                                                       Fe = gauss_mix(purrr::pluck(compo, ., "Fe"), nsim),
+#                                                       Cu = gauss_mix(purrr::pluck(compo, ., "Cu"), nsim),
+#                                                       Mn = gauss_mix(purrr::pluck(compo, ., "Mn"), nsim),
+#                                                       Se = gauss_mix(purrr::pluck(compo, ., "Se"), nsim),
+#                                                       Zn = gauss_mix(purrr::pluck(compo, ., "Zn"), nsim),
+#                                                       Co = gauss_mix(purrr::pluck(compo, ., "Co"), nsim),
+#                                                       As = gauss_mix(purrr::pluck(compo, ., "As"), nsim)
+#                           ))), 
+#         compo_tib |> 
+#           dplyr::group_by(Prey_group) |>
+#           dplyr::filter(Prey_group =="Zooplankton") |>
+#           tidyr::nest(compo = c(NRJ, N, P, Fe, Cu, Mn, Se, Zn, Co, As)) |>
+#           dplyr::mutate(compo = seq_along(compo) |> # nutrient excretion rate
+#                           purrr::map(~ tibble::tibble(NRJ = rnorm(n = nsim, 
+#                                                                   mean = purrr::pluck(compo, ., "NRJ", 1), 
+#                                                                   sd = 0.2*purrr::pluck(compo, ., "NRJ", 1)), 
+#                                                       N = rnorm(n = nsim, 
+#                                                                 mean = purrr::pluck(compo, ., "N", 1), 
+#                                                                 sd = 0.2*purrr::pluck(compo, ., "N", 1)),
+#                                                       P = rnorm(n = nsim, 
+#                                                                 mean = purrr::pluck(compo, ., "P", 1), 
+#                                                                 sd = 0.2*purrr::pluck(compo, ., "P", 1)),
+#                                                       Fe = rnorm(n = nsim, 
+#                                                                  mean = purrr::pluck(compo, ., "Fe", 1), 
+#                                                                  sd = 0.4*purrr::pluck(compo, ., "Fe", 1)),
+#                                                       Cu = rnorm(n = nsim, 
+#                                                                  mean = purrr::pluck(compo, ., "Cu", 1), 
+#                                                                  sd = 0.4*purrr::pluck(compo, ., "Cu", 1)),
+#                                                       Mn = rnorm(n = nsim, 
+#                                                                  mean = purrr::pluck(compo, ., "Mn", 1), 
+#                                                                  sd = 0.4*purrr::pluck(compo, ., "Mn", 1)),
+#                                                       Se = rnorm(n = nsim, 
+#                                                                  mean = purrr::pluck(compo, ., "Se", 1), 
+#                                                                  sd = 0.4*purrr::pluck(compo, ., "Se", 1)),
+#                                                       Zn = rnorm(n = nsim, 
+#                                                                  mean = purrr::pluck(compo, ., "Zn", 1), 
+#                                                                  sd = 0.4*purrr::pluck(compo, ., "Zn", 1)),
+#                                                       Co = rnorm(n = nsim, 
+#                                                                  mean = purrr::pluck(compo, ., "Co", 1), 
+#                                                                  sd = 0.4*purrr::pluck(compo, ., "Co", 1)),
+#                                                       As = rnorm(n = nsim, 
+#                                                                  mean = purrr::pluck(compo, ., "As", 1), 
+#                                                                  sd = 0.4*purrr::pluck(compo, ., "As", 1))
+#                           )))) |>
+#     tidyr::unnest(compo)
+#   
+#   
+# }
 
 ########################################################################
 ################# kernel inversion - first way #########################
@@ -395,7 +396,7 @@ compute_nut_in_diet <- function(diet_tib, compo_tib_boot) {
                      # and one line, each cell containing a full bootstrap tibble 
                      # of elemental concentration, size nsim*nelements
                      dplyr::select(-c(W)) |>
-                     tidyr::nest(Nut = c("NRJ":"Zn")) |>
+                     tidyr::nest(Nut = c("NRJ":"As")) |>
                      tidyr::pivot_wider(names_from = Prey_group, 
                                         values_from = Nut)),
       # 3 - compute the mean concentration of diet by summing these values across prey_groups

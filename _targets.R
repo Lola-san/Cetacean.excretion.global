@@ -302,7 +302,7 @@ list(
   tar_target(prey_compo, join_clean_compo_tib(data_prey_compo, 
                                               data_prey_gps)), 
   ###### bootstrap composition of prey groups
-  tar_target(prey_compo_boot, bootstrap_compo_pg(prey_compo, nsim = 1e4)), #nsim = 1e4 HERE! 
+  tar_target(prey_compo_boot, boot_kernel_inv(prey_compo, nsim = 1e4)), #nsim = 1e4 HERE! 
   # can not go above 1e4 on my laptop
   # compute mean nutrient concentration of diets
   tar_target(diet_nut_input, compute_nut_in_diet(diet_input, prey_compo_boot)), 
