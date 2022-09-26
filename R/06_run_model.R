@@ -20,8 +20,8 @@ abundance <- function(abund_bar, abund_cv,
 
 # to compute the daily need of an individual (Kleiber equation) of a given species
 kleiber <- function(beta, mass, n_sim, 
-                   assimil_mean = NULL,  assimil_sd = 0.05,
-                   dietQuality
+                    assimil_mean = NULL,  assimil_sd = 0.05,
+                    dietQuality
 ) {
   # should the daily ration be computed?
   if(!is.null(assimil_mean) && !is.null(dietQuality)) {
@@ -32,9 +32,9 @@ kleiber <- function(beta, mass, n_sim,
                                b = assimil_b) # assimilation 
     
     return(tibble::tibble(ADMR = beta * (293.1*mass^(3/4)),
-                  A_rate = a,
-                  Ration = beta * (293.1*mass^(3/4))/(a*dietQuality),
-                  PercentBM = 293.1*beta/(a*dietQuality*mass^(1/4)))
+                          A_rate = a,
+                          Ration = beta * (293.1*mass^(3/4))/(a*dietQuality),
+                          PercentBM = 293.1*beta/(a*dietQuality*mass^(1/4)))
     )
   }
   else { return(list(ADMR = beta * (293.1*mass^(3/4)))) }
@@ -58,15 +58,15 @@ run_model <- function(input_tib, nsim) {
                                                  sd = 0.2*Mass[[.]]$Mass))), 
       Beta = seq_along(Beta) |>
         purrr::map(~ tibble::as_tibble_col(truncnorm::rtruncnorm(n = nsim, 
-                                                 mean = Beta[[.]]$Beta, 
-                                                 sd = 0.2*Beta[[.]]$Beta, 
-                                                 a = 1, 
-                                                 b = 5))), 
-      Nut_excrete = seq_along(Nut_excrete) |> # nutrient excretion rate, for migratory species in summering grounds, release reduced for N, P and set to 0 for micronutrients
+                                                                 mean = Beta[[.]]$Beta, 
+                                                                 sd = 0.2*Beta[[.]]$Beta, 
+                                                                 a = 1, 
+                                                                 b = 5))), 
+      Nut_excrete = seq_along(Beta) |> # nutrient excretion rate, for migratory species in summering grounds, release reduced for N, P and set to 0 for micronutrients
         purrr::map(~ tibble::tibble(N = dplyr::case_when(Code_sp %in% c("Bala_ede", 
                                                                         "Bala_phy") & Geo_area == "Pacific_Hawai" ~ runif(n = nsim,   
-                                                                                                        min = 0.2, 
-                                                                                                        max = 0.4),
+                                                                                                                          min = 0.2, 
+                                                                                                                          max = 0.4),
                                                          TRUE ~ runif(n = nsim,  
                                                                       min = 0.7, 
                                                                       max = 0.9)),
@@ -99,12 +99,12 @@ run_model <- function(input_tib, nsim) {
                                                                        min = 0.7, 
                                                                        max = 0.9)),
                                     Fe = dplyr::case_when(Code_sp %in% c("Bala_ede", 
-                                                                        "Bala_phy") & Geo_area == "Pacific_Hawai" ~ runif(n = nsim,   
-                                                                                                                          min = 0, 
-                                                                                                                          max = 0),
-                                                         TRUE ~ runif(n = nsim,  
-                                                                      min = 0.7, 
-                                                                      max = 0.9)),
+                                                                         "Bala_phy") & Geo_area == "Pacific_Hawai" ~ runif(n = nsim,   
+                                                                                                                           min = 0, 
+                                                                                                                           max = 0),
+                                                          TRUE ~ runif(n = nsim,  
+                                                                       min = 0.7, 
+                                                                       max = 0.9)),
                                     Mn = dplyr::case_when(Code_sp %in% c("Bala_ede", 
                                                                          "Bala_phy") & Geo_area == "Pacific_Hawai" ~ runif(n = nsim,   
                                                                                                                            min = 0, 
@@ -133,10 +133,10 @@ run_model <- function(input_tib, nsim) {
       ############################ COMPUTE INDIVIDUAL NRJTIC DATA, NEEDS AND CONSUMPTION OF POP ######  
       Indi_data = seq_along(Mass) |>
         purrr::map(~ kleiber(beta = purrr::pluck(Beta, ., 1), 
-                            mass = purrr::pluck(Mass, ., 1), 
-                            n_sim = nsim, 
-                            assimil_mean = 0.85, assimil_sd = 0.05, assimil_a = 0.8, assimil_b = 0.9,
-                            dietQuality = purrr::pluck(NRJ_diet, ., 1))), 
+                             mass = purrr::pluck(Mass, ., 1), 
+                             n_sim = nsim, 
+                             assimil_mean = 0.85, assimil_sd = 0.05, assimil_a = 0.8, assimil_b = 0.9,
+                             dietQuality = purrr::pluck(NRJ_diet, ., 1))), 
       # Population consumption and needs
       conso_pop = seq_along(Abund) |> # Annual amount of prey consumed by the population in kg
         purrr::map(~ purrr::pluck(Abund, ., 1)*purrr::pluck(Ndays, ., 1)*purrr::pluck(Indi_data, ., "Ration")), 

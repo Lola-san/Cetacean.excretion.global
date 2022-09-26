@@ -28,27 +28,6 @@ prepare_input <- function(pop_tib, diet_nut_tib) {
                 Beta = c(Beta), 
                 Abund = c(Abund, Abund_CV)) |>
     dplyr::mutate(
-      Nut_excrete = dplyr::case_when(Code_sp %in% c("Bala_ede", 
-                                                    "Bala_phy") & Geo_area == "Pacific_Hawai" ~ seq_along(Code_sp) |>
-                                       purrr::map(~ tibble::tibble(N = 0.4, 
-                                                                  P = 0.3, 
-                                                                  As = 0,
-                                                                  Co = 0,
-                                                                  Cu = 0,
-                                                                  Fe = 0,
-                                                                  Mn = 0,
-                                                                  Se = 0,
-                                                                  Zn = 0)),
-                                     TRUE ~ seq_along(Code_sp) |>
-                                       purrr::map(~ tibble::tibble(N = 0.8, 
-                                                                  P = 0.7, 
-                                                                  As = 0.9,
-                                                                  Co = 0.9,
-                                                                  Cu = 0.9,
-                                                                  Fe = 0.9,
-                                                                  Mn = 0.9,
-                                                                  Se = 0.9,
-                                                                  Zn = 0.9))), 
       Ndays_min = dplyr::case_when(Code_sp %in% c("Bala_mus", "Bala_ede", 
                                                   "Bala_phy", "Bala_bor", 
                                                   "Mega_nov") & !(Geo_area %in% c("Med", 
@@ -57,7 +36,7 @@ prepare_input <- function(pop_tib, diet_nut_tib) {
       Ndays_max = dplyr::case_when(Code_sp %in% c("Bala_mus", "Bala_ede", 
                                                   "Bala_phy", "Bala_bor", 
                                                   "Mega_nov") & !(Geo_area %in% c("Med",
-                                                                         "GoMexico")) ~ ndays_migr_max, 
+                                                                                  "GoMexico")) ~ ndays_migr_max, 
                                    TRUE ~ ndays)) |>
     tidyr::nest(Ndays = c(Ndays_min, Ndays_max))
   
