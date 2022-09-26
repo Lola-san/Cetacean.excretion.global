@@ -62,12 +62,7 @@ add_nrjtic <- function(pop_tib) {
                        "Sous_plu", "Small delphinids", 115, 3, # beta guessed
                        "Sota_gui", "Small delphinids", 120, 3, # beta guessed + weight taken from Flores et al 2018 (encyclopedia of MM)
                        "Turs_tru", "Small delphinids", 185, 3, 
-                       "Ziph_cav", "Deep divers", 800, 2) |>
-    # add variation around these values
-    dplyr::mutate(Mass_min = Mass - Mass*0.1, 
-                  Mass_max = Mass + Mass*0.1, 
-                  Beta_min = Beta - 0.5,
-                  Beta_max = Beta + 0.5)
+                       "Ziph_cav", "Deep divers", 800, 2) 
   
   # Bind with abundance data 
   pop_tib |>

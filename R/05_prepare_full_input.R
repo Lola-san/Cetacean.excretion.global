@@ -24,10 +24,8 @@ prepare_input <- function(pop_tib, diet_nut_tib) {
   pop_tib |>
     dplyr::left_join(diet_nut_tib, 
                      by = c("Code_sp", "Species", "Eco_area")) |>
-    tidyr::nest(Mass = c(Mass, 
-                         Mass_min, 
-                         Mass_max), 
-                Beta = c(Beta, Beta_min, Beta_max), 
+    tidyr::nest(Mass = c(Mass), 
+                Beta = c(Beta), 
                 Abund = c(Abund, Abund_CV)) |>
     dplyr::mutate(
       Nut_excrete = dplyr::case_when(Code_sp %in% c("Bala_ede", 
