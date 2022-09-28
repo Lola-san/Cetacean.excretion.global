@@ -1677,7 +1677,7 @@ graph_models_sst <- function(model_output_tib,
     ggplot2::geom_point(ggplot2::aes(x = Var_mod, y = value, color = element)) +
     ggplot2::facet_wrap(~ Var_mod, scales = "free") +
     ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
-                                           "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff"))
+                                           "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
     ggplot2::xlab("(slope in absolute value)") +
     ggplot2::ggtitle("sst")
   
@@ -1699,7 +1699,7 @@ graph_models_sst <- function(model_output_tib,
       ggplot2::geom_point(ggplot2::aes(x = Var_mod, y = value, color = element)) +
       ggplot2::facet_wrap(~ Var_mod, scales = "free") +
       ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
-                                             "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff"))
+                                             "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
       ggplot2::xlab("(slope in absolute value)") +
       ggplot2::ggtitle("sst")
   }
@@ -1727,7 +1727,7 @@ graph_models_chloro <- function(model_output_tib,
     ggplot2::geom_point(ggplot2::aes(x = Var_mod, y = value, color = element)) +
     ggplot2::facet_wrap(~ Var_mod, scales = "free") +
     ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
-                                           "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff"))
+                                           "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
     ggplot2::ggtitle("Mean chlorophyll concentration")
   
   
@@ -1749,7 +1749,7 @@ graph_models_chloro <- function(model_output_tib,
       ggplot2::geom_point(ggplot2::aes(x = Var_mod, y = value, color = element)) +
       ggplot2::facet_wrap(~ Var_mod, scales = "free") +
       ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
-                                             "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff"))
+                                             "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
       ggplot2::ggtitle("Mean chlorophyll concentration")
   }
   

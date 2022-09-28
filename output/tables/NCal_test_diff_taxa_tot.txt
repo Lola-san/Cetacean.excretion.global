@@ -1,9 +1,0 @@
-"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
-"1"	"New Caledonia"	"N"	"Deep divers"	"Small delphinids"	1
-"2"	"New Caledonia"	"P"	"Deep divers"	"Small delphinids"	0.999
-"3"	"New Caledonia"	"Fe"	"Deep divers"	"Small delphinids"	0.977
-"4"	"New Caledonia"	"Cu"	"Deep divers"	"Small delphinids"	1
-"5"	"New Caledonia"	"Mn"	"Deep divers"	"Small delphinids"	0.983
-"6"	"New Caledonia"	"Se"	"Deep divers"	"Small delphinids"	0.999
-"7"	"New Caledonia"	"Zn"	"Deep divers"	"Small delphinids"	1
-"8"	"New Caledonia"	"Co"	"Deep divers"	"Small delphinids"	1

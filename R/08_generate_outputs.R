@@ -1466,7 +1466,7 @@ fig_exc_all_areas_1_facet_element <- function(output_tib,
     )
   
   if (object_type == "file") {
-  ggplot2::ggsave(paste0("output/", 
+  ggplot2::ggsave(paste0("output/figures/", 
                          name_file, 
                          ".jpg"), scale = 1)
   } else {
@@ -1562,7 +1562,7 @@ fig_exc_all_areas_1_facet_element_taxa <- function(output_tib,
     )
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -1652,7 +1652,7 @@ fig_exc_all_areas_log10 <- function(output_tib,
     ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -1740,7 +1740,7 @@ fig_exc_vs_tot_surf <- function(output_tib,
     ggplot2::theme()
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -1842,7 +1842,7 @@ fig_exc_taxa_log10 <- function(output_tib,
     )
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -1972,7 +1972,7 @@ fig_exc_hab_log10 <- function(output_tib,
     )
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -2103,7 +2103,7 @@ fig_exc_hab_taxa_log10 <- function(output_tib,
     )
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/", 
+    ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {

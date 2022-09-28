@@ -1,9 +1,0 @@
-"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
-"1"	"West Indian ocean"	"N"	"Deep divers"	"Small delphinids"	0.612
-"2"	"West Indian ocean"	"P"	"Deep divers"	"Small delphinids"	0.313
-"3"	"West Indian ocean"	"Fe"	"Deep divers"	"Small delphinids"	0.43
-"4"	"West Indian ocean"	"Cu"	"Deep divers"	"Small delphinids"	1
-"5"	"West Indian ocean"	"Mn"	"Deep divers"	"Small delphinids"	0.26
-"6"	"West Indian ocean"	"Se"	"Deep divers"	"Small delphinids"	0.645
-"7"	"West Indian ocean"	"Zn"	"Deep divers"	"Small delphinids"	0.847
-"8"	"West Indian ocean"	"Co"	"Deep divers"	"Small delphinids"	0.789

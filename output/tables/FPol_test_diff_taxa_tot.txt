@@ -1,9 +1,0 @@
-"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
-"1"	"French Polynesia"	"N"	"Deep divers"	"Small delphinids"	0.956
-"2"	"French Polynesia"	"P"	"Deep divers"	"Small delphinids"	0.814
-"3"	"French Polynesia"	"Fe"	"Deep divers"	"Small delphinids"	0.691
-"4"	"French Polynesia"	"Cu"	"Deep divers"	"Small delphinids"	1
-"5"	"French Polynesia"	"Mn"	"Deep divers"	"Small delphinids"	0.653
-"6"	"French Polynesia"	"Se"	"Deep divers"	"Small delphinids"	0.923
-"7"	"French Polynesia"	"Zn"	"Deep divers"	"Small delphinids"	0.986
-"8"	"French Polynesia"	"Co"	"Deep divers"	"Small delphinids"	0.967

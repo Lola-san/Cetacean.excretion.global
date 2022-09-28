@@ -271,10 +271,12 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
                                                               size = 0.5),
                    axis.title.x = ggplot2::element_blank(),
                    axis.title.y = ggplot2::element_blank(), 
-                   axis.text.y = ggplot2::element_blank()) 
+                   axis.text.y = ggplot2::element_blank(), 
+                   axis.text.x = ggplot2::element_blank(), 
+                   legend.position = "none") 
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/article", 
+    ggplot2::ggsave(paste0("output/article/", 
                            name_file, 
                            ".svg"), 
                     scale =1, 

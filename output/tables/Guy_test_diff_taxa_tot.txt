@@ -1,9 +1,0 @@
-"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
-"1"	"French Guyana"	"N"	"Deep divers"	"Small delphinids"	0.009
-"2"	"French Guyana"	"P"	"Deep divers"	"Small delphinids"	0.006
-"3"	"French Guyana"	"Fe"	"Deep divers"	"Small delphinids"	0.022
-"4"	"French Guyana"	"Cu"	"Deep divers"	"Small delphinids"	0.488
-"5"	"French Guyana"	"Mn"	"Deep divers"	"Small delphinids"	0.007
-"6"	"French Guyana"	"Se"	"Deep divers"	"Small delphinids"	0.018
-"7"	"French Guyana"	"Zn"	"Deep divers"	"Small delphinids"	0.029
-"8"	"French Guyana"	"Co"	"Deep divers"	"Small delphinids"	0.101
