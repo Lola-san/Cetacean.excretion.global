@@ -981,7 +981,7 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
                                                        margin = ggplot2::margin(t = 5)))
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/figures/", 
+    ggplot2::ggsave(paste0("output/article/", 
                            name_file, 
                            ".jpg"), scale = 1, 
                     width = 5, 
@@ -1372,7 +1372,7 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                        legend.text = ggplot2::element_text(face = "bold", 
                                                            size = 14,
                                                            margin = ggplot2::margin(t = 5)))
-      ggplot2::ggsave(paste0("output/figures/", 
+      ggplot2::ggsave(paste0("output/article/", 
                              name_file, 
                              ".jpg"), scale = 1, 
                         width = 5, 
@@ -1714,7 +1714,7 @@ graph_models_sst <- function(model_output_tib,
     ggplot2::ggtitle("sst")
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/figures/", 
+    ggplot2::ggsave(paste0("output/article/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
@@ -1764,7 +1764,7 @@ graph_models_chloro <- function(model_output_tib,
   
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/figures/", 
+    ggplot2::ggsave(paste0("output/article/", 
                            name_file, 
                            ".jpg"), scale = 1)
   } else {
