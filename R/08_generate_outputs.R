@@ -690,6 +690,8 @@ test_differences_hab <- function(output_tib,
                                              stringr::str_starts(Test, "t_oceanic") ~ "Oceanic waters"), 
                     Area2 = dplyr::case_when(stringr::str_ends(Test, "_shelf") ~ "Neritic waters",
                                              stringr::str_ends(Test, "_oceanic") ~ "Oceanic waters")) |>
+      # select only one direction for the test to avoid duplicate information (i.e. test neritic > oceanic + test oceanic > neritic = 1)
+      dplyr::filter(Area1 == "Oceanic waters") |>
       dplyr::select(-Test) 
     
     final_table <- rbind(final_table, el_table)

@@ -1520,7 +1520,8 @@ run_models_norm <- function(tib_chloro_sst,
   table_mod <- tibble::tibble(element = NA, 
                               variable = NA, 
                               slope = NA, 
-                              R2 = NA)
+                              R2 = NA, 
+                              p_value = NA)
   
   # run models
   modsstN <- lm(mean_exc ~ mean_sst, data = summary_df |>
@@ -1530,119 +1531,150 @@ run_models_norm <- function(tib_chloro_sst,
   table_mod$variable[1] <- "sst"
   table_mod$slope[1] <- modsstN$coefficients[2]
   table_mod$R2[1] <- summary(modsstN)$r.squared
+  table_mod$p_value[1] <- summary(modsstN)$coefficients[8]
   
   modchloroN <- lm((mean_exc) ~ (mean_chloro), data = summary_df |>
                      dplyr::filter(Element == "N") |>
                      dplyr::filter(Geo_area != "French Guyana")) 
   
   table_mod <- rbind(table_mod, 
-                     c("N", "chloro", modchloroN$coefficients[2], 
-                       summary(modchloroN)$r.squared))
+                     c("N", "chloro", 
+                       modchloroN$coefficients[2], 
+                       summary(modchloroN)$r.squared,
+                       summary(modchloroN)$coefficients[8]))
   
   modsstP <- lm(mean_exc ~ mean_sst, data = summary_df |>
                   dplyr::filter(Element == "P")) 
   
   table_mod <- rbind(table_mod, 
-                     c("P", "sst", modsstP$coefficients[2], 
-                       summary(modsstP)$r.squared))
+                     c("P", "sst", 
+                       modsstP$coefficients[2], 
+                       summary(modsstP)$r.squared,
+                       summary(modsstP)$coefficients[8]))
   
   modchloroP <- lm((mean_exc) ~ (mean_chloro), data = summary_df |>
                      dplyr::filter(Element == "P") |>
                      dplyr::filter(Geo_area != "French Guyana")) 
   
   table_mod <- rbind(table_mod, 
-                     c("P", "chloro", modchloroP$coefficients[2], 
-                       summary(modchloroP)$r.squared))
+                     c("P", "chloro", 
+                       modchloroP$coefficients[2], 
+                       summary(modchloroP)$r.squared,
+                       summary(modchloroP)$coefficients[8]))
   
   modsstFe <- lm(mean_exc ~ mean_sst, data = summary_df |>
                    dplyr::filter(Element == "Fe")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Fe", "sst", modsstFe $coefficients[2], 
-                       summary(modsstFe)$r.squared))
+                     c("Fe", "sst", 
+                       modsstFe $coefficients[2], 
+                       summary(modsstFe)$r.squared,
+                       summary(modsstFe)$coefficients[8]))
   
   modchloroFe  <- lm((mean_exc) ~ (mean_chloro), data = summary_df |>
                        dplyr::filter(Element == "Fe") |>
                        dplyr::filter(Geo_area != "French Guyana")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Fe", "chloro", modchloroFe$coefficients[2], 
-                       summary(modchloroFe)$r.squared))
+                     c("Fe", "chloro", 
+                       modchloroFe$coefficients[2], 
+                       summary(modchloroFe)$r.squared,
+                       summary(modchloroFe)$coefficients[8]))
   
   modsstCu <- lm(mean_exc ~ mean_sst, data = summary_df |>
                    dplyr::filter(Element == "Cu")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Cu", "sst", modsstCu$coefficients[2], 
-                       summary(modsstCu)$r.squared))
+                     c("Cu", "sst", 
+                       modsstCu$coefficients[2], 
+                       summary(modsstCu)$r.squared,
+                       summary(modsstCu)$coefficients[8]))
   
   modchloroCu  <- lm((mean_exc) ~ (mean_chloro), data = summary_df |>
                        dplyr::filter(Element == "Cu") |>
                        dplyr::filter(Geo_area != "French Guyana")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Cu", "chloro", modchloroCu$coefficients[2], 
-                       summary(modchloroCu)$r.squared))
+                     c("Cu", "chloro", 
+                       modchloroCu$coefficients[2], 
+                       summary(modchloroCu)$r.squared,
+                       summary(modchloroCu)$coefficients[8]))
   
   modsstMn <- lm(mean_exc ~ mean_sst, data = summary_df |>
                    dplyr::filter(Element == "Mn")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Mn", "sst", modsstMn$coefficients[2], 
-                       summary(modsstMn)$r.squared))
+                     c("Mn", "sst", 
+                       modsstMn$coefficients[2], 
+                       summary(modsstMn)$r.squared,
+                       summary(modsstMn)$coefficients[8]))
   
   modchloroMn  <- lm((mean_exc) ~ (mean_chloro), data = summary_df |>
                        dplyr::filter(Element == "Mn") |>
                        dplyr::filter(Geo_area != "French Guyana")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Mn", "chloro", modchloroMn$coefficients[2], 
-                       summary(modchloroMn)$r.squared))
+                     c("Mn", "chloro", 
+                       modchloroMn$coefficients[2], 
+                       summary(modchloroMn)$r.squared,
+                       summary(modchloroMn)$coefficients[8]))
   
   modsstSe <- lm(mean_exc ~ mean_sst, data = summary_df |>
                    dplyr::filter(Element == "Se")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Se", "sst", modsstSe$coefficients[2], 
-                       summary(modsstSe)$r.squared))
+                     c("Se", "sst", 
+                       modsstSe$coefficients[2], 
+                       summary(modsstSe)$r.squared,
+                       summary(modsstSe)$coefficients[8]))
   
   modchloroSe  <- lm((mean_exc) ~ (mean_chloro), data = summary_df |>
                        dplyr::filter(Element == "Se") |>
                        dplyr::filter(Geo_area != "French Guyana")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Se", "chloro", modchloroSe$coefficients[2], 
-                       summary(modchloroSe)$r.squared))
+                     c("Se", "chloro", 
+                       modchloroSe$coefficients[2], 
+                       summary(modchloroSe)$r.squared,
+                       summary(modchloroSe)$coefficients[8]))
   
   modsstZn <- lm(mean_exc ~ mean_sst, data = summary_df |>
                    dplyr::filter(Element == "Zn")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Zn", "sst", modsstZn$coefficients[2], 
-                       summary(modsstZn)$r.squared))
+                     c("Zn", "sst", 
+                       modsstZn$coefficients[2], 
+                       summary(modsstZn)$r.squared,
+                       summary(modsstZn)$coefficients[8]))
   
   modchloroZn  <- lm((mean_exc) ~ (mean_chloro), data = summary_df |>
                        dplyr::filter(Element == "Zn") |>
                        dplyr::filter(Geo_area != "French Guyana")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Zn", "chloro", modchloroZn$coefficients[2], 
-                       summary(modchloroZn)$r.squared))
+                     c("Zn", "chloro", 
+                       modchloroZn$coefficients[2], 
+                       summary(modchloroZn)$r.squared,
+                       summary(modchloroZn)$coefficients[8]))
   
   modsstCo <- lm(mean_exc ~ mean_sst, data = summary_df |>
                    dplyr::filter(Element == "Co")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Co", "sst", modsstCo$coefficients[2], 
-                       summary(modsstCo)$r.squared))
+                     c("Co", "sst", 
+                       modsstCo$coefficients[2], 
+                       summary(modsstCo)$r.squared,
+                       summary(modsstCo)$coefficients[8]))
   
   modchloroCo  <- lm((mean_exc) ~ (mean_chloro), data = summary_df |>
                        dplyr::filter(Element == "Co") |>
                        dplyr::filter(Geo_area != "French Guyana")) 
   
   table_mod <- rbind(table_mod, 
-                     c("Co", "chloro", modchloroCo$coefficients[2], 
-                       summary(modchloroCo)$r.squared))
+                     c("Co", "chloro", 
+                       modchloroCo$coefficients[2], 
+                       summary(modchloroCo)$r.squared,
+                       summary(modchloroCo)$coefficients[8]))
   
   if (object_type == "file") {
     write.table(table_mod, paste0("output/tables/", 

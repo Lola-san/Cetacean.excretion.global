@@ -874,4 +874,95 @@ purrr::pluck(model_output_clean, "excrete_nut", 102)|>
                               breaks = c(0.0001, 0.001, 0.01, 0.1, 1, 10, 100)) 
 
 
+########### prey group consumed in the Mediterranean Sea
+# base function to sum tibbles 
+# compute the addition of each vector of values with uncertainties to get values for several areas/sp
+sum_tibb <- function(list_of_tibb) {
+  summed_tibb <- matrix(0, 
+                        nrow = nrow(list_of_tibb[[1]]), 
+                        ncol = ncol(list_of_tibb[[1]]))
+  colnames(summed_tibb) <- colnames(list_of_tibb[[1]])
+  
+  for (j in seq_along(list_of_tibb)) {
+    summed_tibb <- summed_tibb + list_of_tibb[[j]]
+  }
+  return(tibble::as_tibble(summed_tibb))
+}
 
+# explore if cocktails of nutrients released in each zone are significantly different
+# normalization per element 
+model_output_clean |>
+  dplyr::filter(Geo_area == "Mediterranean Sea", 
+                Code_sp %in% c("Turs_tru", 
+                               "Sten_coe", 
+                               "Phys_mac", 
+                               "Gram_gri", 
+                               "Bala_phy", 
+                               "Ziph_cav")) |>
+  dplyr::group_by(Geo_area) |>
+  dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                   sum = list(sum_tibb(conso_diet))) |>
+  tidyr::unnest(sum) |>
+  dplyr::select(-c(Geo_area, Surf)) |>
+  dplyr::summarize_all(mean) |>
+  tidyr::pivot_longer(cols = c(`Large demersal energy-lean fish`:`Zooplankton`), 
+                      names_to = "Prey group", 
+                      values_to = "Annual consumption")
+
+
+# diets 
+model_output_clean |>
+  dplyr::filter(Geo_area == "Mediterranean Sea", 
+                Code_sp %in% c("Turs_tru", 
+                               "Sten_coe", 
+                               "Phys_mac", 
+                               "Gram_gri", 
+                               "Bala_phy", 
+                               "Ziph_cav")) |>
+  dplyr::filter(Code_sp == "Gram_gri") |>
+  dplyr::select(c(Code_sp, Diet)) |>
+  tidyr::unnest(Diet) |>
+  unique() |>
+  tidyr::pivot_longer(cols = c(`Large demersal energy-lean fish`:`Zooplankton`), 
+                      names_to = "Prey group", 
+                      values_to = "%W_diet")
+
+
+# abundances 
+model_output_clean |>
+  dplyr::filter(Geo_area == "Mediterranean Sea", 
+                Code_sp %in% c("Turs_tru", 
+                               "Sten_coe", 
+                               "Phys_mac", 
+                               "Gram_gri", 
+                               "Bala_phy", 
+                               "Ziph_cav")) |>
+  tidyr::unnest(Abund)  |>
+  dplyr::ungroup() |>
+  dplyr::group_by(Code_sp, Eco_area)  |>
+  dplyr::summarise(abund_mean = mean(value))
+  
+model_input |>
+  dplyr::filter(Geo_area == "Med", 
+                Code_sp %in% c("Turs_tru", 
+                               "Sten_coe", 
+                               "Phys_mac", 
+                               "Gram_gri", 
+                               "Bala_phy", 
+                               "Ziph_cav")) |>
+  tidyr::unnest(Abund)  |>
+  dplyr::group_by(Code_sp)  |>
+  dplyr::select(c(Abund, Abund_CV))
+
+
+verif <- model_output_clean |>
+  dplyr::filter(Geo_area == "Mediterranean Sea", 
+                Code_sp %in% c("Turs_tru", 
+                               "Sten_coe", 
+                               "Phys_mac", 
+                               "Gram_gri", 
+                               "Bala_phy", 
+                               "Ziph_cav")) |>
+  tidyr::unnest(Abund) |>
+  dplyr::ungroup() |>
+  dplyr::select(Code_sp, Eco_area, value)

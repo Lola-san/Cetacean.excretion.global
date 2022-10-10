@@ -1853,7 +1853,7 @@ list(
   
   # # generate Rmd reports
   #tarchetypes::tar_render(rmd_report_all_areas, "manuscript/01_Results_all-areas.Rmd"), 
-  tarchetypes::tar_render(rmd_report_all_areas_prod, "manuscript/02_Results_all-areas_prod.Rmd"), 
+  #tarchetypes::tar_render(rmd_report_all_areas_prod, "manuscript/02_Results_all-areas_prod.Rmd"), 
   #tarchetypes::tar_render(rmd_report_per_areas_O, "manuscript/03a_Results_per-area_oceanic.Rmd"),
   #tarchetypes::tar_render(rmd_report_per_areas_NO, "manuscript/03b_Results_per-area_NO.Rmd"),
   tarchetypes::tar_render(rmd_report_figures_article, "manuscript/04_figures_nd_tables_article.Rmd")
