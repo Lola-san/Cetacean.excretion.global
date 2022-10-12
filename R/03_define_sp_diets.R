@@ -523,49 +523,49 @@ create_diet_input <- function(diet_pg_tib) {
       dplyr::mutate(Eco_area = "oceanic") |> 
       dplyr::select(Code_sp, Species, Eco_area, Diet, Sources),
     
-    ##################### Eubalaena glacialis - North Atlantic Right whale ####################
-    # no quantitative data for this species
-    # but from qualitative data we can say it eats 100 % zooplankton 
-    # Euba_gla neritic
-    tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
-                    "Euba_gla", "Eubalaena glacialis", "shelf") |>
-      dplyr::mutate(`Large demersal energy-lean fish` = 0, 
-                    `Large demersal energy-rich fish` = 0, 
-                    `Small schooling energy-lean fish` = 0, 
-                    `Small schooling energy-rich fish` = 0, 
-                    `Miscellanous benthodemersal fish` = 0,
-                    `Miscellanous pelagic fish` = 0, 
-                    `Muscular pelagic cephalopods` = 0, 
-                    `Gelatinous pelagic cephalopods` = 0,
-                    `Bottom cephalopods` = 0, 
-                    `Fish undetermined` = 0,
-                    `Cephalopod undetermined` = 0, 
-                    `Crustaceans` = 0, 
-                    `Zooplankton` = 100, 
-                    Sources = "Watkins & Schevill 1979,
-                              Kenney 2009, Pendleton et al 2012") |>
-      tidyr::nest(Diet = c(`Large demersal energy-lean fish`:`Zooplankton`)) |>
-      dplyr::select(Code_sp, Species, Eco_area, Diet, Sources), 
-    # Euba_gla oceanic
-    tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
-                    "Euba_gla", "Eubalaena glacialis", "oceanic") |>
-      dplyr::mutate(`Large demersal energy-lean fish` = 0, 
-                    `Large demersal energy-rich fish` = 0, 
-                    `Small schooling energy-lean fish` = 0, 
-                    `Small schooling energy-rich fish` = 0, 
-                    `Miscellanous benthodemersal fish` = 0,
-                    `Miscellanous pelagic fish` = 0, 
-                    `Muscular pelagic cephalopods` = 0, 
-                    `Gelatinous pelagic cephalopods` = 0,
-                    `Bottom cephalopods` = 0, 
-                    `Fish undetermined` = 0,
-                    `Cephalopod undetermined` = 0, 
-                    `Crustaceans` = 0, 
-                    `Zooplankton` = 100, 
-                    Sources = "Watkins & Schevill 1979,
-                              Kenney 2009, Pendleton et al 2012") |>
-      tidyr::nest(Diet = c(`Large demersal energy-lean fish`:`Zooplankton`)) |>
-      dplyr::select(Code_sp, Species, Eco_area, Diet, Sources),
+    # ##################### Eubalaena glacialis - North Atlantic Right whale ####################
+    # # no quantitative data for this species
+    # # but from qualitative data we can say it eats 100 % zooplankton 
+    # # Euba_gla neritic
+    # tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+    #                 "Euba_gla", "Eubalaena glacialis", "shelf") |>
+    #   dplyr::mutate(`Large demersal energy-lean fish` = 0, 
+    #                 `Large demersal energy-rich fish` = 0, 
+    #                 `Small schooling energy-lean fish` = 0, 
+    #                 `Small schooling energy-rich fish` = 0, 
+    #                 `Miscellanous benthodemersal fish` = 0,
+    #                 `Miscellanous pelagic fish` = 0, 
+    #                 `Muscular pelagic cephalopods` = 0, 
+    #                 `Gelatinous pelagic cephalopods` = 0,
+    #                 `Bottom cephalopods` = 0, 
+    #                 `Fish undetermined` = 0,
+    #                 `Cephalopod undetermined` = 0, 
+    #                 `Crustaceans` = 0, 
+    #                 `Zooplankton` = 100, 
+    #                 Sources = "Watkins & Schevill 1979,
+    #                           Kenney 2009, Pendleton et al 2012") |>
+    #   tidyr::nest(Diet = c(`Large demersal energy-lean fish`:`Zooplankton`)) |>
+    #   dplyr::select(Code_sp, Species, Eco_area, Diet, Sources), 
+    # # Euba_gla oceanic
+    # tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+    #                 "Euba_gla", "Eubalaena glacialis", "oceanic") |>
+    #   dplyr::mutate(`Large demersal energy-lean fish` = 0, 
+    #                 `Large demersal energy-rich fish` = 0, 
+    #                 `Small schooling energy-lean fish` = 0, 
+    #                 `Small schooling energy-rich fish` = 0, 
+    #                 `Miscellanous benthodemersal fish` = 0,
+    #                 `Miscellanous pelagic fish` = 0, 
+    #                 `Muscular pelagic cephalopods` = 0, 
+    #                 `Gelatinous pelagic cephalopods` = 0,
+    #                 `Bottom cephalopods` = 0, 
+    #                 `Fish undetermined` = 0,
+    #                 `Cephalopod undetermined` = 0, 
+    #                 `Crustaceans` = 0, 
+    #                 `Zooplankton` = 100, 
+    #                 Sources = "Watkins & Schevill 1979,
+    #                           Kenney 2009, Pendleton et al 2012") |>
+    #   tidyr::nest(Diet = c(`Large demersal energy-lean fish`:`Zooplankton`)) |>
+    #   dplyr::select(Code_sp, Species, Eco_area, Diet, Sources),
     
     ##################### Feresa attenuata - pygmy killer whales ####################
     # no quantitative data for this species
@@ -1331,7 +1331,7 @@ create_diet_input <- function(diet_pg_tib) {
                     `Cephalopod undetermined` = 0, 
                     `Crustaceans` = 0, 
                     `Zooplankton` = 0, 
-                    Sources = "Simil? et al 1996, 
+                    Sources = "Simila et al 1996, 
                               Saulitis et al 2000, Aguiar dos Santos & Haimovici 2001,
                               Volkova et al 2019"
       ) |>
@@ -1353,7 +1353,7 @@ create_diet_input <- function(diet_pg_tib) {
                     `Cephalopod undetermined` = 0, 
                     `Crustaceans` = 0, 
                     `Zooplankton` = 0, 
-                    Sources = "Simil? et al 1996, 
+                    Sources = "Simila et al 1996, 
                               Saulitis et al 2000, Aguiar dos Santos & Haimovici 2001,
                               Volkova et al 2019") |>
       tidyr::nest(Diet = c(`Large demersal energy-lean fish`:`Zooplankton`)) |>
