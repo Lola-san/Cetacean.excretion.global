@@ -91,7 +91,8 @@ fig_taxa_contrib_stacked_barplot <- function(output_tib,
                                               "Cu", "Fe", "P", "N")), 
                   ratio_contribution = ratio_contribution*100) |>
     ggplot2::ggplot(ggplot2::aes(x = Element, y = ratio_contribution, fill = Eco_gp)) +
-    ggplot2::geom_col() +
+    ggplot2::geom_col(position = "stack", 
+                      width = 0.7) +
     ggplot2::coord_flip() +
     ggplot2::xlab("") +
     ggplot2::ylab("") +

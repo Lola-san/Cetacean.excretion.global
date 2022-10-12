@@ -325,7 +325,12 @@ list(
   #                                                    nsim = 1e4 = 1e4)), #nsim = 1e4 HERE!
   tar_target(sobol_index_all_sensi, create_sobol_index_tib_sensi(model_output, 
                                                                  nsim = 1e4)), #nsim = 1e4 HERE!
-  
+  tar_target(fig_sensi_output, fig_sensitivy_indices(sobol_index_all_sensi,
+                                                     "output",
+                                                     "fig_sensi")),
+  tar_target(fig_sensi_file, fig_sensitivy_indices(sobol_index_all_sensi,
+                                                   "file",
+                                                   "fig_sensi")),
   ##############################################################################
   #################### generate outputs (fig + tables) #########################
   ############## refers to functions of 08_generate_outputs.R ##################

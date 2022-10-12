@@ -966,3 +966,17 @@ verif <- model_output_clean |>
   tidyr::unnest(Abund) |>
   dplyr::ungroup() |>
   dplyr::select(Code_sp, Eco_area, value)
+
+
+# daily rations
+model_output_clean |>
+  dplyr::filter(Geo_area == "Mediterranean Sea", 
+                Code_sp %in% c("Turs_tru", 
+                               "Sten_coe", 
+                               "Phys_mac", 
+                               "Gram_gri", 
+                               "Bala_phy", 
+                               "Ziph_cav")) |>
+  tidyr::unnest(Indi_data) |>
+  dplyr::group_by(Species, Eco_area) |>
+  dplyr::summarize(mean_ration = mean(Ration))

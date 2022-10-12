@@ -38,7 +38,7 @@ compute_y_c_biomass <- function(param_mat) {
 create_sobol_index_tib <- function(data_tib, 
                                    results_tib, 
                                    nsim) {
-
+  
   # tibble where results we be stored
   df_Si_Sti <- tibble::tibble(Code_sp = NA, 
                               Geo_area = NA, 
@@ -108,7 +108,7 @@ create_sobol_index_tib <- function(data_tib,
                                         max = 0.15)
     
     mat_bootstrap_par <- tibble::tibble(NRJ_diet = purrr::pluck(data_tib, "NRJ_diet", rw, 1),
-                                Nut_diet = purrr::pluck(data_tib, "Nut_diet", rw, "N"))
+                                        Nut_diet = purrr::pluck(data_tib, "Nut_diet", rw, "N"))
     
     # compute output
     yN <- compute_y(matN, mat_bootstrap_par)
@@ -116,7 +116,7 @@ create_sobol_index_tib <- function(data_tib,
     
     # compute sensitivity index 
     indN <- sensobol::sobol_indices(Y = yN, N = nsim, params = paramsN, 
-                          boot = TRUE, R = R, type = type, conf = conf)
+                                    boot = TRUE, R = R, type = type, conf = conf)
     cols <- colnames(indN$results)[1:5]
     indN$results[, (cols):= round(.SD, 3), .SDcols = (cols)]
     
@@ -125,26 +125,26 @@ create_sobol_index_tib <- function(data_tib,
     indC_biomass$results[, (cols):= round(.SD, 3), .SDcols = (cols)]
     
     df_Si_Sti_N <- tibble::tibble(Code_sp = purrr::pluck(results_tib, "Code_sp", rw), 
-                          Geo_area = purrr::pluck(results_tib, "Geo_area", rw), 
-                          Eco_area = purrr::pluck(results_tib, "Eco_area", rw), 
-                          Analysis = "N", 
-                          Input = purrr::pluck(indN, "results", "parameters"),
-                          Sensitivity = purrr::pluck(indN, "results", "sensitivity"), 
-                          Mean = purrr::pluck(indN, "results", "original"), 
-                          Se = purrr::pluck(indN, "results", "std.error"),
-                          Low_ci = purrr::pluck(indN, "results", "low.ci"),
-                          High_ci = purrr::pluck(indN, "results", "high.ci"))
+                                  Geo_area = purrr::pluck(results_tib, "Geo_area", rw), 
+                                  Eco_area = purrr::pluck(results_tib, "Eco_area", rw), 
+                                  Analysis = "N", 
+                                  Input = purrr::pluck(indN, "results", "parameters"),
+                                  Sensitivity = purrr::pluck(indN, "results", "sensitivity"), 
+                                  Mean = purrr::pluck(indN, "results", "original"), 
+                                  Se = purrr::pluck(indN, "results", "std.error"),
+                                  Low_ci = purrr::pluck(indN, "results", "low.ci"),
+                                  High_ci = purrr::pluck(indN, "results", "high.ci"))
     
     df_Si_Sti_C_biomass <- tibble::tibble(Code_sp = purrr::pluck(results_tib, "Code_sp", rw), 
-                                  Geo_area = purrr::pluck(results_tib, "Geo_area", rw), 
-                                  Eco_area = purrr::pluck(results_tib, "Eco_area", rw),
-                                  Analysis = "C_biomass", 
-                                  Input = purrr::pluck(indC_biomass, "results", "parameters"),
-                                  Sensitivity = purrr::pluck(indC_biomass, "results", "sensitivity"), 
-                                  Mean = purrr::pluck(indC_biomass, "results", "original"), 
-                                  Se = purrr::pluck(indC_biomass, "results", "std.error"),
-                                  Low_ci = purrr::pluck(indC_biomass, "results", "low.ci"),
-                                  High_ci = purrr::pluck(indC_biomass, "results", "high.ci"))
+                                          Geo_area = purrr::pluck(results_tib, "Geo_area", rw), 
+                                          Eco_area = purrr::pluck(results_tib, "Eco_area", rw),
+                                          Analysis = "C_biomass", 
+                                          Input = purrr::pluck(indC_biomass, "results", "parameters"),
+                                          Sensitivity = purrr::pluck(indC_biomass, "results", "sensitivity"), 
+                                          Mean = purrr::pluck(indC_biomass, "results", "original"), 
+                                          Se = purrr::pluck(indC_biomass, "results", "std.error"),
+                                          Low_ci = purrr::pluck(indC_biomass, "results", "low.ci"),
+                                          High_ci = purrr::pluck(indC_biomass, "results", "high.ci"))
     
     
     df_Si_Sti <- rbind(df_Si_Sti, 
@@ -247,7 +247,7 @@ create_sobol_index_tib_sensi <- function(results_tib,
                                              Input == "X6" ~ "nut_in_diet",
                                              Input == "X7" ~ "assi_rate",
                                              Input == "X8" ~ "nut_abs_rate"
-                                             ))
+      ))
     
     df_Si_tot <- tibble::tibble(Code_sp = purrr::pluck(results_tib, "Code_sp", rw), 
                                 Geo_area = purrr::pluck(results_tib, "Geo_area", rw), 
@@ -281,4 +281,56 @@ create_sobol_index_tib_sensi <- function(results_tib,
   df_Si_Sti <- df_Si_Sti[-1, ]
   
   df_Si_Sti
+}
+
+
+
+#'
+#'
+#'
+#'
+#' function to plot results of sensitivity analysis 
+fig_sensitivy_indices <- function(sensi_tib, 
+                                  object_type, 
+                                  name_file) {
+  
+  figure <- sensi_tib |> 
+    dplyr::mutate(Input = dplyr::case_when(Input == "abundance" ~ "Abun-dance", 
+                                           Input == "mass" ~ "Body mass",
+                                           Input == "beta" ~ "Beta",
+                                           Input == "ndays" ~ "Nb of days of presense",
+                                           Input == "nrj_in_diet" ~ "Mean energy content of diet",
+                                           Input == "nut_in_diet" ~ "Mean nutrient content of diet",
+                                           Input == "assi_rate" ~ "Assimi-lation rate",
+                                           Input == "nut_abs_rate" ~ "Nutrient release rate")) |>
+    dplyr::mutate(Input = factor(Input, 
+                                 levels = c("Body mass", "Beta",
+                                            "Mean energy content of diet", "Mean nutrient content of diet",
+                                            "Assimi-lation rate", "Nutrient release rate",  
+                                            "Abun-dance", "Nb of days of presense"))) |>
+  ggplot2::ggplot() +
+    ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity), color = "gray40", 
+                          width = 0.5, 
+                          #position = ggplot2::position_dodge(width=0.9)
+                          ) +
+    ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF"), 
+                               labels = function(x) stringr::str_wrap(x, width = 7)) +
+    ggplot2::scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6)) +
+    ggplot2::ylab("Sobol sensivity indice") +
+    ggplot2::xlab("Model parameter") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(size = 12),
+                   axis.title.x = ggplot2::element_text(face = "bold", size = 14),
+                   axis.text.y = ggplot2::element_text(size = 12),
+                   axis.title.y = ggplot2::element_text(face = "bold", size = 14),
+                   legend.title = ggplot2::element_blank(), 
+                   legend.spacing.y = ggplot2::unit(1.5, 'cm'))
+  
+  if (object_type == "file") {
+    ggplot2::ggsave(paste0("output/article/", name_file, ".jpg"),
+                    width = 8,
+                    height = 5)
+  } else {
+    figure
+  }
 }
