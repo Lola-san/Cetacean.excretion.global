@@ -308,7 +308,7 @@ create_sobol_index_tib_sensi <- function(results_tib,
 #'
 #'
 #' function to plot results of sensitivity analysis for all three taxa
-fig_sensitivy_indices_all_taxa <- function(sensi_tib, 
+fig_sensitivy_indices_all_taxa_N <- function(sensi_tib, 
                                            object_type, 
                                            name_file) {
   
@@ -316,7 +316,7 @@ fig_sensitivy_indices_all_taxa <- function(sensi_tib,
     dplyr::mutate(Input = dplyr::case_when(Input == "abundance" ~ "Abun-dance", 
                                            Input == "mass" ~ "Body mass",
                                            Input == "beta" ~ "Beta",
-                                           Input == "ndays" ~ "Nb of days of presense",
+                                           Input == "ndays" ~ "Nb of days of presence",
                                            Input == "nrj_in_diet" ~ "Mean energy content of diet",
                                            Input == "nut_in_diet" ~ "Mean nutrient content of diet",
                                            Input == "assi_rate" ~ "Assimi-lation rate",
@@ -325,7 +325,7 @@ fig_sensitivy_indices_all_taxa <- function(sensi_tib,
                                  levels = c("Body mass", "Beta",
                                             "Mean energy content of diet", "Mean nutrient content of diet",
                                             "Assimi-lation rate", "Nutrient release rate",  
-                                            "Abun-dance", "Nb of days of presense"))) |>
+                                            "Abun-dance", "Nb of days of presence"))) |>
     ggplot2::ggplot() +
     ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity), color = "gray40", 
                           width = 0.5, 
@@ -342,12 +342,69 @@ fig_sensitivy_indices_all_taxa <- function(sensi_tib,
                    axis.text.y = ggplot2::element_text(size = 12),
                    axis.title.y = ggplot2::element_text(face = "bold", size = 14),
                    legend.title = ggplot2::element_blank(), 
+                   legend.text = ggplot2::element_text(size = 12),
                    legend.spacing.y = ggplot2::unit(1.5, 'cm'))
   
   if (object_type == "file") {
     ggplot2::ggsave(paste0("output/article/", name_file, ".jpg"),
                     width = 8,
                     height = 5)
+  } else {
+    figure
+  }
+}
+
+#'
+#'
+#'
+#'
+#' function to plot results of sensitivity analysis for all three taxa
+fig_sensitivy_indices_all_taxa_all_nut <- function(sensi_tib, 
+                                             object_type, 
+                                             name_file) {
+  
+  figure <- sensi_tib |> 
+    dplyr::mutate(Input = dplyr::case_when(Input == "abundance" ~ "Abun-dance", 
+                                           Input == "mass" ~ "Body mass",
+                                           Input == "beta" ~ "Beta",
+                                           Input == "ndays" ~ "Nb of days of presence",
+                                           Input == "nrj_in_diet" ~ "Mean energy content of diet",
+                                           Input == "nut_in_diet" ~ "Mean nutrient content of diet",
+                                           Input == "assi_rate" ~ "Assimi-lation rate",
+                                           Input == "nut_abs_rate" ~ "Nutrient release rate")) |>
+    dplyr::mutate(Input = factor(Input, 
+                                 levels = c("Body mass", "Beta",
+                                            "Mean energy content of diet", "Mean nutrient content of diet",
+                                            "Assimi-lation rate", "Nutrient release rate",  
+                                            "Abun-dance", "Nb of days of presence"))) |>
+    dplyr::mutate(Nutrient = factor(Nutrient, 
+                                    levels = c("N", "P", "Fe", "Cu", 
+                                               "Mn", "Se", "Zn", "Co"))) |>
+    ggplot2::ggplot() +
+    ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity), color = "gray40", 
+                          width = 0.5, 
+                          #position = ggplot2::position_dodge(width=0.9)
+    ) +
+    ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF")) +
+    ggplot2::scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6)) +
+    ggplot2::facet_wrap(~ Nutrient, nrow = 2) +
+    ggplot2::ylab("Sobol sensivity indice") +
+    ggplot2::xlab("Model parameter") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(size = 12),
+                   axis.title.x = ggplot2::element_text(face = "bold", size = 14),
+                   axis.text.y = ggplot2::element_text(size = 12),
+                   axis.title.y = ggplot2::element_text(face = "bold", size = 14),
+                   strip.text = ggplot2::element_text(face = "bold", size = 14),
+                   legend.title = ggplot2::element_blank(), 
+                   legend.spacing.y = ggplot2::unit(1.5, 'cm'), 
+                   legend.text = ggplot2::element_text(size = 12),
+                   legend.position = "bottom")
+  
+  if (object_type == "file") {
+    ggplot2::ggsave(paste0("output/article/", name_file, ".jpg"),
+                    width = 22,
+                    height = 8)
   } else {
     figure
   }
@@ -367,7 +424,7 @@ fig_sensitivy_indices_BW <- function(sensi_tib,
     dplyr::mutate(Input = dplyr::case_when(Input == "abundance" ~ "Abun-dance", 
                                            Input == "mass" ~ "Body mass",
                                            Input == "beta" ~ "Beta",
-                                           Input == "ndays" ~ "Nb of days of presense",
+                                           Input == "ndays" ~ "Nb of days of presence",
                                            Input == "nrj_in_diet" ~ "Mean energy content of diet",
                                            Input == "nut_in_diet" ~ "Mean nutrient content of diet",
                                            Input == "assi_rate" ~ "Assimi-lation rate",
@@ -376,7 +433,7 @@ fig_sensitivy_indices_BW <- function(sensi_tib,
                                  levels = c("Body mass", "Beta",
                                             "Mean energy content of diet", "Mean nutrient content of diet",
                                             "Assimi-lation rate", "Nutrient release rate",  
-                                            "Abun-dance", "Nb of days of presense"))) |>
+                                            "Abun-dance", "Nb of days of presence"))) |>
     dplyr::mutate(Nutrient = factor(Nutrient, 
                                     levels = c("N", "P", "Fe", "Cu", 
                                                "Mn", "Se", "Zn", "Co"))) |>
@@ -384,8 +441,7 @@ fig_sensitivy_indices_BW <- function(sensi_tib,
     ggplot2::ggplot() +
     ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity)) +
     ggplot2::facet_wrap(~ Nutrient, nrow = 2) +
-    ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF"), 
-                               labels = function(x) stringr::str_wrap(x, width = 7)) +
+    ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF")) +
     ggplot2::scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6)) +
     ggplot2::ylab("Sobol sensivity indice") +
     ggplot2::xlab("Model parameter") +
@@ -395,14 +451,16 @@ fig_sensitivy_indices_BW <- function(sensi_tib,
                    axis.title.x = ggplot2::element_text(face = "bold", size = 14),
                    axis.text.y = ggplot2::element_text(size = 12),
                    axis.title.y = ggplot2::element_text(face = "bold", size = 14),
-                   title = ggplot2::element_text(face = "bold", size = 16, hjust = 0.5), 
+                   strip.text = ggplot2::element_text(face = "bold", size = 14),
                    legend.title = ggplot2::element_blank(), 
-                   legend.spacing.y = ggplot2::unit(1.5, 'cm'))
+                   legend.spacing.y = ggplot2::unit(1.5, 'cm'), 
+                   legend.text = ggplot2::element_text(size = 12),
+                   legend.position = "bottom")
   
   if (object_type == "file") {
     ggplot2::ggsave(paste0("output/article/", name_file, ".jpg"),
-                    width = 8,
-                    height = 5)
+                    width = 22,
+                    height = 8)
   } else {
     figure
   }
@@ -422,16 +480,18 @@ fig_sensitivy_indices_DD <- function(sensi_tib,
     dplyr::mutate(Input = dplyr::case_when(Input == "abundance" ~ "Abun-dance", 
                                            Input == "mass" ~ "Body mass",
                                            Input == "beta" ~ "Beta",
-                                           Input == "ndays" ~ "Nb of days of presense",
+                                           Input == "ndays" ~ "Nb of days of presence",
                                            Input == "nrj_in_diet" ~ "Mean energy content of diet",
                                            Input == "nut_in_diet" ~ "Mean nutrient content of diet",
                                            Input == "assi_rate" ~ "Assimi-lation rate",
                                            Input == "nut_abs_rate" ~ "Nutrient release rate")) |>
+    # for deep divers, nb of days of presence is set to 365 so no need to take it into account
+    dplyr::filter(Input != "Nb of days of presence") |>
     dplyr::mutate(Input = factor(Input, 
                                  levels = c("Body mass", "Beta",
                                             "Mean energy content of diet", "Mean nutrient content of diet",
                                             "Assimi-lation rate", "Nutrient release rate",  
-                                            "Abun-dance", "Nb of days of presense"))) |>
+                                            "Abun-dance"))) |>
     dplyr::mutate(Nutrient = factor(Nutrient, 
                                     levels = c("N", "P", "Fe", "Cu", 
                                                "Mn", "Se", "Zn", "Co"))) |>
@@ -439,8 +499,7 @@ fig_sensitivy_indices_DD <- function(sensi_tib,
     ggplot2::ggplot() +
     ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity)) +
     ggplot2::facet_wrap(~ Nutrient, nrow = 2) +
-    ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF"), 
-                               labels = function(x) stringr::str_wrap(x, width = 7)) +
+    ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF")) +
     ggplot2::scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6)) +
     ggplot2::ylab("Sobol sensivity indice") +
     ggplot2::xlab("Model parameter") +
@@ -450,14 +509,16 @@ fig_sensitivy_indices_DD <- function(sensi_tib,
                    axis.title.x = ggplot2::element_text(face = "bold", size = 14),
                    axis.text.y = ggplot2::element_text(size = 12),
                    axis.title.y = ggplot2::element_text(face = "bold", size = 14),
-                   title = ggplot2::element_text(face = "bold", size = 16, hjust = 0.5), 
+                   strip.text = ggplot2::element_text(face = "bold", size = 14),
                    legend.title = ggplot2::element_blank(), 
-                   legend.spacing.y = ggplot2::unit(1.5, 'cm'))
+                   legend.spacing.y = ggplot2::unit(1.5, 'cm'), 
+                   legend.text = ggplot2::element_text(size = 12),
+                   legend.position = "bottom")
   
   if (object_type == "file") {
     ggplot2::ggsave(paste0("output/article/", name_file, ".jpg"),
-                    width = 8,
-                    height = 5)
+                    width = 22,
+                    height = 8)
   } else {
     figure
   }
@@ -478,7 +539,7 @@ fig_sensitivy_indices_SD <- function(sensi_tib,
     dplyr::mutate(Input = dplyr::case_when(Input == "abundance" ~ "Abun-dance", 
                                            Input == "mass" ~ "Body mass",
                                            Input == "beta" ~ "Beta",
-                                           Input == "ndays" ~ "Nb of days of presense",
+                                           Input == "ndays" ~ "Nb of days of presence",
                                            Input == "nrj_in_diet" ~ "Mean energy content of diet",
                                            Input == "nut_in_diet" ~ "Mean nutrient content of diet",
                                            Input == "assi_rate" ~ "Assimi-lation rate",
@@ -487,7 +548,9 @@ fig_sensitivy_indices_SD <- function(sensi_tib,
                                  levels = c("Body mass", "Beta",
                                             "Mean energy content of diet", "Mean nutrient content of diet",
                                             "Assimi-lation rate", "Nutrient release rate",  
-                                            "Abun-dance", "Nb of days of presense"))) |>
+                                            "Abun-dance", "Nb of days of presence"))) |>
+    # for small delph, nb of days of presence is set to 365 so no need to take it into account
+    dplyr::filter(Input != "Nb of days of presence") |>
     dplyr::mutate(Nutrient = factor(Nutrient, 
                                     levels = c("N", "P", "Fe", "Cu", 
                                                "Mn", "Se", "Zn", "Co"))) |>
@@ -495,8 +558,7 @@ fig_sensitivy_indices_SD <- function(sensi_tib,
     ggplot2::ggplot() +
     ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity)) +
     ggplot2::facet_wrap(~ Nutrient, nrow = 2) +
-    ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF"), 
-                               labels = function(x) stringr::str_wrap(x, width = 7)) +
+    ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF")) +
     ggplot2::scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6)) +
     ggplot2::ylab("Sobol sensivity indice") +
     ggplot2::xlab("Model parameter") +
@@ -506,14 +568,16 @@ fig_sensitivy_indices_SD <- function(sensi_tib,
                    axis.title.x = ggplot2::element_text(face = "bold", size = 14),
                    axis.text.y = ggplot2::element_text(size = 12),
                    axis.title.y = ggplot2::element_text(face = "bold", size = 14),
-                   title = ggplot2::element_text(face = "bold", size = 16, hjust = 0.5), 
+                   strip.text = ggplot2::element_text(face = "bold", size = 14),
                    legend.title = ggplot2::element_blank(), 
-                   legend.spacing.y = ggplot2::unit(1.5, 'cm'))
+                   legend.spacing.y = ggplot2::unit(1.5, 'cm'), 
+                   legend.text = ggplot2::element_text(size = 12),
+                   legend.position = "bottom")
   
   if (object_type == "file") {
     ggplot2::ggsave(paste0("output/article/", name_file, ".jpg"),
-                    width = 8,
-                    height = 5)
+                    width = 22,
+                    height = 8)
   } else {
     figure
   }
