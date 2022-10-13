@@ -602,6 +602,47 @@ sobol_index_all_sensi |>
   ggplot2::ggplot() +
   ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity))
 
+trial |>
+  ggplot2::ggplot() +
+  ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity)) +
+  ggplot2::facet_grid(rows =  ggplot2::vars(Nutrient), 
+                      cols = ggplot2::vars(Eco_gp))
+
+trial |>
+  dplyr::mutate(Input = dplyr::case_when(Input == "abundance" ~ "Abun-dance", 
+                                         Input == "mass" ~ "Body mass",
+                                         Input == "beta" ~ "Beta",
+                                         Input == "ndays" ~ "Nb of days of presense",
+                                         Input == "nrj_in_diet" ~ "Mean energy content of diet",
+                                         Input == "nut_in_diet" ~ "Mean nutrient content of diet",
+                                         Input == "assi_rate" ~ "Assimi-lation rate",
+                                         Input == "nut_abs_rate" ~ "Nutrient release rate")) |>
+  dplyr::mutate(Input = factor(Input, 
+                               levels = c("Body mass", "Beta",
+                                          "Mean energy content of diet", "Mean nutrient content of diet",
+                                          "Assimi-lation rate", "Nutrient release rate",  
+                                          "Abun-dance", "Nb of days of presense"))) |>
+  dplyr::mutate(Nutrient = factor(Nutrient, 
+                               levels = c("N", "P", "Fe", "Cu", 
+                                          "Mn", "Se", "Zn", "Co"))) |>
+  dplyr::filter(Eco_gp == "Small delphinids") |>
+  ggplot2::ggplot() +
+  ggplot2::geom_boxplot(ggplot2::aes(x = Input, y = original, fill = Sensitivity)) +
+  ggplot2::facet_wrap(~ Nutrient, nrow = 2) +
+  ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF"), 
+                           labels = function(x) stringr::str_wrap(x, width = 7)) +
+  ggplot2::scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6)) +
+  ggplot2::ylab("Sobol sensivity indice") +
+  ggplot2::xlab("Model parameter") +
+  ggplot2::theme_bw() +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(size = 12),
+                 axis.title.x = ggplot2::element_text(face = "bold", size = 14),
+                 axis.text.y = ggplot2::element_text(size = 12),
+                 axis.title.y = ggplot2::element_text(face = "bold", size = 14),
+                 legend.title = ggplot2::element_blank(), 
+                 legend.spacing.y = ggplot2::unit(1.5, 'cm'))
+
+
 
 
 ############################## figures for ISEC ######################

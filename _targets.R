@@ -358,6 +358,9 @@ list(
   tar_target(tot_est_stat_kg_km2_yr_output, create_full_stat_tab_kg_km2_yr(model_output_clean, 
                                                                            "output", 
                                                                            "tot_est_stat_kg_km2_yr")),
+  tar_target(tot_est_stat_kg_ha_yr_output, create_full_stat_tab_kg_ha_yr(model_output_clean, 
+                                                                           "output", 
+                                                                           "tot_est_stat_kg_ha_yr")),
   # table with results of statistical test of significance of difference between areas
   # only for N 
   tar_target(test_diff_tot_exc_N, create_tab_stat_diff_tot_exc(model_output_clean, 

@@ -142,6 +142,48 @@ create_full_stat_tab_kg_km2_yr <- function(output_tib,
 #'
 #'
 #'
+# statistics of estimates of total excretion per area per surface unit
+# for all areas, all elements
+# in kg/km2/yr
+create_full_stat_tab_kg_ha_yr <- function(output_tib,
+                                           object_type, # either "output" or "file" 
+                                           name_file) {
+  table <- output_tib |>
+    dplyr::group_by(Geo_area) |>
+    dplyr::summarise(Surf_km2 = sum(unique(Surf_tot)), 
+                     Surf_ha = Surf_km2*100,
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Element", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Excretion = Excretion*1e3/Surf_ha, # from tons to kg/ha
+                  Element = factor(Element, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As"))) |>
+    dplyr::group_by(Geo_area, Element) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion))
+  if (object_type == "file") {
+    write.table(table, paste0("output/tables/", 
+                              name_file,
+                              ".txt"), sep = "\t")
+  } else {
+    table
+  }
+}
+
+
+
+#'
+#'
+#'
+#'
+#'
 # statistical test significance of differences between areas
 # for all areas, but only for N (could be done similarly for other, just very long)
 # in kg/km2/yr
