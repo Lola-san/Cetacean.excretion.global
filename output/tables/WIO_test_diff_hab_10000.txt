@@ -1,9 +1,9 @@
 "Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
-"1"	"West Indian ocean"	"N"	"Oceanic waters"	"Neritic waters"	0.9541
-"2"	"West Indian ocean"	"P"	"Oceanic waters"	"Neritic waters"	0.8904
-"3"	"West Indian ocean"	"Fe"	"Oceanic waters"	"Neritic waters"	0.9195
-"4"	"West Indian ocean"	"Cu"	"Oceanic waters"	"Neritic waters"	1
-"5"	"West Indian ocean"	"Mn"	"Oceanic waters"	"Neritic waters"	0.8201
+"1"	"West Indian ocean"	"N"	"Oceanic waters"	"Neritic waters"	0.9555
+"2"	"West Indian ocean"	"P"	"Oceanic waters"	"Neritic waters"	0.8899
+"3"	"West Indian ocean"	"Fe"	"Oceanic waters"	"Neritic waters"	0.9181
+"4"	"West Indian ocean"	"Cu"	"Oceanic waters"	"Neritic waters"	0.9999
+"5"	"West Indian ocean"	"Mn"	"Oceanic waters"	"Neritic waters"	0.8221
 "6"	"West Indian ocean"	"Se"	"Oceanic waters"	"Neritic waters"	0.9645
-"7"	"West Indian ocean"	"Zn"	"Oceanic waters"	"Neritic waters"	0.99
-"8"	"West Indian ocean"	"Co"	"Oceanic waters"	"Neritic waters"	0.9757
+"7"	"West Indian ocean"	"Zn"	"Oceanic waters"	"Neritic waters"	0.9902
+"8"	"West Indian ocean"	"Co"	"Oceanic waters"	"Neritic waters"	0.9769

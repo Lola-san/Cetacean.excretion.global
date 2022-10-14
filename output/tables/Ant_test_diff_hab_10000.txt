@@ -1,9 +1,9 @@
 "Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
-"1"	"French Antilles"	"N"	"Oceanic waters"	"Neritic waters"	0.0242
-"2"	"French Antilles"	"P"	"Oceanic waters"	"Neritic waters"	0.028
-"3"	"French Antilles"	"Fe"	"Oceanic waters"	"Neritic waters"	0.0283
-"4"	"French Antilles"	"Cu"	"Oceanic waters"	"Neritic waters"	0.0156
-"5"	"French Antilles"	"Mn"	"Oceanic waters"	"Neritic waters"	0.0411
+"1"	"French Antilles"	"N"	"Oceanic waters"	"Neritic waters"	0.0255
+"2"	"French Antilles"	"P"	"Oceanic waters"	"Neritic waters"	0.0273
+"3"	"French Antilles"	"Fe"	"Oceanic waters"	"Neritic waters"	0.0281
+"4"	"French Antilles"	"Cu"	"Oceanic waters"	"Neritic waters"	0.0157
+"5"	"French Antilles"	"Mn"	"Oceanic waters"	"Neritic waters"	0.0425
 "6"	"French Antilles"	"Se"	"Oceanic waters"	"Neritic waters"	0.0234
-"7"	"French Antilles"	"Zn"	"Oceanic waters"	"Neritic waters"	0.0174
-"8"	"French Antilles"	"Co"	"Oceanic waters"	"Neritic waters"	0.0303
+"7"	"French Antilles"	"Zn"	"Oceanic waters"	"Neritic waters"	0.0165
+"8"	"French Antilles"	"Co"	"Oceanic waters"	"Neritic waters"	0.0327

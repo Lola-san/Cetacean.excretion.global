@@ -1,9 +1,9 @@
 "Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
 "1"	"Wallis & Futuna"	"N"	"Deep divers"	"Small delphinids"	0.3041
-"2"	"Wallis & Futuna"	"P"	"Deep divers"	"Small delphinids"	0.1827
-"3"	"Wallis & Futuna"	"Fe"	"Deep divers"	"Small delphinids"	0.2433
-"4"	"Wallis & Futuna"	"Cu"	"Deep divers"	"Small delphinids"	0.9488
-"5"	"Wallis & Futuna"	"Mn"	"Deep divers"	"Small delphinids"	0.1782
-"6"	"Wallis & Futuna"	"Se"	"Deep divers"	"Small delphinids"	0.3358
-"7"	"Wallis & Futuna"	"Zn"	"Deep divers"	"Small delphinids"	0.4328
-"8"	"Wallis & Futuna"	"Co"	"Deep divers"	"Small delphinids"	0.609
+"2"	"Wallis & Futuna"	"P"	"Deep divers"	"Small delphinids"	0.1873
+"3"	"Wallis & Futuna"	"Fe"	"Deep divers"	"Small delphinids"	0.2501
+"4"	"Wallis & Futuna"	"Cu"	"Deep divers"	"Small delphinids"	0.9463
+"5"	"Wallis & Futuna"	"Mn"	"Deep divers"	"Small delphinids"	0.178
+"6"	"Wallis & Futuna"	"Se"	"Deep divers"	"Small delphinids"	0.3318
+"7"	"Wallis & Futuna"	"Zn"	"Deep divers"	"Small delphinids"	0.4368
+"8"	"Wallis & Futuna"	"Co"	"Deep divers"	"Small delphinids"	0.6156

@@ -1,9 +1,9 @@
 "Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
 "1"	"Gulf of Alaska"	"N"	"Oceanic waters"	"Neritic waters"	0
 "2"	"Gulf of Alaska"	"P"	"Oceanic waters"	"Neritic waters"	0
-"3"	"Gulf of Alaska"	"Fe"	"Oceanic waters"	"Neritic waters"	6e-04
+"3"	"Gulf of Alaska"	"Fe"	"Oceanic waters"	"Neritic waters"	0.0007
 "4"	"Gulf of Alaska"	"Cu"	"Oceanic waters"	"Neritic waters"	0.0042
 "5"	"Gulf of Alaska"	"Mn"	"Oceanic waters"	"Neritic waters"	0.0011
-"6"	"Gulf of Alaska"	"Se"	"Oceanic waters"	"Neritic waters"	0.0012
-"7"	"Gulf of Alaska"	"Zn"	"Oceanic waters"	"Neritic waters"	0.0011
+"6"	"Gulf of Alaska"	"Se"	"Oceanic waters"	"Neritic waters"	0.001
+"7"	"Gulf of Alaska"	"Zn"	"Oceanic waters"	"Neritic waters"	0.0015
 "8"	"Gulf of Alaska"	"Co"	"Oceanic waters"	"Neritic waters"	0.0011

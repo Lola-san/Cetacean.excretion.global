@@ -1,9 +1,9 @@
 "Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
-"1"	"French Antilles"	"N"	"Deep divers"	"Small delphinids"	0.9573
-"2"	"French Antilles"	"P"	"Deep divers"	"Small delphinids"	0.9044
-"3"	"French Antilles"	"Fe"	"Deep divers"	"Small delphinids"	0.8605
+"1"	"French Antilles"	"N"	"Deep divers"	"Small delphinids"	0.9584
+"2"	"French Antilles"	"P"	"Deep divers"	"Small delphinids"	0.9045
+"3"	"French Antilles"	"Fe"	"Deep divers"	"Small delphinids"	0.8597
 "4"	"French Antilles"	"Cu"	"Deep divers"	"Small delphinids"	0.9993
-"5"	"French Antilles"	"Mn"	"Deep divers"	"Small delphinids"	0.8049
-"6"	"French Antilles"	"Se"	"Deep divers"	"Small delphinids"	0.9512
-"7"	"French Antilles"	"Zn"	"Deep divers"	"Small delphinids"	0.9771
-"8"	"French Antilles"	"Co"	"Deep divers"	"Small delphinids"	0.9346
+"5"	"French Antilles"	"Mn"	"Deep divers"	"Small delphinids"	0.8056
+"6"	"French Antilles"	"Se"	"Deep divers"	"Small delphinids"	0.952
+"7"	"French Antilles"	"Zn"	"Deep divers"	"Small delphinids"	0.9764
+"8"	"French Antilles"	"Co"	"Deep divers"	"Small delphinids"	0.9364
