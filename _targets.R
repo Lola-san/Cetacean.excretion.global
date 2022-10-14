@@ -363,6 +363,15 @@ list(
   
   
   ############################# for all areas - tables ################
+  # table with estimates and statistics for all parameters of the model, 
+  # for all elements, in tons/yr
+  tar_target(supp_table_param_file, supp_table_param_all_param_sp(model_output_clean, 
+                                                                    "file", 
+                                                                    paste("model_param_stats", 
+                                                                          nsim = 1e4, sep = "_"))),
+  tar_target(supp_table_param_output, supp_table_param_all_param_sp(model_output_clean, 
+                                                                      "output", 
+                                                                      "model_param_stats")), 
   # table with estimates and statistics for total excretion in all areas, 
   # for all elements, in tons/yr
   tar_target(tot_est_stat_tns_yr_file, create_full_stat_tab_tons_yr(model_output_clean, 

@@ -24,6 +24,12 @@ prepare_input <- function(pop_tib, diet_nut_tib) {
   pop_tib |>
     dplyr::left_join(diet_nut_tib, 
                      by = c("Code_sp", "Species", "Eco_area")) |>
+    # account for the enhance cost of lunge feeding for lunge feeding baleen whales 
+    # to obtain daily rations in line with findings of Savoca et al 2021
+    dplyr::mutate(Beta = dplyr::case_when(Code_sp %in% c("Bala_mus", "Bala_ede", 
+                                           "Bala_phy", "Bala_bor", 
+                                           "Bala_acu", "Mega_nov") ~ Beta + 0.5, 
+                            TRUE ~ Beta)) |>
     tidyr::nest(Mass = c(Mass), 
                 Beta = c(Beta), 
                 Abund = c(Abund, Abund_CV)) |>
