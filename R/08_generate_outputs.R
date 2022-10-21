@@ -488,7 +488,7 @@ create_tab_stat_diff_tot_exc <- function(output_tib, element) {
     tidyr::pivot_longer(cols = c("t_Alaska_NAtl":"t_Paci_WFu_Paci_FPoly"),
                         names_to = "Test", 
                         values_to = "is_area1_superior_to_area2") |>
-    dplyr::mutate(Area = dplyr::case_when(stringr::str_starts(Test, "t_Ant") ~ "French Antilles",
+    dplyr::mutate(Area1 = dplyr::case_when(stringr::str_starts(Test, "t_Ant") ~ "French Antilles",
                                           stringr::str_starts(Test, "t_Alaska") ~ "Gulf of Alaska",
                                           stringr::str_starts(Test, "t_Guy") ~ "French Guyana",
                                           stringr::str_starts(Test, "t_Mex") ~ "Gulf of Mexico",
@@ -515,10 +515,10 @@ create_tab_stat_diff_tot_exc <- function(output_tib, element) {
                                            stringr::str_ends(Test, "_Paci_FPoly") ~ "French Polynesia",
                                            stringr::str_ends(Test, "_Paci_Hawai") ~ "Hawaii",
                                            stringr::str_ends(Test, "_Paci_NCal") ~ "New Caledonia",
-                                           stringr::str_ends(Test, "_Paci_WFu") ~ "Wallis & Futuna")) |>
-    dplyr::select(c(is_area1_superior_to_area2, Area, Area2)) |>
-    tidyr::pivot_wider(names_from = Area2, 
-                       values_from = is_area1_superior_to_area2)
+                                           stringr::str_ends(Test, "_Paci_WFu") ~ "Wallis & Futuna"), 
+                  Element = element) |>
+    dplyr::select(c(element, Area1, Area2, p_area1_superior_to_area2)) |>
+    tidyr::filter(!(is.na(p_area1_superior_to_area2)))
 }
 
 
@@ -725,15 +725,15 @@ test_differences_hab <- function(output_tib,
                        t_oceanic_shelf = mean(t_oceanic_shelf)) |>
       tidyr::pivot_longer(cols = c("t_shelf_oceanic":"t_oceanic_shelf"),
                           names_to = "Test", 
-                          values_to = "ratio_area1_superior_to_area2") |>
+                          values_to = "p_habitat1_superior_to_habitat2") |>
       dplyr::mutate(Geo_area = geo_area, 
                     Element = i, 
-                    Area1 = dplyr::case_when(stringr::str_starts(Test, "t_shelf") ~ "Neritic waters",
+                    habitat1 = dplyr::case_when(stringr::str_starts(Test, "t_shelf") ~ "Neritic waters",
                                              stringr::str_starts(Test, "t_oceanic") ~ "Oceanic waters"), 
-                    Area2 = dplyr::case_when(stringr::str_ends(Test, "_shelf") ~ "Neritic waters",
+                    habitat2 = dplyr::case_when(stringr::str_ends(Test, "_shelf") ~ "Neritic waters",
                                              stringr::str_ends(Test, "_oceanic") ~ "Oceanic waters")) |>
       # select only one direction for the test to avoid duplicate information (i.e. test neritic > oceanic + test oceanic > neritic = 1)
-      dplyr::filter(Area1 == "Oceanic waters") |>
+      dplyr::filter(habitat1 == "Oceanic waters") |>
       dplyr::select(-Test) 
     
     final_table <- rbind(final_table, el_table)
@@ -780,7 +780,12 @@ taxa_contribution_total <- function(output_tib,
                   Excretion = Excretion
     )  |>
     dplyr::group_by(Geo_area, Eco_gp, Element) |>
-    dplyr::summarize(mean = mean(Excretion)) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
     dplyr::left_join(output_tib |>
                        dplyr::filter(Geo_area == geo_area) |>
                        dplyr::summarise(Surf = sum(unique(Surf_tot)), 
@@ -833,7 +838,12 @@ taxa_contribution_hab <- function(output_tib,
                   Excretion = Excretion
     )  |>
     dplyr::group_by(Geo_area, Eco_area, Eco_gp, Element) |>
-    dplyr::summarize(mean = mean(Excretion)) |>
+    dplyr::summarize(min = min(Excretion), 
+                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
+                     mean = mean(Excretion), 
+                     median = median(Excretion), 
+                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
+                     max = max(Excretion)) |>
     dplyr::left_join(output_tib |> 
                        dplyr::group_by(Geo_area, Eco_area) |>
                        dplyr::filter(Geo_area == geo_area) |>
@@ -912,12 +922,12 @@ test_differences_taxa <- function(output_tib,
                          t_deep_delphi = mean(t_deep_delphi)) |>
         tidyr::pivot_longer(cols = c("t_baleen_deep":"t_deep_delphi"),
                             names_to = "Test", 
-                            values_to = "ratio_group1_superior_to_group2") |>
+                            values_to = "p_taxa1_superior_to_taxa2") |>
         dplyr::mutate(Geo_area = geo_area, 
                       Element = i, 
-                      Group1 = dplyr::case_when(stringr::str_starts(Test, "t_baleen") ~ "Baleen whales",
+                      Taxa1 = dplyr::case_when(stringr::str_starts(Test, "t_baleen") ~ "Baleen whales",
                                                 stringr::str_starts(Test, "t_deep") ~ "Deep divers"), 
-                      Group2 = dplyr::case_when(stringr::str_ends(Test, "_deep") ~ "Deep divers",
+                      Taxa2 = dplyr::case_when(stringr::str_ends(Test, "_deep") ~ "Deep divers",
                                                 stringr::str_ends(Test, "_delphi") ~ "Small delphinids")) |>
         dplyr::select(-Test) 
       
@@ -954,11 +964,11 @@ test_differences_taxa <- function(output_tib,
         dplyr::summarise(t_deep_delphi = mean(t_deep_delphi)) |>
         tidyr::pivot_longer(cols = c("t_deep_delphi"),
                             names_to = "Test", 
-                            values_to = "ratio_group1_superior_to_group2") |>
+                            values_to = "p_taxa1_superior_to_taxa2") |>
         dplyr::mutate(Geo_area = geo_area, 
                       Element = i, 
-                      Group1 = "Deep divers", 
-                      Group2 = "Small delphinids") |>
+                      Taxa1 = "Deep divers", 
+                      Taxa2 = "Small delphinids") |>
         dplyr::select(-Test) 
       
       final_table <- rbind(final_table, el_table)
@@ -1037,12 +1047,12 @@ test_differences_taxa_hab <- function(output_tib,
                          t_deep_delphi = mean(t_deep_delphi)) |>
         tidyr::pivot_longer(cols = c("t_baleen_deep":"t_deep_delphi"),
                             names_to = "Test", 
-                            values_to = "ratio_group1_superior_to_group2") |>
+                            values_to = "p_taxa1_superior_to_taxa2") |>
         dplyr::mutate(Geo_area = geo_area, 
                       Element = i, 
-                      Group1 = dplyr::case_when(stringr::str_starts(Test, "t_baleen") ~ "Baleen whales",
+                      Taxa1 = dplyr::case_when(stringr::str_starts(Test, "t_baleen") ~ "Baleen whales",
                                                 stringr::str_starts(Test, "t_deep") ~ "Deep divers"), 
-                      Group2 = dplyr::case_when(stringr::str_ends(Test, "_deep") ~ "Deep divers",
+                      Taxa2 = dplyr::case_when(stringr::str_ends(Test, "_deep") ~ "Deep divers",
                                                 stringr::str_ends(Test, "_delphi") ~ "Small delphinids")) |>
         dplyr::select(-Test) 
       
@@ -1080,11 +1090,11 @@ test_differences_taxa_hab <- function(output_tib,
         dplyr::summarise(t_deep_delphi = mean(t_deep_delphi)) |>
         tidyr::pivot_longer(cols = c("t_deep_delphi"),
                             names_to = "Test", 
-                            values_to = "ratio_group1_superior_to_group2") |>
+                            values_to = "p_taxa1_superior_to_taxa2") |>
         dplyr::mutate(Geo_area = geo_area, 
                       Element = i, 
-                      Group1 = "Deep divers", 
-                      Group2 = "Small delphinids") |>
+                      Taxa1 = "Deep divers", 
+                      Taxa2 = "Small delphinids") |>
         dplyr::select(-Test) 
       
       final_table <- rbind(final_table, el_table)

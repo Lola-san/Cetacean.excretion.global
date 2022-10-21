@@ -949,7 +949,7 @@ model_output_clean |>
 
 
 # diets 
-model_output_clean |>
+try <- model_output_clean |>
   dplyr::filter(Geo_area == "Mediterranean Sea", 
                 Code_sp %in% c("Turs_tru", 
                                "Sten_coe", 
@@ -957,7 +957,7 @@ model_output_clean |>
                                "Gram_gri", 
                                "Bala_phy", 
                                "Ziph_cav")) |>
-  dplyr::filter(Code_sp == "Sten_coe") |>
+  dplyr::filter(Code_sp == "Turs_tru") |>
   dplyr::select(c(Code_sp, Diet)) |>
   tidyr::unnest(Diet) |>
   unique() |>
@@ -1021,6 +1021,46 @@ model_output_clean |>
 
 
 
+model_output_clean |>
+  dplyr::filter(Geo_area == "Mediterranean Sea", 
+                Code_sp %in% c("Turs_tru", 
+                               "Sten_coe", 
+                               "Phys_mac", 
+                               "Gram_gri", 
+                               "Bala_phy", 
+                               "Ziph_cav")) |>
+  tidyr::unnest(Indi_data) |>
+  dplyr::group_by(Species, Eco_area) |>
+  dplyr::summarize(mean_per = mean(PercentBM))
+
+
+
+
+model_output_clean |>
+  dplyr::filter(Geo_area == "Mediterranean Sea", 
+                Code_sp %in% c("Turs_tru", 
+                               "Sten_coe", 
+                               "Phys_mac", 
+                               "Gram_gri", 
+                               "Bala_phy", 
+                               "Ziph_cav")) |>
+  tidyr::unnest(Indi_data) |>
+  dplyr::group_by(Species, Eco_area) |>
+  dplyr::summarize(mean_ADMR = mean(ADMR))
+
+
+model_output_clean |>
+  dplyr::filter(Geo_area == "Mediterranean Sea", 
+                Code_sp %in% c("Turs_tru", 
+                               "Sten_coe", 
+                               "Phys_mac", 
+                               "Gram_gri", 
+                               "Bala_phy", 
+                               "Ziph_cav")) |>
+  tidyr::unnest(NRJ_diet) |>
+  dplyr::group_by(Species, Eco_area) |>
+  dplyr::summarize(mean_NRJ = mean(value))
+
 
 ############################## comparison with estimates of Savoca et al 2021
 # daily rations
@@ -1032,6 +1072,16 @@ model_output |>
   tidyr::unnest(Indi_data) |>
   dplyr::group_by(Species, Eco_area) |>
   dplyr::summarize(mean_ration = mean(Ration))
+
+
+model_output |>
+  dplyr::filter(Code_sp %in% c("Bala_mus", 
+                               "Bala_phy", 
+                               "Bala_acu", 
+                               "Mega_nov")) |>
+  tidyr::unnest(Indi_data) |>
+  dplyr::group_by(Species, Eco_area) |>
+  dplyr::summarize(mean_ = mean(Ration))
 
 
 
@@ -1084,3 +1134,58 @@ model_output_clean |>
   dplyr::group_by(Geo_area, Element) |>
   dplyr::summarize(mean_exc = mean(Excretion)) |>
   tidyr::pivot_wider(names_from = Element, values_from = mean_exc)
+
+
+
+
+########################## supplementary material 
+
+targets::tar_read(est_stat_hab_tns_yr_NEA_output) # there are negative values!! 
+
+View(model_output_clean |>
+  dplyr::filter(Geo_area == "Northeast Atlantic") |>
+  dplyr::group_by(Geo_area, Code_sp) |>
+  dplyr::summarise(sum = list(sum_tibb(excrete_nut))) |>
+  tidyr::unnest(sum) |>
+  tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                    names_to = "Element", 
+                    values_to = "Excretion") |> 
+  dplyr::mutate(Element = factor(Element, 
+                                 levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                            "Se", "Zn", "Co", "As"))
+  )  |>
+  dplyr::filter(Element != "As") |>
+  dplyr::group_by(Geo_area, Element, Code_sp) |>
+  dplyr::summarize(min_exc = min(Excretion), 
+                   `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                   `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
+                   mean_exc = mean(Excretion), 
+                   median_exc = median(Excretion), 
+                   `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
+                   `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                   max_exc = max(Excretion))) 
+
+# ca vient de Bala phy sans surprise
+
+model_output_clean |>
+  dplyr::filter(Code_sp == "Bala_phy") |>
+  tidyr::unnest(Nut_diet) |>
+  tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                      names_to = "Element", 
+                      values_to = "Nut_diet") |> 
+  dplyr::mutate(Element = factor(Element, 
+                                 levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                            "Se", "Zn", "Co", "As"))
+  )  |>
+  dplyr::filter(Element != "As") |>
+  dplyr::group_by(Geo_area, Element) |>
+  dplyr::summarize(min_exc = min(Nut_diet), 
+                   `2.5_quant_exc` = quantile(Nut_diet, probs = c(0.025)), 
+                   `10_quant_exc` = quantile(Nut_diet, probs = c(0.1)), 
+                   mean_exc = mean(Nut_diet), 
+                   median_exc = median(Nut_diet), 
+                   `90_quant_exc` = quantile(Nut_diet, probs = c(0.90)), 
+                   `97.5_quant_exc` = quantile(Nut_diet, probs = c(0.975)), 
+                   max_exc = max(Nut_diet))
+
+# c'est le mean nutrient content of prey qui ne va pas pour les micronutriments : j'ai pas utilisé de normale tronquée!! 
