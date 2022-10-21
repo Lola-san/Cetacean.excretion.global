@@ -936,13 +936,13 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
                        tidyr::unnest(sum) |>
                        tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
                                            names_to = "Element", 
-                                           values_to = "Excretion") |> 
+                                           values_to = "Excretion") |>
+                       dplyr::filter(Element != "As") |> 
                        dplyr::mutate(Element = factor(Element, 
-                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                                                 "Se", "Zn", "Co", "As")), 
+                                                      levels = c("Fe", "Co", "Mn", "Zn",
+                                                                 "P", "Se", "N", "Cu")), 
                                      Excretion = Excretion/Surf
                        )  |>
-                       dplyr::filter(Element != "As") |>
                        # normalize excretion data 
                        dplyr::group_by(Element) |>
                        dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>
@@ -996,12 +996,12 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
                          tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
                                              names_to = "Element", 
                                              values_to = "Excretion") |> 
+                         dplyr::filter(Element != "As") |> 
                          dplyr::mutate(Element = factor(Element, 
-                                                        levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                                                   "Se", "Zn", "Co", "As")), 
+                                                        levels = c("Fe", "Co", "Mn", "Zn",
+                                                                   "P", "Se", "N", "Cu")), 
                                        Excretion = Excretion/Surf
                          )  |>
-                         dplyr::filter(Element != "As") |>
                          # normalize excretion data 
                          dplyr::group_by(Element) |>
                          dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>
@@ -1270,12 +1270,12 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                            tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
                                                names_to = "Element", 
                                                values_to = "Excretion") |> 
+                           dplyr::filter(Element != "As") |> 
                            dplyr::mutate(Element = factor(Element, 
-                                                          levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                                                     "Se", "Zn", "Co", "As")), 
+                                                          levels = c("Fe", "Co", "Mn", "Zn",
+                                                                     "P", "Se", "N", "Cu")), 
                                          Excretion = Excretion/Surf
                            )  |>
-                           dplyr::filter(Element != "As") |>
                            # normalize excretion data 
                            dplyr::group_by(Element) |>
                            dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>
@@ -1328,12 +1328,12 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                            tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
                                                names_to = "Element", 
                                                values_to = "Excretion") |> 
+                           dplyr::filter(Element != "As") |> 
                            dplyr::mutate(Element = factor(Element, 
-                                                          levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                                                     "Se", "Zn", "Co", "As")), 
+                                                          levels = c("Fe", "Co", "Mn", "Zn",
+                                                                     "P", "Se", "N", "Cu")), 
                                          Excretion = Excretion/Surf
                            )  |>
-                           dplyr::filter(Element != "As") |>
                            # normalize excretion data 
                            dplyr::group_by(Element) |>
                            dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>

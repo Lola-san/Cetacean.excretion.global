@@ -80,9 +80,9 @@ all_fig_compo_poop_boxplot <- function(output_tib,
 #'
 # stack barplot to show on the map, one per area
 fig_taxa_contrib_stacked_barplot <- function(output_tib, 
-                                       geo_area,
-                                       object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
-                                       name_file # should be a character string
+                                             geo_area,
+                                             object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                                             name_file # should be a character string
 ) {
   output_tib |> 
     dplyr::filter(Element != "As") |>
@@ -110,7 +110,7 @@ fig_taxa_contrib_stacked_barplot <- function(output_tib,
                    axis.text.y = ggplot2::element_text(face = "bold", size = 14)) 
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/article/", 
+    ggplot2::ggsave(paste0("output/article/Inkscape/", 
                            name_file, 
                            ".svg"), 
                     scale = 1, 
@@ -158,7 +158,7 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
                                         geo_area,
                                         object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                                         name_file) # should be a character string) 
-  {
+{
   
   table_oceanic <- output_tib |>
     # keep only areas with both neritic and oceanic waters
@@ -277,7 +277,7 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
                    legend.position = "none") 
   
   if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/article/", 
+    ggplot2::ggsave(paste0("output/article/Inkscape/", 
                            name_file, 
                            ".svg"), 
                     scale =1, 
@@ -316,7 +316,9 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
 }
 
 
-#### Supplementary table with statistics for all model parameters, and all species
+################################### SUPPLEMENTARY TABLES ######################################################
+
+# Supplementary table with statistics for all model parameters, and all species
 #'
 #'
 #'
@@ -324,8 +326,8 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
 #'
 #' function to generate supplementary material table with all parameters summary values
 supp_table_param_all_param_sp <- function(output_tib,
-                             object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
-                             name_file) {
+                                          object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                                          name_file) {
   
   options(scipen = 999)
   
@@ -440,3 +442,1445 @@ supp_table_param_all_param_sp <- function(output_tib,
 }
 
 
+
+# SUPER LONG FUNCTION 
+# Supplementary table with details of all simplified diet and references used for that 
+#'
+#'
+#'
+#'
+#'Supplementary table with details of all simplified diet and references used for that
+#' 
+supp_table_diets <- function(clean_diet_tib,
+                             object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                             name_file) {
+  
+  options(scipen = 999)
+  
+  table <- clean_diet_tib |>
+    dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+    dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+    tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+    tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                           `Large demersal energy-rich fish` = 0, 
+                           `Small schooling energy-lean fish` = 0, 
+                           `Small schooling energy-rich fish` = 0, 
+                           `Miscellanous benthodemersal fish` = 0,
+                           `Miscellanous pelagic fish` = 0, 
+                           `Muscular pelagic cephalopods` = 0, 
+                           `Gelatinous pelagic cephalopods` = 0,
+                           `Bottom cephalopods` = 0, 
+                           `Fish undetermined` = 0,
+                           `Cephalopod undetermined` = 0, 
+                           `Crustaceans` = 0, 
+                           `Zooplankton` = 0)) |> # replace NA with zeros
+    dplyr::filter(Code_sp == "Bala_acu") |>
+    dplyr::group_by(Code_sp, Species) |>
+    dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                     `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                     `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                     `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                     `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                     `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                     `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                     `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                     `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                     `Fish undetermined` = mean(`Fish undetermined`),
+                     `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                     `Crustaceans` = mean(`Crustaceans`), 
+                     `Zooplankton` = mean(`Zooplankton`), 
+                     Sources = stringr::str_c(Source, collapse = ", ")) |>
+    dplyr::mutate(waters = "all", 
+                  Type_sources = "quantitative", 
+                  Copied_from_other_sp = "no", 
+                  other_sp_code = NA) |> 
+    # next parameters
+    dplyr::bind_rows(clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Bera_bai") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       tidyr::nest(mean_diet = c(`Large demersal energy-lean fish`:`Zooplankton`)) |>
+                       dplyr::mutate(waters = "all") |> 
+                       dplyr::select(Code_sp, Species, waters, mean_diet, Sources) |>
+                       dplyr::mutate(Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+                                     "Bala_bon", "Balaenoptera bonaerensis", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 0, 
+                                     `Large demersal energy-rich fish` = 0, 
+                                     `Small schooling energy-lean fish` = 0, 
+                                     `Small schooling energy-rich fish` = 2.5, 
+                                     `Miscellanous benthodemersal fish` = 2.5,
+                                     `Miscellanous pelagic fish` = 0, 
+                                     `Muscular pelagic cephalopods` = 0, 
+                                     `Gelatinous pelagic cephalopods` = 0,
+                                     `Bottom cephalopods` = 0, 
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0, 
+                                     `Crustaceans` = 0, 
+                                     `Zooplankton` = 95, 
+                                     Sources = "Tamura & Kenji 2009,
+                              Friedlaender et al 2014") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+                                     "Bala_bor", "Balaenoptera borealis", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 0, 
+                                     `Large demersal energy-rich fish` = 0, 
+                                     `Small schooling energy-lean fish` = 0, 
+                                     `Small schooling energy-rich fish` = 0, 
+                                     `Miscellanous benthodemersal fish` = 0,
+                                     `Miscellanous pelagic fish` = 0, 
+                                     `Muscular pelagic cephalopods` = 0, 
+                                     `Gelatinous pelagic cephalopods` = 0,
+                                     `Bottom cephalopods` = 0, 
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0, 
+                                     `Crustaceans` = 0, 
+                                     `Zooplankton` = 100, 
+                                     Sources = "Kawamura 1969, Nishimoto et al 1952,
+                              Watkins & Schevill 1979, Flinn et al 2002,
+                              Leonardi et al 2011, Horwood 2018") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+                                     "Bala_ede", "Balaenoptera edeni", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 0, 
+                                     `Large demersal energy-rich fish` = 0, 
+                                     `Small schooling energy-lean fish` = 0, 
+                                     `Small schooling energy-rich fish` = 90, 
+                                     `Miscellanous benthodemersal fish` = 0,
+                                     `Miscellanous pelagic fish` = 0, 
+                                     `Muscular pelagic cephalopods` = 0, 
+                                     `Gelatinous pelagic cephalopods` = 0,
+                                     `Bottom cephalopods` = 0, 
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0, 
+                                     `Crustaceans` = 0, 
+                                     `Zooplankton` = 10, 
+                                     Sources = "Siciliano et al 2004, Tershy et al 1992") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+                                     "Bala_mus", "Balaenoptera musculus", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 0, 
+                                     `Large demersal energy-rich fish` = 0, 
+                                     `Small schooling energy-lean fish` = 0, 
+                                     `Small schooling energy-rich fish` = 0, 
+                                     `Miscellanous benthodemersal fish` = 0,
+                                     `Miscellanous pelagic fish` = 0, 
+                                     `Muscular pelagic cephalopods` = 0, 
+                                     `Gelatinous pelagic cephalopods` = 0,
+                                     `Bottom cephalopods` = 0, 
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0, 
+                                     `Crustaceans` = 0, 
+                                     `Zooplankton` = 100, 
+                                     Sources = "Figueiredo et al 2014, Gavrilchuck et al 2014,
+                              Lesage et al 2018") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+                                     "Bala_omu", "Balaenoptera omurai", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 0, 
+                                     `Large demersal energy-rich fish` = 0, 
+                                     `Small schooling energy-lean fish` = 0, 
+                                     `Small schooling energy-rich fish` = 0, 
+                                     `Miscellanous benthodemersal fish` = 0,
+                                     `Miscellanous pelagic fish` = 0, 
+                                     `Muscular pelagic cephalopods` = 0, 
+                                     `Gelatinous pelagic cephalopods` = 0,
+                                     `Bottom cephalopods` = 0, 
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0, 
+                                     `Crustaceans` = 0, 
+                                     `Zooplankton` = 100, 
+                                     Sources = "Cerchio et al 2015,
+                              Cerchio & Tadasu 2018, Laboute & Borsa 2018") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Bala_phy") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Delp_cap") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Delp_del", Block %in% c("Alboran", "A", "B", "Aegean")) |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "neritic",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Delp_del", Block %in% c("E1")) |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "oceanic",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Glob_mel") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = paste(c("[Fere_att] L?pez-Su?rez et al 2012, O'Dwyer et al 2015, 
+                                                            Elorriaga-Verplancken et al 2016, Zerbini & Santos 1997,
+                                                            Aguiar dos Santos & Haimovici 2001, Donahue & Perryman 2009, 
+                                                            Baird 2018, Sekiguchi et al 1992, [Glob_mel]"), 
+                                                        stringr::str_c(Source, collapse = ", "), 
+                                                        sep = " ")) |>
+                       dplyr::mutate(waters = "all", 
+                                     Code_sp = "Fere_att", 
+                                     Species = "Feresa attenuata",
+                                     Type_sources = "qualitative (Fere_att) & quantitative (Glob_mel)", 
+                                     Copied_from_other_sp = "yes", 
+                                     other_sp_code = "Glob_mel"),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area,
+                                     "Glob_mac", "Globicephala macrorhynchus", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 0,
+                                     `Large demersal energy-rich fish` = 0,
+                                     `Small schooling energy-lean fish` = 0,
+                                     `Small schooling energy-rich fish` = 0,
+                                     `Miscellanous benthodemersal fish` = 2,
+                                     `Miscellanous pelagic fish` = 0,
+                                     `Muscular pelagic cephalopods` = 49,
+                                     `Gelatinous pelagic cephalopods` = 49,
+                                     `Bottom cephalopods` = 0,
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0,
+                                     `Crustaceans` = 0,
+                                     `Zooplankton` = 0,
+                                     Sources = "Hern?ndez-Garc?a et al 1994, Hacker 1986,
+                             Mintzer et al 2008, Fernandez et al 2009") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Glob_mel") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Gram_gri") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Hype_amp") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Ziph_cav") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = paste(c("[Indo_pac] Yatabe et al 2010, [Ziph_cav]"), 
+                                                        stringr::str_c(Source, collapse = ", "), 
+                                                        sep = " ")) |>
+                       dplyr::mutate(waters = "all", 
+                                     Species = "Indopacetus pacificus", 
+                                     Code_sp = "Indo_pac",
+                                     Type_sources = "qualitative (Indo_pac) & quantitative (Ziph_cav)", 
+                                     Copied_from_other_sp = "yes", 
+                                     other_sp_code = "Ziph_cav"), 
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Kogi_spp") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Lage_acu") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA), 
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Lage_alb") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area,
+                                     "Liss_bor", "Lissodelphis borealis", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 5,
+                                     `Large demersal energy-rich fish` = 0,
+                                     `Small schooling energy-lean fish` = 5,
+                                     `Small schooling energy-rich fish` = 40,
+                                     `Miscellanous benthodemersal fish` = 0,
+                                     `Miscellanous pelagic fish` = 0,
+                                     `Muscular pelagic cephalopods` = 25,
+                                     `Gelatinous pelagic cephalopods` = 25,
+                                     `Bottom cephalopods` = 0,
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0,
+                                     `Crustaceans` = 0,
+                                     `Zooplankton` = 0,
+                                     Sources = "Leatherwood & Walker 1979, Jefferson et al 1994, 
+                             Lipsky & Brownell 2018") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area,
+                                     "Lage_hos", "Lagenodelphis hosei", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 0,
+                                     `Large demersal energy-rich fish` = 0,
+                                     `Small schooling energy-lean fish` = 15,
+                                     `Small schooling energy-rich fish` = 15,
+                                     `Miscellanous benthodemersal fish` = 0,
+                                     `Miscellanous pelagic fish` = 0,
+                                     `Muscular pelagic cephalopods` = 30,
+                                     `Gelatinous pelagic cephalopods` = 40,
+                                     `Bottom cephalopods` = 0,
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0,
+                                     `Crustaceans` = 0,
+                                     `Zooplankton` = 0,
+                                     Sources = "Sekiguchi et al 1992, Fernandez et al 2009, 
+                                Di Beneditto et al 2001, Dolar et al 2003, Wang et al 2012") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative & quantitative (n very limited)", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Lage_obl") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp %in% c("Meso_bid", "Meso_lay", "Meso_den", "Meso_mir", "Meso_eur")) |>
+                       dplyr::mutate(Code_sp = dplyr::case_when(Code_sp %in% c("Meso_bid", "Meso_lay", "Meso_den", "Meso_mir", "Meso_eur") ~ "Meso_spp", 
+                                                                TRUE ~ Code_sp), 
+                                     Species = dplyr::case_when(Species %in% c("Mesoplodon bidens", "Mesoplodon layardii", 
+                                                                               "Mesoplodon densirostris", 
+                                                                               "Mesoplodon mirus", "Mesoplodon europaeus") ~ "Mesoplodon spp", 
+                                                                TRUE ~ Species)) |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+                                     "Mega_nov", "Megaptera novaeangliae", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 0, 
+                                     `Large demersal energy-rich fish` = 0, 
+                                     `Small schooling energy-lean fish` = 0, 
+                                     `Small schooling energy-rich fish` = 50, 
+                                     `Miscellanous benthodemersal fish` = 0,
+                                     `Miscellanous pelagic fish` = 0, 
+                                     `Muscular pelagic cephalopods` = 0, 
+                                     `Gelatinous pelagic cephalopods` = 0,
+                                     `Bottom cephalopods` = 0, 
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0, 
+                                     `Crustaceans` = 0, 
+                                     `Zooplankton` = 50, 
+                                     Sources = "Watkins & Schevill 1979, 
+                              Witteven et al 2006, Filatova et al 2013,
+                              Ryan et al 2014, Haro et al 2016,
+                              Fleming et al 2016, Clapham 2018") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+                                     "Orci_orc", "Orcinus orca", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 20, 
+                                     `Large demersal energy-rich fish` = 35, 
+                                     `Small schooling energy-lean fish` = 0, 
+                                     `Small schooling energy-rich fish` = 35, 
+                                     `Miscellanous benthodemersal fish` = 0,
+                                     `Miscellanous pelagic fish` = 0, 
+                                     `Muscular pelagic cephalopods` = 5, 
+                                     `Gelatinous pelagic cephalopods` = 5,
+                                     `Bottom cephalopods` = 0, 
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0, 
+                                     `Crustaceans` = 0, 
+                                     `Zooplankton` = 0, 
+                                     Sources = "Simil? et al 1996, 
+                              Saulitis et al 2000, Aguiar dos Santos & Haimovici 2001,
+                              Volkova et al 2019") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Pseu_cra") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Phoc_dal") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Pepo_ele") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative but n very limited (6 & 1)", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Phys_mac") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Phoc_pho") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Sten_att") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
+                                     "Sten_bre", "Steno bredanensis", "shelf") |>
+                       dplyr::mutate(`Large demersal energy-lean fish` = 0, 
+                                     `Large demersal energy-rich fish` = 35, 
+                                     `Small schooling energy-lean fish` = 0, 
+                                     `Small schooling energy-rich fish` = 5, 
+                                     `Miscellanous benthodemersal fish` = 0,
+                                     `Miscellanous pelagic fish` = 10, 
+                                     `Muscular pelagic cephalopods` = 25, 
+                                     `Gelatinous pelagic cephalopods` = 0,
+                                     `Bottom cephalopods` = 25, 
+                                     `Fish undetermined` = 0,
+                                     `Cephalopod undetermined` = 0, 
+                                     `Crustaceans` = 0, 
+                                     `Zooplankton` = 0, 
+                                     Sources = "Lodi & Hetzel 1999, Di Beneditto et al 2001,
+                             Aguiar dos Santos & Haimovici 2001, Pitman & Stinchcomb 2002, 
+                             Wedekin et al 2005, Fernandez et al 2009, West et al 2011,
+                             Ortega-Ortiz et al 2014") |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "qualitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp %in% c("Sten_att", "Sten_coe", "Sten_fro")) |>
+                       dplyr::mutate(Code_sp = "Sten_cly", 
+                                     Species = "Stenella clymene") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "yes, mean of known other Stenella sp", 
+                                     other_sp_code = stringr::str_c("Sten_att, ", "Sten_coe, ", "Sten_fro", 
+                                                                    collapse = ", ")),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Sten_coe", Block != "E1") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "neritic",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Sten_coe", Block == "E1") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "oceanic",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Sten_fro") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Sten_att") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = paste(c("[Sten_long] Silva-Jr et al 2004, Salum Soud 2010, 
+                                          Dolar et al 2003, Kiszka et al 2010, Clarke & Young 1998, 
+                                          Gross et al 2009, [Sten_att]"), 
+                                                        stringr::str_c(Source, collapse = ", "), 
+                                                        sep = " ")) |>
+                       dplyr::mutate(waters = "all", 
+                                     Code_sp = "Sten_lon", 
+                                     Species = "Stenella longirostris",
+                                     Type_sources = "qualitative (Sten_long) & quantitative (Sten_att)", 
+                                     Copied_from_other_sp = "yes", 
+                                     other_sp_code = "Sten_att"),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Turs_tru") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = paste(c("[Sous_plu] Perrin 2009, Wang et al 2003, 
+                                          Wang et al 2012, Clarke & Young 1998, Gross et al 2009, [Turs_tru]"), 
+                                                        stringr::str_c(Source, collapse = ", "), 
+                                                        sep = " ")) |>
+                       dplyr::mutate(waters = "all", 
+                                     Code_sp = "Sous_plu", 
+                                     Species = "Sousa plumbea",
+                                     Type_sources = "qualitative (Sous_plu) & quantitative (Turs_tru)", 
+                                     Copied_from_other_sp = "yes", 
+                                     other_sp_code = "Turs_tru"),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Sota_gui") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Turs_tru") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA),
+                     clean_diet_tib |>
+                       dplyr::group_by(Code_sp, Species, Block, Source, Prey_group) |>
+                       dplyr::summarise(W_prey_group = sum(W)) |> # compute %W per prey group, for each species in each Block
+                       tidyr::pivot_wider(names_from = Prey_group, values_from = W_prey_group) |> # format to get a value for each prey group
+                       tidyr::replace_na(list(`Large demersal energy-lean fish` = 0, 
+                                              `Large demersal energy-rich fish` = 0, 
+                                              `Small schooling energy-lean fish` = 0, 
+                                              `Small schooling energy-rich fish` = 0, 
+                                              `Miscellanous benthodemersal fish` = 0,
+                                              `Miscellanous pelagic fish` = 0, 
+                                              `Muscular pelagic cephalopods` = 0, 
+                                              `Gelatinous pelagic cephalopods` = 0,
+                                              `Bottom cephalopods` = 0, 
+                                              `Fish undetermined` = 0,
+                                              `Cephalopod undetermined` = 0, 
+                                              `Crustaceans` = 0, 
+                                              `Zooplankton` = 0)) |> # replace NA with zeros
+                       dplyr::filter(Code_sp == "Ziph_cav") |>
+                       dplyr::group_by(Code_sp, Species) |>
+                       dplyr::summarise(`Large demersal energy-lean fish` = mean(`Large demersal energy-lean fish`), 
+                                        `Large demersal energy-rich fish` = mean(`Large demersal energy-rich fish`), 
+                                        `Small schooling energy-lean fish` = mean(`Small schooling energy-lean fish`), 
+                                        `Small schooling energy-rich fish` = mean(`Small schooling energy-rich fish`), 
+                                        `Miscellanous benthodemersal fish` = mean(`Miscellanous benthodemersal fish`),
+                                        `Miscellanous pelagic fish` = mean(`Miscellanous pelagic fish`), 
+                                        `Muscular pelagic cephalopods` = mean(`Muscular pelagic cephalopods`), 
+                                        `Gelatinous pelagic cephalopods` = mean(`Gelatinous pelagic cephalopods`),
+                                        `Bottom cephalopods` = mean(`Bottom cephalopods`), 
+                                        `Fish undetermined` = mean(`Fish undetermined`),
+                                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
+                                        `Crustaceans` = mean(`Crustaceans`), 
+                                        `Zooplankton` = mean(`Zooplankton`), 
+                                        Sources = stringr::str_c(Source, collapse = ", ")) |>
+                       dplyr::mutate(waters = "all",
+                                     Type_sources = "quantitative", 
+                                     Copied_from_other_sp = "no", 
+                                     other_sp_code = NA)
+    )
+  
+  if (object_type == "file") {
+    openxlsx::write.xlsx(table,
+                         file =paste0("output/article/", name_file, ".xlsx"))
+  } else {
+    table
+  }
+  
+}

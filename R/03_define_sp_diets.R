@@ -1284,7 +1284,7 @@ create_diet_input <- function(diet_pg_tib) {
                     Sources = "Watkins & Schevill 1979, 
                               Witteven et al 2006, Filatova et al 2013,
                               Ryan et al 2014, Haro et al 2016,
-                              Fleming et al 2016, Claham 2018"
+                              Fleming et al 2016, Clapham 2018"
       ) |>
       tidyr::nest(Diet = c(`Large demersal energy-lean fish`:`Zooplankton`)) |>
       dplyr::select(Code_sp, Species, Eco_area, Diet, Sources), 
@@ -1934,7 +1934,7 @@ create_diet_input <- function(diet_pg_tib) {
                        `Cephalopod undetermined` = mean(`Cephalopod undetermined`), 
                        `Crustaceans` = mean(`Crustaceans`), 
                        `Zooplankton` = mean(`Zooplankton`), 
-                       Sources = paste(c("[Sten_long] Silva et al 2004, Salum Soud 2010, 
+                       Sources = paste(c("[Sten_long] Silva-Jr et al 2004, Salum Soud 2010, 
                                           Dolar et al 2003, Kiszka et al 2010, Clarke & Young 1998, 
                                           Gross et al 2009, [Sten_att]"), 
                                        stringr::str_c(Source, collapse = ", "), 

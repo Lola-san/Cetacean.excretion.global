@@ -363,15 +363,6 @@ list(
   
   
   ############################# for all areas - tables ################
-  # table with estimates and statistics for all parameters of the model, 
-  # for all elements, in tons/yr
-  tar_target(supp_table_param_file, supp_table_param_all_param_sp(model_output_clean, 
-                                                                    "file", 
-                                                                    paste("model_param_stats", 
-                                                                          nsim = 1e4, sep = "_"))),
-  tar_target(supp_table_param_output, supp_table_param_all_param_sp(model_output_clean, 
-                                                                      "output", 
-                                                                      "model_param_stats")), 
   # table with estimates and statistics for total excretion in all areas, 
   # for all elements, in tons/yr
   tar_target(tot_est_stat_tns_yr_file, create_full_stat_tab_tons_yr(model_output_clean, 
@@ -395,7 +386,6 @@ list(
                                                                            "output", 
                                                                            "tot_est_stat_kg_ha_yr")),
   # table with results of statistical test of significance of difference between areas
-  # only for N 
   tar_target(test_diff_tot_exc_N, create_tab_stat_diff_tot_exc(model_output_clean, 
                                                                element = "N")), 
   tar_target(test_diff_tot_exc_P, create_tab_stat_diff_tot_exc(model_output_clean, 
@@ -1664,6 +1654,25 @@ list(
                                                               "Gulf of Alaska", 
                                                               "output",
                                                               "GoAl_exc_hab_taxa")), 
+  ###################################################### ARTICLE FIGURES AND TABLES ######################################
+  ######### TABLES
+  # table with estimates and statistics for all parameters of the model, 
+  # for all elements, in tons/yr
+  tar_target(supp_table_param_file, supp_table_param_all_param_sp(model_output_clean, 
+                                                                  "file", 
+                                                                  paste("Supp-mat_model_param_stats", 
+                                                                        nsim = 1e4, sep = "_"))),
+  tar_target(supp_table_param_output, supp_table_param_all_param_sp(model_output_clean, 
+                                                                    "output", 
+                                                                    "Supp-mat_model_param_stats")), 
+  tar_target(supp_table_diets_file, supp_table_diets(data_diets_PG, 
+                                                                  "file", 
+                                                                  paste("Supp-mat_model_diets", 
+                                                                        nsim = 1e4, sep = "_"))),
+  tar_target(supp_table_diets_output, supp_table_diets(data_diets_PG, 
+                                                                    "output", 
+                                                                    "Supp-mat_model_diets")), 
+  ######### FIGURES
   ######### area per area - figures for figures of the article 
   tar_target(fig_contrib_taxa_stackbar_NEA_file, 
              fig_taxa_contrib_stacked_barplot(taxa_contrib_tot_NEA_output,

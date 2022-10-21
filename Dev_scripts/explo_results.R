@@ -930,8 +930,7 @@ sum_tibb <- function(list_of_tibb) {
   return(tibble::as_tibble(summed_tibb))
 }
 
-# explore if cocktails of nutrients released in each zone are significantly different
-# normalization per element 
+
 model_output_clean |>
   dplyr::filter(Geo_area == "Mediterranean Sea", 
                 Code_sp %in% c("Turs_tru", 
@@ -940,11 +939,9 @@ model_output_clean |>
                                "Gram_gri", 
                                "Bala_phy", 
                                "Ziph_cav")) |>
-  dplyr::group_by(Geo_area) |>
-  dplyr::summarise(Surf = sum(unique(Surf_tot)), 
-                   sum = list(sum_tibb(conso_diet))) |>
+  dplyr::ungroup() |>
+  dplyr::summarise(sum = list(sum_tibb(conso_diet))) |>
   tidyr::unnest(sum) |>
-  dplyr::select(-c(Geo_area, Surf)) |>
   dplyr::summarize_all(mean) |>
   tidyr::pivot_longer(cols = c(`Large demersal energy-lean fish`:`Zooplankton`), 
                       names_to = "Prey group", 
@@ -960,7 +957,7 @@ model_output_clean |>
                                "Gram_gri", 
                                "Bala_phy", 
                                "Ziph_cav")) |>
-  dplyr::filter(Code_sp == "Gram_gri") |>
+  dplyr::filter(Code_sp == "Sten_coe") |>
   dplyr::select(c(Code_sp, Diet)) |>
   tidyr::unnest(Diet) |>
   unique() |>
@@ -1021,3 +1018,69 @@ model_output_clean |>
   tidyr::unnest(Indi_data) |>
   dplyr::group_by(Species, Eco_area) |>
   dplyr::summarize(mean_ration = mean(Ration))
+
+
+
+
+############################## comparison with estimates of Savoca et al 2021
+# daily rations
+model_output |>
+  dplyr::filter(Code_sp %in% c("Bala_mus", 
+                               "Bala_phy", 
+                               "Bala_acu", 
+                               "Mega_nov")) |>
+  tidyr::unnest(Indi_data) |>
+  dplyr::group_by(Species, Eco_area) |>
+  dplyr::summarize(mean_ration = mean(Ration))
+
+
+
+targets::tar_load(model_output)
+
+model_output |>
+  dplyr::group_by(Geo_area) |>
+  dplyr::summarise(n_sp = dplyr::n_distinct(Code_sp))
+
+
+
+###### total release 
+
+# per area
+see <- model_output_clean |>
+  dplyr::group_by(Geo_area) |>
+  dplyr::summarise(sum = list(sum_tibb(excrete_nut))) |>
+  tidyr::unnest(sum) |>
+  tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                      names_to = "Element", 
+                      values_to = "Excretion") |> 
+  dplyr::mutate(Element = factor(Element, 
+                                 levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                            "Se", "Zn", "Co", "As"))
+  )  |>
+  dplyr::filter(Element != "As") |>
+  dplyr::group_by(Geo_area, Element) |>
+  dplyr::summarize(min_exc = min(Excretion), 
+                   `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
+                   `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
+                   mean_exc = mean(Excretion), 
+                   median_exc = median(Excretion), 
+                   `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
+                   `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
+                   max_exc = max(Excretion)) 
+
+
+model_output_clean |>
+  dplyr::group_by(Geo_area) |>
+  dplyr::summarise(sum = list(sum_tibb(excrete_nut))) |>
+  tidyr::unnest(sum) |>
+  tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                      names_to = "Element", 
+                      values_to = "Excretion") |> 
+  dplyr::mutate(Element = factor(Element, 
+                                 levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                            "Se", "Zn", "Co", "As"))
+  )  |>
+  dplyr::filter(Element != "As") |>
+  dplyr::group_by(Geo_area, Element) |>
+  dplyr::summarize(mean_exc = mean(Excretion)) |>
+  tidyr::pivot_wider(names_from = Element, values_from = mean_exc)
