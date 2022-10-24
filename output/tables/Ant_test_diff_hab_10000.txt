@@ -1,4 +1,4 @@
-"Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
+"Geo_area"	"Element"	"habitat1"	"habitat2"	"p_habitat1_superior_to_habitat2"
 "1"	"French Antilles"	"N"	"Oceanic waters"	"Neritic waters"	0.0255
 "2"	"French Antilles"	"P"	"Oceanic waters"	"Neritic waters"	0.0273
 "3"	"French Antilles"	"Fe"	"Oceanic waters"	"Neritic waters"	0.0281

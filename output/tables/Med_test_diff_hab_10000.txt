@@ -1,9 +1,9 @@
-"Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
-"1"	"Mediterranean Sea"	"N"	"Oceanic waters"	"Neritic waters"	0.7224
-"2"	"Mediterranean Sea"	"P"	"Oceanic waters"	"Neritic waters"	0.666
-"3"	"Mediterranean Sea"	"Fe"	"Oceanic waters"	"Neritic waters"	0.8308
-"4"	"Mediterranean Sea"	"Cu"	"Oceanic waters"	"Neritic waters"	0.9231
-"5"	"Mediterranean Sea"	"Mn"	"Oceanic waters"	"Neritic waters"	0.6885
-"6"	"Mediterranean Sea"	"Se"	"Oceanic waters"	"Neritic waters"	0.7582
-"7"	"Mediterranean Sea"	"Zn"	"Oceanic waters"	"Neritic waters"	0.8036
-"8"	"Mediterranean Sea"	"Co"	"Oceanic waters"	"Neritic waters"	0.8542
+"Geo_area"	"Element"	"habitat1"	"habitat2"	"p_habitat1_superior_to_habitat2"
+"1"	"Mediterranean Sea"	"N"	"Oceanic waters"	"Neritic waters"	0.7221
+"2"	"Mediterranean Sea"	"P"	"Oceanic waters"	"Neritic waters"	0.6642
+"3"	"Mediterranean Sea"	"Fe"	"Oceanic waters"	"Neritic waters"	0.8342
+"4"	"Mediterranean Sea"	"Cu"	"Oceanic waters"	"Neritic waters"	0.9253
+"5"	"Mediterranean Sea"	"Mn"	"Oceanic waters"	"Neritic waters"	0.698
+"6"	"Mediterranean Sea"	"Se"	"Oceanic waters"	"Neritic waters"	0.7677
+"7"	"Mediterranean Sea"	"Zn"	"Oceanic waters"	"Neritic waters"	0.8108
+"8"	"Mediterranean Sea"	"Co"	"Oceanic waters"	"Neritic waters"	0.8583

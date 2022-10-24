@@ -1,25 +1,25 @@
-"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
+"Geo_area"	"Element"	"Taxa1"	"Taxa2"	"p_taxa1_superior_to_taxa2"
 "1"	"Hawaii"	"N"	"Baleen whales"	"Deep divers"	0
-"2"	"Hawaii"	"N"	"Baleen whales"	"Small delphinids"	0.0012
+"2"	"Hawaii"	"N"	"Baleen whales"	"Small delphinids"	0.0014
 "3"	"Hawaii"	"N"	"Deep divers"	"Small delphinids"	0.9903
-"4"	"Hawaii"	"P"	"Baleen whales"	"Deep divers"	1e-04
+"4"	"Hawaii"	"P"	"Baleen whales"	"Deep divers"	0.0001
 "5"	"Hawaii"	"P"	"Baleen whales"	"Small delphinids"	0.0018
 "6"	"Hawaii"	"P"	"Deep divers"	"Small delphinids"	0.9664
-"7"	"Hawaii"	"Fe"	"Baleen whales"	"Deep divers"	0.0011
-"8"	"Hawaii"	"Fe"	"Baleen whales"	"Small delphinids"	0.0013
+"7"	"Hawaii"	"Fe"	"Baleen whales"	"Deep divers"	0.001
+"8"	"Hawaii"	"Fe"	"Baleen whales"	"Small delphinids"	0.0014
 "9"	"Hawaii"	"Fe"	"Deep divers"	"Small delphinids"	0.8384
 "10"	"Hawaii"	"Cu"	"Baleen whales"	"Deep divers"	0
 "11"	"Hawaii"	"Cu"	"Baleen whales"	"Small delphinids"	0
 "12"	"Hawaii"	"Cu"	"Deep divers"	"Small delphinids"	0.9974
-"13"	"Hawaii"	"Mn"	"Baleen whales"	"Deep divers"	0.0015
+"13"	"Hawaii"	"Mn"	"Baleen whales"	"Deep divers"	0.0016
 "14"	"Hawaii"	"Mn"	"Baleen whales"	"Small delphinids"	0.0023
 "15"	"Hawaii"	"Mn"	"Deep divers"	"Small delphinids"	0.8273
-"16"	"Hawaii"	"Se"	"Baleen whales"	"Deep divers"	3e-04
-"17"	"Hawaii"	"Se"	"Baleen whales"	"Small delphinids"	9e-04
+"16"	"Hawaii"	"Se"	"Baleen whales"	"Deep divers"	0.0003
+"17"	"Hawaii"	"Se"	"Baleen whales"	"Small delphinids"	0.0009
 "18"	"Hawaii"	"Se"	"Deep divers"	"Small delphinids"	0.9765
 "19"	"Hawaii"	"Zn"	"Baleen whales"	"Deep divers"	0
-"20"	"Hawaii"	"Zn"	"Baleen whales"	"Small delphinids"	0.001
+"20"	"Hawaii"	"Zn"	"Baleen whales"	"Small delphinids"	0.0012
 "21"	"Hawaii"	"Zn"	"Deep divers"	"Small delphinids"	0.9868
-"22"	"Hawaii"	"Co"	"Baleen whales"	"Deep divers"	1e-04
-"23"	"Hawaii"	"Co"	"Baleen whales"	"Small delphinids"	2e-04
+"22"	"Hawaii"	"Co"	"Baleen whales"	"Deep divers"	0.0001
+"23"	"Hawaii"	"Co"	"Baleen whales"	"Small delphinids"	0.0002
 "24"	"Hawaii"	"Co"	"Deep divers"	"Small delphinids"	0.8176

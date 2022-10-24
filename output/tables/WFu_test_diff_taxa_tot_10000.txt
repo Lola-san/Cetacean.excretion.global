@@ -1,4 +1,4 @@
-"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
+"Geo_area"	"Element"	"Taxa1"	"Taxa2"	"p_taxa1_superior_to_taxa2"
 "1"	"Wallis & Futuna"	"N"	"Deep divers"	"Small delphinids"	0.3041
 "2"	"Wallis & Futuna"	"P"	"Deep divers"	"Small delphinids"	0.1873
 "3"	"Wallis & Futuna"	"Fe"	"Deep divers"	"Small delphinids"	0.2501

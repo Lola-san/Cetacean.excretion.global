@@ -1,4 +1,4 @@
-"Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
+"Geo_area"	"Element"	"habitat1"	"habitat2"	"p_habitat1_superior_to_habitat2"
 "1"	"French Guyana"	"N"	"Oceanic waters"	"Neritic waters"	0.0004
 "2"	"French Guyana"	"P"	"Oceanic waters"	"Neritic waters"	0.0001
 "3"	"French Guyana"	"Fe"	"Oceanic waters"	"Neritic waters"	0.0009

@@ -1,4 +1,4 @@
-"Geo_area"	"Element"	"Group1"	"Group2"	"ratio_group1_superior_to_group2"
+"Geo_area"	"Element"	"Taxa1"	"Taxa2"	"p_taxa1_superior_to_taxa2"
 "1"	"West Indian ocean"	"N"	"Deep divers"	"Small delphinids"	0.5769
 "2"	"West Indian ocean"	"P"	"Deep divers"	"Small delphinids"	0.3407
 "3"	"West Indian ocean"	"Fe"	"Deep divers"	"Small delphinids"	0.4661

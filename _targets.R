@@ -1738,7 +1738,7 @@ list(
                                                                          test_diff_taxa_tot_FPol_output,
                                                                          test_diff_taxa_tot_Haw_output,
                                                                          test_diff_taxa_tot_GoAl_output,
-                                                                         ttest_diff_taxa_tot_Calif_output),  
+                                                                         test_diff_taxa_tot_Calif_output),  
                                                          "Supp-mat2c_taxa_area")),  
   # supplementary table with test of differences for total nutrient release per taxa in each habitat within areas
   tar_target(suppmat2d_taxa_hab, supp_table2d_taxa_hab(list_tib = list(test_diff_taxa_hab_NEA, 

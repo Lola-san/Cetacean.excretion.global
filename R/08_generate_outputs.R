@@ -487,7 +487,7 @@ create_tab_stat_diff_tot_exc <- function(output_tib, element) {
                      t_Paci_WFu_Paci_FPoly = mean(t_Paci_WFu_Paci_FPoly)) |>
     tidyr::pivot_longer(cols = c("t_Alaska_NAtl":"t_Paci_WFu_Paci_FPoly"),
                         names_to = "Test", 
-                        values_to = "is_area1_superior_to_area2") |>
+                        values_to = "p_area1_superior_to_area2") |>
     dplyr::mutate(Area1 = dplyr::case_when(stringr::str_starts(Test, "t_Ant") ~ "French Antilles",
                                           stringr::str_starts(Test, "t_Alaska") ~ "Gulf of Alaska",
                                           stringr::str_starts(Test, "t_Guy") ~ "French Guyana",
@@ -517,8 +517,8 @@ create_tab_stat_diff_tot_exc <- function(output_tib, element) {
                                            stringr::str_ends(Test, "_Paci_NCal") ~ "New Caledonia",
                                            stringr::str_ends(Test, "_Paci_WFu") ~ "Wallis & Futuna"), 
                   Element = element) |>
-    dplyr::select(c(element, Area1, Area2, p_area1_superior_to_area2)) |>
-    tidyr::filter(!(is.na(p_area1_superior_to_area2)))
+    dplyr::select(c(Element, Area1, Area2, p_area1_superior_to_area2)) |>
+    dplyr::filter(!(is.na(p_area1_superior_to_area2)))
 }
 
 
@@ -688,9 +688,9 @@ test_differences_hab <- function(output_tib,
                                  geo_area) {
   final_table <- tibble::tibble(Geo_area = NA, 
                                 Element = NA, 
-                                Area1 = NA,
-                                Area2 = NA, 
-                                ratio_area1_superior_to_area2 = NA)
+                                habitat1 = NA,
+                                habitat2 = NA, 
+                                p_habitat1_superior_to_habitat2 = NA)
   
   for (i in c("N", "P", "Fe", "Cu", "Mn", 
               "Se", "Zn", "Co")) {
@@ -880,9 +880,9 @@ test_differences_taxa <- function(output_tib,
   # element is a character string indicating the element for which to conduct the test
   final_table <- tibble::tibble(Geo_area = NA, 
                                 Element = NA, 
-                                Group1 = NA,
-                                Group2 = NA, 
-                                ratio_group1_superior_to_group2 = NA)
+                                Taxa1 = NA,
+                                Taxa2 = NA, 
+                                p_taxa1_superior_to_taxa2 = NA)
   
   for (i in c("N", "P", "Fe", "Cu", "Mn", 
               "Se", "Zn", "Co")) {
@@ -1004,9 +1004,9 @@ test_differences_taxa_hab <- function(output_tib,
   final_table <- tibble::tibble(Geo_area = NA, 
                                 Eco_area = NA,
                                 Element = NA, 
-                                Group1 = NA,
-                                Group2 = NA,
-                                ratio_group1_superior_to_group2 = NA)
+                                Taxa1 = NA,
+                                Taxa2 = NA,
+                                p_taxa1_superior_to_taxa2 = NA)
   
   for (i in c("N", "P", "Fe", "Cu", "Mn", 
               "Se", "Zn", "Co")) {

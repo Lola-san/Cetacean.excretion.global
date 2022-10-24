@@ -1,4 +1,4 @@
-"Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
+"Geo_area"	"Element"	"habitat1"	"habitat2"	"p_habitat1_superior_to_habitat2"
 "1"	"West Indian ocean"	"N"	"Oceanic waters"	"Neritic waters"	0.9555
 "2"	"West Indian ocean"	"P"	"Oceanic waters"	"Neritic waters"	0.8899
 "3"	"West Indian ocean"	"Fe"	"Oceanic waters"	"Neritic waters"	0.9181

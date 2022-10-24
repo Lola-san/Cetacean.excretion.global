@@ -1,9 +1,9 @@
-"Geo_area"	"Element"	"Area1"	"Area2"	"ratio_area1_superior_to_area2"
-"1"	"Central North Atlantic"	"N"	"Oceanic waters"	"Neritic waters"	0.5472
-"2"	"Central North Atlantic"	"P"	"Oceanic waters"	"Neritic waters"	0.46
-"3"	"Central North Atlantic"	"Fe"	"Oceanic waters"	"Neritic waters"	0.4867
-"4"	"Central North Atlantic"	"Cu"	"Oceanic waters"	"Neritic waters"	0.7778
-"5"	"Central North Atlantic"	"Mn"	"Oceanic waters"	"Neritic waters"	0.3973
-"6"	"Central North Atlantic"	"Se"	"Oceanic waters"	"Neritic waters"	0.5316
-"7"	"Central North Atlantic"	"Zn"	"Oceanic waters"	"Neritic waters"	0.5281
-"8"	"Central North Atlantic"	"Co"	"Oceanic waters"	"Neritic waters"	0.5344
+"Geo_area"	"Element"	"habitat1"	"habitat2"	"p_habitat1_superior_to_habitat2"
+"1"	"Central North Atlantic"	"N"	"Oceanic waters"	"Neritic waters"	0.548
+"2"	"Central North Atlantic"	"P"	"Oceanic waters"	"Neritic waters"	0.4597
+"3"	"Central North Atlantic"	"Fe"	"Oceanic waters"	"Neritic waters"	0.4927
+"4"	"Central North Atlantic"	"Cu"	"Oceanic waters"	"Neritic waters"	0.7848
+"5"	"Central North Atlantic"	"Mn"	"Oceanic waters"	"Neritic waters"	0.4036
+"6"	"Central North Atlantic"	"Se"	"Oceanic waters"	"Neritic waters"	0.5374
+"7"	"Central North Atlantic"	"Zn"	"Oceanic waters"	"Neritic waters"	0.5359
+"8"	"Central North Atlantic"	"Co"	"Oceanic waters"	"Neritic waters"	0.5387
