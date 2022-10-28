@@ -597,7 +597,7 @@ list(
   tar_target(tib_models_norm_file, run_models_norm(chloro_sst_tib,
                                                    model_output_clean, 
                                                    "file",
-                                                   paste("all_tib_models_norm", 
+                                                   paste("Table1", 
                                                          nsim = 1e4, 
                                                          sep = "_"))),
   tar_target(tib_models_norm_output, run_models_norm(chloro_sst_tib,

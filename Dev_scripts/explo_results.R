@@ -1189,3 +1189,60 @@ model_output_clean |>
                    max_exc = max(Nut_diet))
 
 # c'est le mean nutrient content of prey qui ne va pas pour les micronutriments : j'ai pas utilisé de normale tronquée!! 
+
+
+
+################## clustering compo of poop
+targets::tar_load(model_output_clean)
+
+profile_excretion <- model_output_clean |>
+  dplyr::ungroup() |>
+  dplyr::select(c(Eco_gp, Species, Indi_data, excrete_nut_ind, Mass)) 
+
+
+# select only one line per species (as there is many lines for all the places each species occurs)
+profile_excretion <- profile_excretion[c(1, 9, 13, 15, 19, 
+                                         31, 32, 33, 40, 
+                                         42, 51, 58, 73, 
+                                         76, 80, 92, 96, 
+                                         100, 106, 107, 108, 
+                                         115, 129, 136, 146, 
+                                         149, 152, 168, 176, 
+                                         177, 179, 186, 190, 
+                                         191, 199, 201, 208,
+                                         225),]
+
+table <- profile_excretion |>
+  dplyr::group_by(Eco_gp) |>
+  dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
+                  purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
+  dplyr::select(-c(Indi_data, excrete_nut_ind, Mass)) |>
+  tidyr::unnest(excrete_ind_perkg_food) |>
+  tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+                      names_to = "Element",
+                      values_to = "Excretion_ind") |>
+  dplyr::mutate(Element = factor(Element,
+                                 levels = c("N", "P", "Fe", "Cu", "Mn",
+                                            "Se", "Zn", "Co", "As"))) |>
+  dplyr::group_by(Species, Element) |>
+  dplyr::summarize(mean = mean(Excretion_ind)) |>
+  tidyr::pivot_wider(names_from = Element,
+                    values_from = mean)
+
+table <- as.data.frame(table)
+row.names(table) <- table$Species
+
+clust <- cluster::agnes(scale(table[, 3:10]), method = "ward")
+
+plot(clust)
+
+
+clusters <- tibble::as.tibble(clust$clustering) |>
+  tidyr::pivot_longer(cols = everything(), 
+                      names_to = "row_names", 
+                      values_to = "clust_nb") 
+
+
+# correspondence analysis
+ggplot2::balloonplot(t(table[,3:11]), main ="housetasks", xlab ="", ylab="",
+                      label = FALSE, show.margins = FALSE)

@@ -939,8 +939,8 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
                                            values_to = "Excretion") |>
                        dplyr::filter(Element != "As") |> 
                        dplyr::mutate(Element = factor(Element, 
-                                                      levels = c("Fe", "Co", "Mn", "Zn",
-                                                                 "P", "Se", "N", "Cu")), 
+                                                      levels = c("Fe", "Co", "Mn", "P",
+                                                                 "Zn", "N", "Se", "Cu")), 
                                      Excretion = Excretion/Surf
                        )  |>
                        # normalize excretion data 
@@ -1330,8 +1330,8 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                                                values_to = "Excretion") |> 
                            dplyr::filter(Element != "As") |> 
                            dplyr::mutate(Element = factor(Element, 
-                                                          levels = c("Fe", "Co", "Mn", "Zn",
-                                                                     "P", "Se", "N", "Cu")), 
+                                                          levels = c("Fe", "Co", "Mn", "P",
+                                                                     "Zn", "N", "Se", "Cu")), 
                                          Excretion = Excretion/Surf
                            )  |>
                            # normalize excretion data 
@@ -1677,7 +1677,7 @@ run_models_norm <- function(tib_chloro_sst,
                        summary(modchloroCo)$coefficients[8]))
   
   if (object_type == "file") {
-    write.table(table_mod, paste0("output/tables/", 
+    write.table(table_mod, paste0("output/article/", 
                                   name_file,
                                   ".txt"), sep = "\t")
   } else {

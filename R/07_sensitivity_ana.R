@@ -387,7 +387,7 @@ fig_sensitivy_indices_all_taxa_all_nut <- function(sensi_tib,
     ) +
     ggplot2::scale_fill_manual(values = c("#278B9AFF", "#E75B64FF")) +
     ggplot2::scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 6)) +
-    ggplot2::facet_wrap(~ Nutrient, nrow = 2) +
+    ggplot2::facet_wrap(~ Nutrient, nrow = 3) +
     ggplot2::ylab("Sobol sensivity indice") +
     ggplot2::xlab("Model parameter") +
     ggplot2::theme_bw() +
@@ -403,8 +403,8 @@ fig_sensitivy_indices_all_taxa_all_nut <- function(sensi_tib,
   
   if (object_type == "file") {
     ggplot2::ggsave(paste0("output/article/", name_file, ".jpg"),
-                    width = 22,
-                    height = 8)
+                    width = 16,
+                    height = 14)
   } else {
     figure
   }
