@@ -160,6 +160,45 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
                                         name_file) # should be a character string) 
 {
   
+  # table_oceanic_1st <- output_tib |>
+  #   # keep only areas with both neritic and oceanic waters
+  #   dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",
+  #                                   "New Caledonia", "Hawaii",
+  #                                   "Wallis & Futuna",
+  #                                   "French Polynesia"))) |>
+  #   dplyr::group_by(Geo_area, Eco_area) |>
+  #   dplyr::summarise(Surf = sum(unique(Surf_tot)),
+  #                    sum = list(sum_tibb(excrete_nut))) |>
+  #   tidyr::unnest(sum) |>
+  #   tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+  #                       names_to = "Element",
+  #                       values_to = "Excretion") |>
+  #   dplyr::mutate(Element = factor(Element,
+  #                                  levels = c("N", "P", "Fe", "Cu", "Mn",
+  #                                             "Se", "Zn", "Co", "As")),
+  #                 Excretion = Excretion*1e3/Surf, # from tons to kg/km2
+  #                 Geo_area = factor(Geo_area,
+  #                                   levels = c("Gulf of Alaska", "Central North Atlantic", "Northeast Atlantic",
+  #                                              "Northwest Atlantic", "California current",
+  #                                              "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles",
+  #                                              "New Caledonia", "Hawaii",
+  #                                              "French Guyana", "Wallis & Futuna", "French Polynesia"))
+  #   )  |>
+  #   dplyr::group_by(Geo_area, Eco_area, Element) |>
+  #   dplyr::summarize(min = min(Excretion),
+  #                    `2.5_quant` = quantile(Excretion, probs = c(0.025)),
+  #                    mean = mean(Excretion),
+  #                    median = median(Excretion),
+  #                    `97.5_quant` = quantile(Excretion, probs = c(0.975)),
+  #                    max = max(Excretion)) |>
+  #   dplyr::group_by(Element) |>
+  #   dplyr::mutate(mean_norm = (mean - min(mean))/(max(mean) - min(mean))) |> # normalize between zero and 1 across all areas
+  #   dplyr::filter(Eco_area == "oceanic") |>
+  #   dplyr::group_by(Geo_area, Element) |>
+  #   tidyr::pivot_wider(names_from = Eco_area,
+  #                      values_from = mean_norm) |>
+  #   dplyr::select(Geo_area, Element, oceanic)
+
   table_oceanic <- output_tib |>
     # keep only areas with both neritic and oceanic waters
     dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",  
@@ -184,21 +223,88 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
                                                "New Caledonia", "Hawaii",  
                                                "French Guyana", "Wallis & Futuna", "French Polynesia"))
     )  |>
+    dplyr::left_join(output_tib |>
+                       # keep only areas with both neritic and oceanic waters
+                       dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",  
+                                                       "New Caledonia", "Hawaii",  
+                                                       "Wallis & Futuna",
+                                                       "French Polynesia"))) |>
+                       dplyr::group_by(Geo_area, Eco_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion*1e3/Surf, # from tons to kg/km2
+                                     Geo_area = factor(Geo_area, 
+                                                       levels = c("Gulf of Alaska", "Central North Atlantic", "Northeast Atlantic", 
+                                                                  "Northwest Atlantic", "California current", 
+                                                                  "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                                                  "New Caledonia", "Hawaii",  
+                                                                  "French Guyana", "Wallis & Futuna", "French Polynesia"))
+                       )  |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::summarize(min_area = min(Excretion), 
+                                        `2.5_quant` = quantile(Excretion, probs = c(0.025)),
+                                        mean_area = mean(Excretion), 
+                                        `97.5_quant` = quantile(Excretion, probs = c(0.975)),
+                                        max_area = max(Excretion))) |>
+    # select only values between the lowest and highest quantiles as extreme values tend 
+    # to shred the standardized release values 
+    dplyr::filter(Excretion > `2.5_quant`, Excretion < `97.5_quant` ) |>
+    dplyr::mutate(ex_norm = (Excretion - `2.5_quant`)/(`97.5_quant` - `2.5_quant`)) |> # normalize between zero and 1 per area
     dplyr::group_by(Geo_area, Eco_area, Element) |>
-    dplyr::summarize(min = min(Excretion), 
-                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
-                     mean = mean(Excretion), 
-                     median = median(Excretion), 
-                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
-                     max = max(Excretion)) |>
-    dplyr::group_by(Element) |>
-    dplyr::mutate(mean_norm = (mean - min(mean))/(max(mean) - min(mean))) |> # normalize between zero and 1 across all areas
+    dplyr::summarize(mean_hab = mean(ex_norm)) |> 
     dplyr::filter(Eco_area == "oceanic") |>
     dplyr::group_by(Geo_area, Element) |>
     tidyr::pivot_wider(names_from = Eco_area, 
-                       values_from = mean_norm) |>
+                       values_from = mean_hab) |>
     dplyr::select(Geo_area, Element, oceanic)
   
+  
+  # table_shelf_1st <- output_tib |>
+  #   # keep only areas with both neritic and oceanic waters
+  #   dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",
+  #                                   "New Caledonia", "Hawaii",
+  #                                   "Wallis & Futuna",
+  #                                   "French Polynesia"))) |>
+  #   dplyr::group_by(Geo_area, Eco_area) |>
+  #   dplyr::summarise(Surf = sum(unique(Surf_tot)),
+  #                    sum = list(sum_tibb(excrete_nut))) |>
+  #   tidyr::unnest(sum) |>
+  #   tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+  #                       names_to = "Element",
+  #                       values_to = "Excretion") |>
+  #   dplyr::mutate(Element = factor(Element,
+  #                                  levels = c("N", "P", "Fe", "Cu", "Mn",
+  #                                             "Se", "Zn", "Co", "As")),
+  #                 Excretion = Excretion*1e3/Surf, # from tons to kg/km2
+  #                 Geo_area = factor(Geo_area,
+  #                                   levels = c("Gulf of Alaska", "Central North Atlantic", "Northeast Atlantic",
+  #                                              "Northwest Atlantic", "California current",
+  #                                              "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles",
+  #                                              "New Caledonia", "Hawaii",
+  #                                              "French Guyana", "Wallis & Futuna", "French Polynesia"))
+  #   )  |>
+  #   dplyr::group_by(Geo_area, Eco_area, Element) |>
+  #   dplyr::summarize(min = min(Excretion),
+  #                    `2.5_quant` = quantile(Excretion, probs = c(0.025)),
+  #                    mean = mean(Excretion),
+  #                    median = median(Excretion),
+  #                    `97.5_quant` = quantile(Excretion, probs = c(0.975)),
+  #                    max = max(Excretion)) |>
+  #   dplyr::group_by(Element) |>
+  #   dplyr::mutate(mean_norm = (mean - min(mean))/(max(mean) - min(mean))) |> # normalize between zero and 1 across all areas
+  #   dplyr::filter(Eco_area == "shelf") |>
+  #   dplyr::group_by(Geo_area, Element) |>
+  #   tidyr::pivot_wider(names_from = Eco_area, 
+  #                      values_from = mean_norm) |>
+  #   dplyr::select(Geo_area, Element, shelf) 
+
   table_shelf <- output_tib |>
     # keep only areas with both neritic and oceanic waters
     dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",  
@@ -223,20 +329,49 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
                                                "New Caledonia", "Hawaii",  
                                                "French Guyana", "Wallis & Futuna", "French Polynesia"))
     )  |>
+    dplyr::left_join(output_tib |>
+                       # keep only areas with both neritic and oceanic waters
+                       dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",  
+                                                       "New Caledonia", "Hawaii",  
+                                                       "Wallis & Futuna",
+                                                       "French Polynesia"))) |>
+                       dplyr::group_by(Geo_area, Eco_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Element", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Element = factor(Element, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion*1e3/Surf, # from tons to kg/km2
+                                     Geo_area = factor(Geo_area, 
+                                                       levels = c("Gulf of Alaska", "Central North Atlantic", "Northeast Atlantic", 
+                                                                  "Northwest Atlantic", "California current", 
+                                                                  "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                                                  "New Caledonia", "Hawaii",  
+                                                                  "French Guyana", "Wallis & Futuna", "French Polynesia"))
+                       )  |>
+                       dplyr::group_by(Geo_area, Element) |>
+                       dplyr::summarize(min_area = min(Excretion), 
+                                        `2.5_quant` = quantile(Excretion, probs = c(0.025)),
+                                        mean_area = mean(Excretion), 
+                                        `97.5_quant` = quantile(Excretion, probs = c(0.975)),
+                                        max_area = max(Excretion))) |>
+    # select only values between the lowest and highest quantiles as extreme values tend 
+    # to shred the standardized release values 
+    dplyr::filter(Excretion > `2.5_quant`, Excretion < `97.5_quant` ) |>
+    dplyr::mutate(ex_norm = (Excretion - `2.5_quant`)/(`97.5_quant` - `2.5_quant`)) |> # normalize between zero and 1 per area
     dplyr::group_by(Geo_area, Eco_area, Element) |>
-    dplyr::summarize(min = min(Excretion), 
-                     `2.5_quant` = quantile(Excretion, probs = c(0.025)), 
-                     mean = mean(Excretion), 
-                     median = median(Excretion), 
-                     `97.5_quant` = quantile(Excretion, probs = c(0.975)), 
-                     max = max(Excretion)) |>
-    dplyr::group_by(Element) |>
-    dplyr::mutate(mean_norm = (mean - min(mean))/(max(mean) - min(mean))) |> # normalize between zero and 1 across all areas
+    dplyr::summarize(mean_hab = mean(ex_norm)) |> 
     dplyr::filter(Eco_area == "shelf") |>
     dplyr::group_by(Geo_area, Element) |>
     tidyr::pivot_wider(names_from = Eco_area, 
-                       values_from = mean_norm) |>
-    dplyr::select(Geo_area, Element, shelf) 
+                       values_from = mean_hab) |>
+    dplyr::select(Geo_area, Element, shelf)
+  
+  
   
   table_diff <- table_oceanic |>
     dplyr::left_join(table_shelf, 
