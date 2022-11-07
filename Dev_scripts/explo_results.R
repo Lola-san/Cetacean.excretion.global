@@ -1195,6 +1195,10 @@ model_output_clean |>
 ################## clustering compo of poop
 targets::tar_load(model_output_clean)
 
+
+# to disable scientific notations
+options(scipen = 999)
+
 profile_excretion <- model_output_clean |>
   dplyr::ungroup() |>
   dplyr::select(c(Eco_gp, Species, Indi_data, excrete_nut_ind, Mass)) 
@@ -1225,7 +1229,11 @@ table <- profile_excretion |>
                                  levels = c("N", "P", "Fe", "Cu", "Mn",
                                             "Se", "Zn", "Co", "As"))) |>
   dplyr::group_by(Species, Element) |>
-  dplyr::summarize(mean = mean(Excretion_ind)) |>
+  dplyr::summarize(min_exc = min(Excretion_ind), 
+                   `2.5_quant_exc` = quantile(Excretion_ind, probs = c(0.025)), 
+                   mean = mean(Excretion_ind), 
+                   `97.5_quant_exc` = quantile(Excretion_ind, probs = c(0.975)), 
+                   max_exc = max(Excretion_ind)) |>
   tidyr::pivot_wider(names_from = Element,
                     values_from = mean)
 
@@ -1246,3 +1254,184 @@ clusters <- tibble::as.tibble(clust$clustering) |>
 # correspondence analysis
 ggplot2::balloonplot(t(table[,3:11]), main ="housetasks", xlab ="", ylab="",
                       label = FALSE, show.margins = FALSE)
+
+
+
+############### ACP
+
+table <- profile_excretion |>
+  dplyr::group_by(Eco_gp) |>
+  dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
+                  purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
+  dplyr::select(-c(Indi_data, excrete_nut_ind, Mass)) |>
+  tidyr::unnest(excrete_ind_perkg_food) |>
+  tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+                      names_to = "Element",
+                      values_to = "Excretion_ind") |>
+  dplyr::mutate(Element = factor(Element,
+                                 levels = c("N", "P", "Fe", "Cu", "Mn",
+                                            "Se", "Zn", "Co", "As"))) |>
+  dplyr::filter(Element != "As") |>
+  dplyr::group_by(Species, Eco_gp, Element) |>
+  dplyr::summarize(min = min(Excretion_ind), 
+                   `2.5_quant` = quantile(Excretion_ind, probs = c(0.025)), 
+                   mean = mean(Excretion_ind), 
+                   `97.5_quant` = quantile(Excretion_ind, probs = c(0.975)), 
+                   max = max(Excretion_ind)) |>
+  tidyr::pivot_wider(names_from = Element,
+                     values_from = c(min, `2.5_quant`, 
+                                     mean, 
+                                     `97.5_quant`, max))
+
+table <- as.data.frame(table)
+rownames(table) <- table$Species
+table <- table[, -1]
+
+# extract active variables and observations
+data.act <- table[1:34, 2:41]
+
+res.pca <- FactoMineR::PCA(table,
+                           quali.sup = 1, 
+                           ncp = 5, graph = FALSE)
+
+res.pca <- FactoMineR::PCA(data.act,
+                           ncp = 5, graph = FALSE)
+
+res.pca
+
+# eigen values 
+eig.val <- factoextra::get_eigenvalue(res.pca)
+eig.val
+
+factoextra::fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 50))
+
+
+var <- factoextra::get_pca_var(res.pca)
+var
+
+# Coordonnées
+head(var$coord)
+# Cos2: qualité de répresentation
+head(var$cos2)
+# Contributions aux composantes principales
+head(var$contrib)
+
+
+#### correlation circle
+# Coordonnées des variables
+head(var$coord, 4)
+
+factoextra::fviz_pca_var(res.pca, col.var = "black")
+
+
+## quality of representation
+head(var$cos2, 4)
+corrplot::corrplot(var$cos2, is.corr=FALSE)
+
+
+# Cos2 total des variables sur Dim.1 et Dim.2
+factoextra::fviz_cos2(res.pca, choice = "var", axes = 1:2)
+
+
+# Colorer en fonction du cos2: qualité de représentation
+factoextra::fviz_pca_var(res.pca, col.var = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE, # Évite le chevauchement de texte
+             alpha.var = "cos2"
+)
+
+
+#### graph of individuals
+ind <- factoextra::get_pca_ind(res.pca)
+ind
+
+
+# Coordonnées des individus
+head(ind$coord)
+# Qualité des individus
+head(ind$cos2)
+# Contributions des individus
+head(ind$contrib)
+
+
+factoextra::fviz_pca_ind (res.pca)
+
+
+factoextra::fviz_pca_ind (res.pca, 
+                          axes = c(1, 2),
+                          geom.ind = "point",
+                          mean.point = FALSE,
+                          col.ind = table$Eco_gp[1:34], 
+                          addEllipses = TRUE, 
+                          palette = c("#cf7474ff", "slategray3", "#365579ff"))
+
+
+factoextra::fviz_pca_ind (res.pca, 
+                          axes = c(1, 3),
+                          geom.ind = "point",
+                          col.ind = table$Eco_gp, 
+                          addEllipses = TRUE, 
+                          palette = c("#cf7474ff", "slategray3", "#365579ff"))
+
+factoextra::fviz_pca_ind (res.pca, 
+                          axes = c(2, 3),
+                          geom.ind = "point",
+                          col.ind = table$Eco_gp, 
+                          addEllipses = TRUE, 
+                          palette = c("#cf7474ff", "slategray3", "#365579ff"))
+
+
+
+
+# clustering
+# coordoninates on the two first components
+xbm <- res.pca$ind$coord[ ,1]
+ybm <- res.pca$ind$coord[ ,2]
+# calculation distance matrix
+d2ij <- as.matrix(dist(cbind(xbm, ybm), method = "euclidean"))
+
+# perform hierarchical clustering
+tclu <- hclust(as.dist(d2ij), method = "complete") 
+# set nb of clusters
+ng <- 3
+# attribute cluster group
+gp <- cutree(tclu, k = ng)
+res_gp <- tibble::as_tibble(cbind(gp, table$Eco_gp[1:34]) )
+colnames(res_gp) <- c("gp", "Eco_gp")
+
+table(res_gp$gp, res_gp$Eco_gp)
+
+
+
+xbm <- res.pca$ind$coord[ ,1]
+ybm <- res.pca$ind$coord[ ,3]
+# calculation distance matrix
+d2ij <- as.matrix(dist(cbind(xbm, ybm), method = "euclidean"))
+
+# perform hierarchical clustering
+tclu <- hclust(as.dist(d2ij), method = "complete") 
+# set nb of clusters
+ng <- 3
+# attribute cluster group
+gp <- cutree(tclu, k = ng)
+res_gp <- tibble::as_tibble(cbind(gp, table$Eco_gp[1:34]) )
+colnames(res_gp) <- c("gp", "Eco_gp")
+
+table(res_gp$gp, res_gp$Eco_gp)
+
+
+xbm <- res.pca$ind$coord[ ,2]
+ybm <- res.pca$ind$coord[ ,3]
+# calculation distance matrix
+d2ij <- as.matrix(dist(cbind(xbm, ybm), method = "euclidean"))
+
+# perform hierarchical clustering
+tclu <- hclust(as.dist(d2ij), method = "complete") 
+# set nb of clusters
+ng <- 3
+# attribute cluster group
+gp <- cutree(tclu, k = ng)
+res_gp <- tibble::as_tibble(cbind(gp, table$Eco_gp[1:34]) )
+colnames(res_gp) <- c("gp", "Eco_gp")
+
+table(res_gp$gp, res_gp$Eco_gp)
