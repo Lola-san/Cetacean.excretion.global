@@ -1281,14 +1281,40 @@ table <- profile_excretion |>
   tidyr::pivot_wider(names_from = Element,
                      values_from = c(min, `2.5_quant`, 
                                      mean, 
-                                     `97.5_quant`, max))
+                                     `97.5_quant`, max)) |>
+  dplyr::select(c(#min_N, 
+                  "2.5_quant_N", mean_N, "97.5_quant_N", 
+                  #"max_N", 
+                  #min_P, 
+                  "2.5_quant_P", mean_P, "97.5_quant_P", 
+                  #"max_P",
+                  #min_Fe, 
+                  "2.5_quant_Fe", mean_Fe, "97.5_quant_Fe", 
+                  #"max_Fe",
+                  #min_Cu, 
+                  "2.5_quant_Cu", mean_Cu, "97.5_quant_Cu", 
+                  #"max_Cu",
+                  #min_Mn, 
+                  "2.5_quant_Mn", mean_Mn, "97.5_quant_Mn", 
+                  #"max_Mn",
+                  #min_Se, 
+                  "2.5_quant_Se", mean_Se, "97.5_quant_Se", 
+                  #"max_Se",
+                  #min_Zn, 
+                  "2.5_quant_Zn", mean_Zn, "97.5_quant_Zn", 
+                  #"max_Zn",
+                  #min_Co, 
+                  "2.5_quant_Co", mean_Co, "97.5_quant_Co", 
+                  #"max_Co"
+                  ))
 
 table <- as.data.frame(table)
 rownames(table) <- table$Species
 table <- table[, -1]
 
 # extract active variables and observations
-data.act <- table[1:34, 2:41]
+data.act <- table[, 2:41]
+data.act <- table[, 2:25]
 
 res.pca <- FactoMineR::PCA(table,
                            quali.sup = 1, 
@@ -1316,22 +1342,50 @@ head(var$cos2)
 # Contributions aux composantes principales
 head(var$contrib)
 
+var_contrib <- tibble::as_tibble(var$contrib[,1:3])
+var_contrib <- cbind(rownames(var$contrib), var_contrib)
+
+View(var_contrib |>
+  dplyr::arrange(`Dim.2`, `Dim.3`))
 
 #### correlation circle
 # Coordonnées des variables
 head(var$coord, 4)
 
-factoextra::fviz_pca_var(res.pca, col.var = "black")
+factoextra::fviz_pca_var(res.pca, 
+                         axes = c(1,2), 
+                         col.var = "black")
+
+factoextra::fviz_pca_var(res.pca, 
+                         axes = c(1,3), 
+                         col.var = "black")
+
+factoextra::fviz_pca_var(res.pca, 
+                         axes = c(2, 3), 
+                         col.var = "black")
 
 
 ## quality of representation
 head(var$cos2, 4)
-corrplot::corrplot(var$cos2, is.corr=FALSE)
+corrplot::corrplot(var$cos2[,1:2], is.corr=FALSE)
+
+corrplot::corrplot(var$cos2[,1:2], is.corr = FALSE, method = 'number')
+
+png(file="output/article/PCA_contrib_var.jpg", 
+    width = 600, 
+    height = 500)
+corrplot::corrplot(var$cos2[,1:2], is.corr = FALSE, method = 'circle', 
+                   diag = FALSE, col = corrplot::COL2('RdBu', 10),
+                   cl.ratio = 0.9, cl.align.text = "l", cl.length = 10,
+                   win.asp = 0.3)
+dev.off()
 
 
 # Cos2 total des variables sur Dim.1 et Dim.2
 factoextra::fviz_cos2(res.pca, choice = "var", axes = 1:2)
 
+# Contributions des individus
+head(var$contrib)
 
 # Colorer en fonction du cos2: qualité de représentation
 factoextra::fviz_pca_var(res.pca, col.var = "cos2",
@@ -1361,9 +1415,110 @@ factoextra::fviz_pca_ind (res.pca,
                           axes = c(1, 2),
                           geom.ind = "point",
                           mean.point = FALSE,
-                          col.ind = table$Eco_gp[1:34], 
+                          col.ind = table$Eco_gp, 
+                          #select.ind = list(cos2 = 0.5),
                           addEllipses = TRUE, 
                           palette = c("#cf7474ff", "slategray3", "#365579ff"))
+
+factoextra::fviz_pca_biplot(res.pca, 
+                          axes = c(1, 2),
+                          # individuals
+                          geom.ind = "point",
+                          mean.point = FALSE,
+                          col.ind = table$Eco_gp, 
+                          #select.ind = list(cos2 = 0.5),
+                          addEllipses = TRUE, 
+                          palette = c("#cf7474ff", "slategray3", "#365579ff"),
+                          #variables
+                          geom.var = c("arrow", "text"),
+                          col.var = "black",
+                          #alpha.var = "cos2",
+                          select.var = list(cos2 = 0.5),
+                          ggtheme = ggplot2::theme_minimal(), 
+                          title = ggplot2::element_blank()
+                          ) +
+  ggplot2::theme(legend.title = ggplot2::element_blank())
+
+
+factoextra::fviz_pca_biplot(res.pca, 
+                            axes = c(1, 2),
+                            habillage = table$Eco_gp,
+                            # individuals
+                            mean.point = FALSE,
+                            geom.ind = "point",
+                            #col.ind = table$Eco_gp,
+                            #fill.ind = table$Eco_gp,
+                            addEllipses = TRUE, 
+                            ellipse.level = 0.95, 
+                            palette = c("#cf7474ff", "slategray3", "#365579ff"), 
+                            #variables
+                            geom.var = c("arrow", "text"),
+                            col.var = "black", 
+                            #alpha.var = "cos2",
+                            select.var = list(cos2 = 0.5),
+                            #gradient.cols = "RdYlBu",
+                            repel = 1,
+                            # customize
+                            #legend.title = list(col = ggplot2::element_blank()),
+                            ggtheme = ggplot2::theme_minimal(), 
+                            title = ggplot2::element_blank()) 
+
+factoextra::fviz_pca_biplot(res.pca, 
+                            axes = c(1, 2),
+                            habillage = "none",
+                            # individuals
+                            mean.point = FALSE,
+                            #geom.ind = "point",
+                            #col.ind = table$Eco_gp,
+                            fill.ind = table$Eco_gp,
+                            addEllipses = TRUE, 
+                            ellipse.level = 0.95, 
+                            palette = c("#cf7474ff", "slategray3", "#365579ff"), 
+                            #variables
+                            geom.var = c("arrow", "text"),
+                            col.var = "cos2", 
+                            #alpha.var = "cos2",
+                            select.var = list(cos2 = 0.5),
+                            #gradient.cols = "RdYlBu",
+                            repel = 1,
+                            # customize
+                            legend.title = list(col = "Contribution", fill = "Group"),
+                            ggtheme = ggplot2::theme_minimal(), 
+                            title = ggplot2::element_blank()) 
+
+factoextra::fviz_pca_biplot(res.pca, 
+                            axes = c(1, 3),
+                            geom.ind = "point",
+                            geom.var = c("arrow", "text"),
+                            col.var = "black", 
+                            select.var = list(cos2 = 0.5),
+                            alpha.var = "cos2",
+                            repel = 1,
+                            mean.point = FALSE,
+                            col.ind = table$Eco_gp, 
+                            palette = c("#cf7474ff", "slategray3", "#365579ff"), 
+                            #select.ind = list(cos2 = 0.5),
+                            addEllipses = TRUE, 
+                            #ellipse.type = c("euclid"),
+                            ellipse.level = 0.95, 
+                            ggtheme = ggplot2::theme_minimal())
+
+factoextra::fviz_pca_biplot(res.pca, 
+                            axes = c(2, 3),
+                            geom.ind = "point",
+                            geom.var = c("arrow", "text"),
+                            col.var = "black", 
+                            select.var = list(cos2 = 0.5),
+                            alpha.var = "cos2",
+                            repel = 1,
+                            mean.point = FALSE,
+                            col.ind = table$Eco_gp, 
+                            palette = c("#cf7474ff", "slategray3", "#365579ff"), 
+                            #select.ind = list(cos2 = 0.5),
+                            addEllipses = TRUE, 
+                            #ellipse.type = c("euclid"),
+                            ellipse.level = 0.95, 
+                            ggtheme = ggplot2::theme_minimal())
 
 
 factoextra::fviz_pca_ind (res.pca, 
@@ -1383,7 +1538,8 @@ factoextra::fviz_pca_ind (res.pca,
 
 
 
-# clustering
+
+################## clustering ################################
 # coordoninates on the two first components
 xbm <- res.pca$ind$coord[ ,1]
 ybm <- res.pca$ind$coord[ ,2]
@@ -1396,10 +1552,18 @@ tclu <- hclust(as.dist(d2ij), method = "complete")
 ng <- 3
 # attribute cluster group
 gp <- cutree(tclu, k = ng)
-res_gp <- tibble::as_tibble(cbind(gp, table$Eco_gp[1:34]) )
+res_gp <- tibble::as_tibble(cbind(gp, table$Eco_gp) )
 colnames(res_gp) <- c("gp", "Eco_gp")
 
 table(res_gp$gp, res_gp$Eco_gp)
+
+factoextra::fviz_pca_ind (res.pca, 
+                          axes = c(1, 2),
+                          geom.ind = "point",
+                          mean.point = FALSE,
+                          col.ind = res_gp$gp, 
+                          addEllipses = TRUE, 
+                          palette = c("#cf7474ff", "slategray3", "#365579ff"))
 
 
 
@@ -1414,7 +1578,7 @@ tclu <- hclust(as.dist(d2ij), method = "complete")
 ng <- 3
 # attribute cluster group
 gp <- cutree(tclu, k = ng)
-res_gp <- tibble::as_tibble(cbind(gp, table$Eco_gp[1:34]) )
+res_gp <- tibble::as_tibble(cbind(gp, table$Eco_gp) )
 colnames(res_gp) <- c("gp", "Eco_gp")
 
 table(res_gp$gp, res_gp$Eco_gp)
@@ -1431,7 +1595,7 @@ tclu <- hclust(as.dist(d2ij), method = "complete")
 ng <- 3
 # attribute cluster group
 gp <- cutree(tclu, k = ng)
-res_gp <- tibble::as_tibble(cbind(gp, table$Eco_gp[1:34]) )
+res_gp <- tibble::as_tibble(cbind(gp, table$Eco_gp) )
 colnames(res_gp) <- c("gp", "Eco_gp")
 
 table(res_gp$gp, res_gp$Eco_gp)
