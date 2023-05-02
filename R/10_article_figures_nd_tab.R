@@ -420,7 +420,31 @@ compo_poop_PCA_biplot <- function(output_tib,
                     "2.5_quant_Mn", mean_Mn, "97.5_quant_Mn", 
                     "2.5_quant_Se", mean_Se, "97.5_quant_Se", 
                     "2.5_quant_Zn", mean_Zn, "97.5_quant_Zn", 
-                    "2.5_quant_Co", mean_Co, "97.5_quant_Co"))
+                    "2.5_quant_Co", mean_Co, "97.5_quant_Co")) |>
+    dplyr::rename("N (2.5%)" = "2.5_quant_N", 
+                  "N (mean)" = "mean_N",
+                  "N (97.5%)" = "97.5_quant_N", 
+                  "P (2.5%)" = "2.5_quant_P", 
+                  "P (mean)" = "mean_P",
+                  "P (97.5%)" = "97.5_quant_P",
+                  "Fe (2.5%)" = "2.5_quant_Fe", 
+                  "Fe (mean)" = "mean_Fe",
+                  "Fe (97.5%)" = "97.5_quant_Fe",
+                  "Cu (2.5%)" = "2.5_quant_Cu", 
+                  "Cu (mean)" = "mean_Cu",
+                  "Cu (97.5%)" = "97.5_quant_Cu", 
+                  "Mn (2.5%)" = "2.5_quant_Mn", 
+                  "Mn (mean)" = "mean_Mn",
+                  "Mn (97.5%)" = "97.5_quant_Mn",
+                  "Se (2.5%)" = "2.5_quant_Se", 
+                  "Se (mean)" = "mean_Se",
+                  "Se (97.5%)" = "97.5_quant_Se",
+                  "Zn (2.5%)" = "2.5_quant_Zn", 
+                  "Zn (mean)" = "mean_Zn",
+                  "Zn (97.5%)" = "97.5_quant_Zn",
+                  "Co (2.5%)" = "2.5_quant_Co", 
+                  "Co (mean)" = "mean_Co",
+                  "Co (97.5%)" = "97.5_quant_Co")
   
   profile_excretion <- as.data.frame(profile_excretion)
   rownames(profile_excretion) <- profile_excretion$Species
@@ -449,6 +473,9 @@ compo_poop_PCA_biplot <- function(output_tib,
                               ggtheme = ggplot2::theme_minimal(),
                               title = ggplot2::element_blank()
   ) +
+    ggplot2::scale_color_manual(values = c(`Small delphinids` = "#365579ff", 
+                                           `Deep divers` = "slategray3", 
+                                           `Baleen whales` = "#cf7474ff")) +
     ggplot2::theme(legend.title = ggplot2::element_blank(), 
                    legend.text = ggplot2::element_text(size = 12, face = "bold"),
                    legend.position = "bottom",

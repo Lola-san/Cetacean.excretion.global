@@ -328,10 +328,10 @@ plot_exc_chloro <- function(tib_chloro_sst,
                             guyana, 
                             object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                             name_file # should be a character string
-                            ) {
+) {
   # element should be a character string specifying what element to select
   # guyana should be either YES or NO (as whether to include Guyana into the plot 
-  # or not, as it is an outlyer)
+  # or not, as it is an outlier)
   if (guyana == "YES") {
     tib_chloro_sst |>
       dplyr::left_join(output_tib |>
@@ -375,15 +375,15 @@ plot_exc_chloro <- function(tib_chloro_sst,
                                              "#94A323", "#C3CE3D", "#A08400", "#F7D42A", "#26897E", "#8DBFA8", 
                                              "#CF3E53", "#F1788D")) +
       ggplot2::guides(color = ggplot2::guide_legend("")) + 
-      ggplot2::ylab(expression(paste0(element, " excretion (t/km^2/yr)"))) +
-      ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
+      ggplot2::ylab(paste0(element, " release (t/km<sup>2</sup>/yr)")) +
+      ggplot2::xlab(expression("Mean chlorophyll concentration (mg/m"^{3}*")")) +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      strip.text.x = ggplot2::element_text(face = "bold", size = 12),
                      strip.text.y = ggplot2::element_text(face = "bold", size = 12),
                      axis.text.x = ggplot2::element_text(size = 12), 
                      axis.text.y = ggplot2::element_text(size = 12), 
                      axis.title.x = ggplot2::element_text(face = "bold", size = 12), 
-                     axis.title.y = ggplot2::element_text(face = "bold", size = 12), 
+                     axis.title.y = ggtext::element_markdown(face = "bold", size = 12), 
                      legend.title = ggplot2::element_blank(), 
                      legend.position = "bottom", 
                      legend.text = ggplot2::element_text(size = 12, face = "bold")
@@ -433,15 +433,15 @@ plot_exc_chloro <- function(tib_chloro_sst,
                                              "#94A323", "#C3CE3D", "#A08400", "#F7D42A", "#26897E", "#8DBFA8", 
                                              "#CF3E53", "#F1788D")) +
       ggplot2::guides(color = ggplot2::guide_legend("")) + 
-      ggplot2::ylab(paste0(element, " excretion (t/km2/yr)")) +
-      ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
+      ggplot2::ylab(paste0(element, " release (t/km<sup>2</sup>/yr)")) +
+      ggplot2::xlab(expression("Mean chlorophyll concentration (mg/m"^{3}~")")) +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      strip.text.x = ggplot2::element_text(face = "bold", size = 12),
                      strip.text.y = ggplot2::element_text(face = "bold", size = 12),
                      axis.text.x = ggplot2::element_text(size = 12), 
                      axis.text.y = ggplot2::element_text(size = 12), 
                      axis.title.x = ggplot2::element_text(face = "bold", size = 12), 
-                     axis.title.y = ggplot2::element_text(face = "bold", size = 12), 
+                     axis.title.y = ggtext::element_markdown(face = "bold", size = 12), 
                      legend.title = ggplot2::element_blank(), 
                      legend.position = "bottom", 
                      legend.text = ggplot2::element_text(size = 12, face = "bold")
@@ -452,123 +452,8 @@ plot_exc_chloro <- function(tib_chloro_sst,
     ggplot2::ggsave(paste0("output/figures/", 
                            name_file, 
                            ".jpg"), scale = 1)
-  } else {
-    if (guyana == "YES") {
-      tib_chloro_sst |>
-        dplyr::left_join(output_tib |>
-                           dplyr::group_by(Geo_area) |>
-                           dplyr::summarise(Surf = sum(unique(Surf_tot)), 
-                                            sum = list(sum_tibb(excrete_nut))) |>
-                           tidyr::unnest(sum) |>
-                           tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
-                                               names_to = "Element", 
-                                               values_to = "Excretion") |> 
-                           dplyr::mutate(Element = factor(Element, 
-                                                          levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                                                     "Se", "Zn", "Co", "As")), 
-                                         Excretion = Excretion/Surf
-                           )  |>
-                           dplyr::filter(Element == element) |>
-                           dplyr::group_by(Geo_area) |>
-                           dplyr::summarize(min_exc = min(Excretion), 
-                                            `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
-                                            `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
-                                            mean_exc = mean(Excretion), 
-                                            median_exc = median(Excretion), 
-                                            `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
-                                            `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
-                                            max_exc = max(Excretion))) |>
-        dplyr::mutate(Geo_area = factor(Geo_area, 
-                                        levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
-                                                   "Northwest Atlantic", "California current", 
-                                                   "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
-                                                   "New Caledonia", "Hawaii",  
-                                                   "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
-        ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = mean_exc, color = Geo_area)) +
-        ggplot2::geom_point(shape = 16, size = 3) +
-        ggplot2::geom_errorbar(ggplot2::aes(y = mean_exc, xmin = `10_quant_chloro`, xmax = `90_quant_chloro`, color = Geo_area), 
-                               size = 1) +
-        ggplot2::geom_errorbar(ggplot2::aes(x = mean_chloro, ymin = `10_quant_exc`, ymax = `90_quant_exc`, color = Geo_area), 
-                               size = 1) +
-        ggplot2::geom_smooth(method = "lm", col = "black") +
-        ggplot2::theme_classic() +
-        ggplot2::scale_color_manual(values = c("#4E9F50", "#87D180", "#EF8A0C", "#FCC66D", "#3CA8BC", "#98D9E4", 
-                                               "#94A323", "#C3CE3D", "#A08400", "#F7D42A", "#26897E", "#8DBFA8", 
-                                               "#CF3E53", "#F1788D")) +
-        ggplot2::guides(color = ggplot2::guide_legend("")) + 
-        ggplot2::ylab(paste0(element, " excretion (t/km2/yr)")) +
-        ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
-        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
-                       strip.text.x = ggplot2::element_text(face = "bold", size = 12),
-                       strip.text.y = ggplot2::element_text(face = "bold", size = 12),
-                       axis.text.x = ggplot2::element_text(size = 12), 
-                       axis.text.y = ggplot2::element_text(size = 12), 
-                       axis.title.x = ggplot2::element_text(face = "bold", size = 12), 
-                       axis.title.y = ggplot2::element_text(face = "bold", size = 12), 
-                       legend.title = ggplot2::element_blank(), 
-                       legend.position = "bottom", 
-                       legend.text = ggplot2::element_text(size = 12, face = "bold")
-        )
-    } else {
-      tib_chloro_sst |>
-        dplyr::left_join(output_tib |>
-                           dplyr::group_by(Geo_area) |>
-                           dplyr::summarise(Surf = sum(unique(Surf_tot)), 
-                                            sum = list(sum_tibb(excrete_nut))) |>
-                           tidyr::unnest(sum) |>
-                           tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
-                                               names_to = "Element", 
-                                               values_to = "Excretion") |> 
-                           dplyr::mutate(Element = factor(Element, 
-                                                          levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                                                     "Se", "Zn", "Co", "As")), 
-                                         Excretion = Excretion/Surf
-                           )  |>
-                           dplyr::filter(Element == element) |>
-                           dplyr::group_by(Geo_area) |>
-                           dplyr::summarize(min_exc = min(Excretion), 
-                                            `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
-                                            `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
-                                            mean_exc = mean(Excretion), 
-                                            median_exc = median(Excretion), 
-                                            `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
-                                            `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
-                                            max_exc = max(Excretion))) |>
-        dplyr::mutate(Geo_area = factor(Geo_area, 
-                                        levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
-                                                   "Northwest Atlantic", "California current", 
-                                                   "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
-                                                   "New Caledonia", "Hawaii",  
-                                                   "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
-        # filter out Guyana as it is an outlier
-        dplyr::filter(Geo_area != "French Guyana") |>
-        ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = mean_exc, color = Geo_area)) +
-        ggplot2::geom_point(shape = 16, size = 3) +
-        ggplot2::geom_errorbar(ggplot2::aes(y = mean_exc, xmin = `10_quant_chloro`, xmax = `90_quant_chloro`, color = Geo_area), 
-                               size = 1) +
-        ggplot2::geom_errorbar(ggplot2::aes(x = mean_chloro, ymin = `10_quant_exc`, ymax = `90_quant_exc`, color = Geo_area), 
-                               size = 1) +
-        ggplot2::geom_smooth(method = "lm", col = "black") +
-        ggplot2::theme_classic() +
-        ggplot2::scale_color_manual(values = c("#4E9F50", "#87D180", "#EF8A0C", "#FCC66D", "#3CA8BC", "#98D9E4", 
-                                               "#94A323", "#C3CE3D", "#A08400", "#F7D42A", "#26897E", "#8DBFA8", 
-                                               "#CF3E53", "#F1788D")) +
-        ggplot2::guides(color = ggplot2::guide_legend("")) + 
-        ggplot2::ylab(paste0(element, " excretion (t/km2/yr)")) +
-        ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
-        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
-                       strip.text.x = ggplot2::element_text(face = "bold", size = 12),
-                       strip.text.y = ggplot2::element_text(face = "bold", size = 12),
-                       axis.text.x = ggplot2::element_text(size = 12), 
-                       axis.text.y = ggplot2::element_text(size = 12), 
-                       axis.title.x = ggplot2::element_text(face = "bold", size = 12), 
-                       axis.title.y = ggplot2::element_text(face = "bold", size = 12), 
-                       legend.title = ggplot2::element_blank(), 
-                       legend.position = "bottom", 
-                       legend.text = ggplot2::element_text(size = 12, face = "bold")
-        )
-    }
-  }
+  } 
+  
 }
 
 
@@ -585,7 +470,7 @@ plot_exc_sst <- function(tib_chloro_sst,
                          element, 
                          object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                          name_file # should be a character string
-                         ) {
+) {
   # element should be a character string specifying what element to select
   
   tib_chloro_sst |>
@@ -630,7 +515,7 @@ plot_exc_sst <- function(tib_chloro_sst,
                                            "#94A323", "#C3CE3D", "#A08400", "#F7D42A", "#26897E", "#8DBFA8", 
                                            "#CF3E53", "#F1788D")) +
     ggplot2::guides(color = ggplot2::guide_legend("")) + 
-    ggplot2::ylab(paste0(element, " excretion (t/km2/yr)")) +
+    ggplot2::ylab(paste0(element, " release (t/km<sup>2</sup>/yr)")) +
     ggplot2::xlab("Mean sea surface temperature") +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                    strip.text.x = ggplot2::element_text(face = "bold", size = 12),
@@ -638,7 +523,7 @@ plot_exc_sst <- function(tib_chloro_sst,
                    axis.text.x = ggplot2::element_text(size = 12), 
                    axis.text.y = ggplot2::element_text(size = 12), 
                    axis.title.x = ggplot2::element_text(face = "bold", size = 12), 
-                   axis.title.y = ggplot2::element_text(face = "bold", size = 12), 
+                   axis.title.y = ggtext::element_markdown(face = "bold", size = 12), 
                    legend.title = ggplot2::element_blank(), 
                    legend.position = "bottom", 
                    legend.text = ggplot2::element_text(size = 12, face = "bold")
@@ -691,7 +576,7 @@ plot_exc_sst <- function(tib_chloro_sst,
                                              "#94A323", "#C3CE3D", "#A08400", "#F7D42A", "#26897E", "#8DBFA8", 
                                              "#CF3E53", "#F1788D")) +
       ggplot2::guides(color = ggplot2::guide_legend("")) + 
-      ggplot2::ylab(paste0(element, " excretion (t/km2/yr)")) +
+      ggplot2::ylab(paste0(element, " release (t/km<sup>2</sup>/yr)")) +
       ggplot2::xlab("Mean sea surface temperature") +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5),
                      strip.text.x = ggplot2::element_text(face = "bold", size = 12),
@@ -699,7 +584,7 @@ plot_exc_sst <- function(tib_chloro_sst,
                      axis.text.x = ggplot2::element_text(size = 12), 
                      axis.text.y = ggplot2::element_text(size = 12), 
                      axis.title.x = ggplot2::element_text(face = "bold", size = 12), 
-                     axis.title.y = ggplot2::element_text(face = "bold", size = 12), 
+                     axis.title.y = ggtext::element_markdown(face = "bold", size = 12), 
                      legend.title = ggplot2::element_blank(), 
                      legend.position = "bottom", 
                      legend.text = ggplot2::element_text(size = 12, face = "bold")
@@ -719,7 +604,7 @@ plot_exc_sst_all_el_log10 <- function(tib_chloro_sst,
                                       output_tib, 
                                       object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                                       name_file # should be a character string
-                                      ) {
+) {
   
   tib_chloro_sst |>
     dplyr::left_join(output_tib |>
@@ -757,9 +642,10 @@ plot_exc_sst_all_el_log10 <- function(tib_chloro_sst,
     ggplot2::scale_y_continuous(trans = "log10" ) +
     ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                            "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-    ggplot2::ylab("Nutrient excretion (t/km2/yr)") +
+    ggplot2::ylab("Nutrient release (t/km<sup>2</sup>/yr)") +
     ggplot2::xlab("Mean sea surface temperature") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                   axis.title.y = ggtext::element_markdown(),
                    legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
   
   if (object_type == "file") {
@@ -823,7 +709,7 @@ plot_exc_sst_all_el <- function(tib_chloro_sst,
                                 output_tib, 
                                 object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                                 name_file # should be a character string
-                                ) {
+) {
   
   tib_chloro_sst |>
     dplyr::left_join(output_tib |>
@@ -926,7 +812,7 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
                                      output_tib, 
                                      object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                                      name_file # should be a character string
-                                     ) {
+) {
   
   tib_chloro_sst |>
     dplyr::left_join(output_tib |>
@@ -966,15 +852,15 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
     ggplot2::geom_smooth(method = "lm", se = FALSE, size = 2) +
     ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                            "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-    ggplot2::ylab("Normalized Nutrient \n release (t/km2/yr)") +
+    ggplot2::ylab("Normalized Nutrient <br> release (t/km<sup>2</sup>/yr)") +
     ggplot2::xlab("Mean sea surface temperature") +
     ggplot2::theme_classic() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(size = 14),
                    axis.text.y = ggplot2::element_text(size = 14),
                    axis.title.x = ggplot2::element_text(face = "bold", 
                                                         size = 15),
-                   axis.title.y = ggplot2::element_text(face = "bold", 
-                                                        size = 15),
+                   axis.title.y = ggtext::element_markdown(face = "bold", 
+                                                           size = 15),
                    legend.title = ggplot2::element_blank(),
                    legend.text = ggplot2::element_text(face = "bold", 
                                                        size = 14,
@@ -1026,10 +912,12 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
                            size = 2) +
       ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                              "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-      ggplot2::ylab("Normalized Nutrient \n excretion (t/km2/yr)") +
+      ggplot2::ylab("Normalized Nutrient <br> release (t/km<sup>2</sup>/yr)") +
       ggplot2::xlab("Mean sea surface temperature") +
       ggplot2::theme_classic() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
+                     axis.title.y = ggtext::element_markdown(face = "bold", 
+                                                             size = 15),
                      legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
   }
   
@@ -1047,7 +935,7 @@ plot_exc_chloro_all_el_log10 <- function(tib_chloro_sst,
                                          output_tib, 
                                          object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                                          name_file # should be a character string
-                                         ) {
+) {
   
   tib_chloro_sst |>
     dplyr::left_join(output_tib |>
@@ -1152,7 +1040,7 @@ plot_exc_chloro_all_el <- function(tib_chloro_sst,
                                    output_tib, 
                                    object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                                    name_file # should be a character string
-                                   ) {
+) {
   
   tib_chloro_sst |>
     dplyr::left_join(output_tib |>
@@ -1256,10 +1144,9 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                                         guyana, 
                                         object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                                         name_file # should be a character string
-                                        ) {
+) {
   
   
-  if (object_type == "file") {
     if (guyana == "YES") {
       tib_chloro_sst |>
         dplyr::left_join(output_tib |>
@@ -1300,24 +1187,19 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                              size = 2) +
         ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                                "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-        ggplot2::ylab("Normalized Nutrient \n release (t/km2/yr)") +
-        ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
+        ggplot2::ylab("Normalized Nutrient <br> release (t/km<sup>2</sup>/yr)") +
+        ggplot2::xlab("Mean chlorophyll concentration (mg/m<sup>3</sup>)") +
         ggplot2::theme_classic() +
         ggplot2::theme(axis.text.x = ggplot2::element_text(size = 14),
                        axis.text.y = ggplot2::element_text(size = 14),
-                       axis.title.x = ggplot2::element_text(face = "bold", 
-                                                            size = 15),
-                       axis.title.y = ggplot2::element_text(face = "bold", 
-                                                            size = 15),
+                       axis.title.x = ggtext::element_markdown(face = "bold", 
+                                                               size = 15),
+                       axis.title.y = ggtext::element_markdown(face = "bold", 
+                                                               size = 15),
                        legend.title = ggplot2::element_blank(),
                        legend.text = ggplot2::element_text(face = "bold", 
                                                            size = 14,
                                                            margin = ggplot2::margin(t = 5)))
-      ggplot2::ggsave(paste0("output/figures/", 
-                             name_file, 
-                             ".jpg"), scale = 1, 
-                      width = 5, 
-                      height = 4)
     } else {
       tib_chloro_sst |>
         dplyr::left_join(output_tib |>
@@ -1359,118 +1241,28 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                              size = 2) +
         ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                                "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-        ggplot2::ylab("Normalized Nutrient \n release (t/km2/yr)") +
-        ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
+        ggplot2::ylab("Normalized Nutrient <br> release (t/km<sup>2</sup>/yr)") +
+        ggplot2::xlab("Mean chlorophyll concentration (mg/m<sup>3</sup>)") +
         ggplot2::theme_classic() +
         ggplot2::theme(axis.text.x = ggplot2::element_text(size = 14),
                        axis.text.y = ggplot2::element_text(size = 14),
-                       axis.title.x = ggplot2::element_text(face = "bold", 
-                                                            size = 15),
-                       axis.title.y = ggplot2::element_text(face = "bold", 
-                                                            size = 15),
+                       axis.title.x = ggtext::element_markdown(face = "bold", 
+                                                               size = 15),
+                       axis.title.y = ggtext::element_markdown(face = "bold", 
+                                                               size = 15),
                        legend.title = ggplot2::element_blank(),
                        legend.text = ggplot2::element_text(face = "bold", 
                                                            size = 14,
                                                            margin = ggplot2::margin(t = 5)))
-      ggplot2::ggsave(paste0("output/article/", 
-                             name_file, 
-                             ".jpg"), scale = 1, 
-                        width = 5, 
-                      height = 4)
+     
     }
     
-  } else {
-    if (guyana == "YES") {
-      tib_chloro_sst |>
-        dplyr::left_join(output_tib |>
-                           dplyr::group_by(Geo_area) |>
-                           dplyr::summarise(Surf = sum(unique(Surf_tot)), 
-                                            sum = list(sum_tibb(excrete_nut))) |>
-                           tidyr::unnest(sum) |>
-                           tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
-                                               names_to = "Element", 
-                                               values_to = "Excretion") |> 
-                           dplyr::mutate(Element = factor(Element, 
-                                                          levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                                                     "Se", "Zn", "Co", "As")), 
-                                         Excretion = Excretion/Surf
-                           )  |>
-                           dplyr::filter(Element != "As") |>
-                           # normalize excretion data 
-                           dplyr::group_by(Element) |>
-                           dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>
-                           dplyr::group_by(Geo_area, Element) |>
-                           dplyr::summarize(min_exc = min(Excretion), 
-                                            `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
-                                            `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
-                                            mean_exc = mean(Excretion), 
-                                            median_exc = median(Excretion), 
-                                            `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
-                                            `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
-                                            max_exc = max(Excretion))) |>
-        dplyr::mutate(Geo_area = factor(Geo_area, 
-                                        levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
-                                                   "Northwest Atlantic", "California current", 
-                                                   "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
-                                                   "New Caledonia", "Hawaii",  
-                                                   "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
-        ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = mean_exc, colour = Element)) +
-        ggplot2::geom_point() +
-        ggplot2::geom_smooth(method = "lm", se = FALSE) +
-        ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
-                                               "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-        ggplot2::ylab("Normalized Nutrient excretion (t/km2/yr)") +
-        ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
-        ggplot2::theme_classic() +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
-                       legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-
-    } else {
-      tib_chloro_sst |>
-        dplyr::left_join(output_tib |>
-                           dplyr::group_by(Geo_area) |>
-                           dplyr::summarise(Surf = sum(unique(Surf_tot)), 
-                                            sum = list(sum_tibb(excrete_nut))) |>
-                           tidyr::unnest(sum) |>
-                           tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
-                                               names_to = "Element", 
-                                               values_to = "Excretion") |> 
-                           dplyr::mutate(Element = factor(Element, 
-                                                          levels = c("N", "P", "Fe", "Cu", "Mn", 
-                                                                     "Se", "Zn", "Co", "As")), 
-                                         Excretion = Excretion/Surf
-                           )  |>
-                           dplyr::filter(Element != "As") |>
-                           # normalize excretion data 
-                           dplyr::group_by(Element) |>
-                           dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>
-                           dplyr::group_by(Geo_area, Element) |>
-                           dplyr::summarize(min_exc = min(Excretion), 
-                                            `2.5_quant_exc` = quantile(Excretion, probs = c(0.025)), 
-                                            `10_quant_exc` = quantile(Excretion, probs = c(0.1)), 
-                                            mean_exc = mean(Excretion), 
-                                            median_exc = median(Excretion), 
-                                            `90_quant_exc` = quantile(Excretion, probs = c(0.90)), 
-                                            `97.5_quant_exc` = quantile(Excretion, probs = c(0.975)), 
-                                            max_exc = max(Excretion))) |>
-        dplyr::mutate(Geo_area = factor(Geo_area, 
-                                        levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
-                                                   "Northwest Atlantic", "California current", 
-                                                   "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
-                                                   "New Caledonia", "Hawaii",  
-                                                   "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
-        dplyr::filter(Geo_area != "French Guyana") |> 
-        ggplot2::ggplot(ggplot2::aes(x = mean_chloro, y = mean_exc, colour = Element)) +
-        ggplot2::geom_point() +
-        ggplot2::geom_smooth(method = "lm", se = FALSE) +
-        ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
-                                               "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-        ggplot2::ylab("Normalized Nutrient excretion (t/km2/yr)") +
-        ggplot2::xlab("Mean chlorophyll concentration (mg/m3)") +
-        ggplot2::theme_classic() +
-        ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
-                       legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
-    }
+ if (object_type == "file") {
+  ggplot2::ggsave(paste0("output/figures/", 
+                         name_file, 
+                         ".jpg"), scale = 1, 
+                  width = 5, 
+                  height = 4)
   }
   
 }
@@ -1485,8 +1277,8 @@ run_models_norm <- function(tib_chloro_sst,
                             output_tib,
                             object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                             name_file # should be a character string
-                            ) {
-
+) {
+  
   # df used for the modelling
   summary_df <- tib_chloro_sst |>
     dplyr::left_join(output_tib |>
@@ -1694,7 +1486,7 @@ run_models_norm <- function(tib_chloro_sst,
 graph_models_sst <- function(model_output_tib, 
                              object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                              name_file # should be a character string
-                             ) {
+) {
   
   model_output_tib |>
     tidyr::pivot_longer(cols = c("slope", "R2"),
@@ -1745,11 +1537,11 @@ graph_models_sst <- function(model_output_tib,
 graph_models_chloro <- function(model_output_tib,
                                 object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
                                 name_file # should be a character string
-                                ) {
+) {
   model_output_tib |>
     tidyr::pivot_longer(cols = c("slope", "R2"),
-                 names_to = "Var_mod", 
-                 values_to = "value") |>
+                        names_to = "Var_mod", 
+                        values_to = "value") |>
     dplyr::mutate(value = as.numeric(value),
                   element = factor(element, 
                                    levels = c("N", "P", "Fe", "Cu", "Mn", 
