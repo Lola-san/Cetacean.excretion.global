@@ -1645,11 +1645,32 @@ list(
                                                               "Gulf of Alaska", 
                                                               "output",
                                                               "GoAl_exc_hab_taxa")), 
+  
+  #################### carbon in biomass #####################
+  tar_target(tab_C_in_biomass, create_tab_C_in_bio(model_output_clean, 
+                                                   "output", 
+                                                   "stats_C_in_biomass")),
+  tar_target(fig_C_in_biomass_areas_tns, create_fig_C_per_area_tons(model_output_clean, 
+                                                   "output", 
+                                                   "fig_C_in_biomass_tns")),
+  tar_target(fig_C_in_biomass_areas_tns_per_km2, create_fig_C_per_area_tons_per_km2(model_output_clean, 
+                                                                    "output", 
+                                                                    "fig_C_in_biomass_tns_per_km2")),
+  tar_target(fig_C_in_biomass_areas_tns_eco_gps_tot, create_fig_C_per_taxa_tot(model_output_clean, 
+                                                                    "output", 
+                                                                    "fig_C_in_biomass_tns_gps")),
+  tar_target(fig_C_in_biomass_areas_tns_eco_gps_areas, create_fig_C_per_taxa_per_area(model_output_clean, 
+                                                                               "output", 
+                                                                               "fig_C_in_biomass_tns_gps_areas")),
+  
+  
   ###################################################### ARTICLE FIGURES AND TABLES ######################################
   ######### TABLES
   # supplementary table with statistics for total nutrient release per area 
-  tar_target(suppmat1a_areas, supp_table1a_area(list(tot_est_stat_tns_yr_output, 
-                                                     tot_est_stat_kg_km2_yr_output), 
+  tar_target(suppmat1a_areas, supp_table1a_area(list(tot_est_stat_kg_km2_yr_output,
+                                                     tot_est_stat_tns_yr_output 
+                                                     ), 
+                                                table_fold_output,
                                                 "Supp-mat1a_areas")),
   # supplementary table with statistics for total nutrient release per habitat
   tar_target(suppmat1b_hab, supp_table1b_hab(list_tib_tons = list(est_stat_hab_tns_yr_NEA_output, 
@@ -1698,6 +1719,10 @@ list(
   # supplementary table with statistics for total nutrient release per taxa in each habitat within areas
   tar_target(suppmat1e_compo_waste, supp_table1e_compo_waste(model_output_clean,  
                                                              "Supp-mat1e_compo_waste")),
+  # supplementary tables with statistics for Sobol indices 
+  # across all species and areas
+  tar_target(suppmat1f_Sobol, supp_table1f_sobol(sobol_index_all_sensi,  
+                                                            "Supp-mat1f_Sobol_indices")),
   # supplementary table with test of differences between areas
   tar_target(suppmat2a_area, supp_table2a_area(list_tib = list(test_diff_tot_exc_N, 
                                                                test_diff_tot_exc_P,
@@ -1750,20 +1775,12 @@ list(
   
   # table with estimates and statistics for all parameters of the model, 
   # for all elements, in tons/yr
-  tar_target(supp_table3_param_file, supp_table_param_all_param_sp(model_output_clean, 
-                                                                   "file", 
+  tar_target(supp_table3_param_file, supp_table3_param_all_param_sp(model_output_clean,  
                                                                    paste("Supp-mat3_model_param_stats", 
                                                                          nsim = 1e4, sep = "_"))),
-  tar_target(supp_table3_param_output, supp_table_param_all_param_sp(model_output_clean, 
-                                                                     "output", 
-                                                                     "Supp-mat3_model_param_stats")), 
-  tar_target(supp_table3_diets_file, supp_table_diets(data_diets_PG, 
-                                                      "file", 
-                                                      paste("Supp-mat3_model_diets", 
+  tar_target(supp_table4_diets_file, supp_table_diets(data_diets_PG, 
+                                                      paste("Supp-mat4_model_diets", 
                                                             nsim = 1e4, sep = "_"))),
-  tar_target(supp_table3_diets_output, supp_table_diets(data_diets_PG, 
-                                                        "output", 
-                                                        "Supp-mat3_model_diets")), 
   
   # table with statistics of abundance as calculated from references 
   tar_target(supp_table4_abund, supp_table4_abundances_par(abund_sp_all,
@@ -1941,11 +1958,5 @@ list(
                                                nsim = 1e4, 
                                                sep = "_"))) 
   
-  # # generate Rmd reports
-  #tarchetypes::tar_render(rmd_report_all_areas, "manuscript/01_Results_all-areas.Rmd"), 
-  #tarchetypes::tar_render(rmd_report_all_areas_prod, "manuscript/02_Results_all-areas_prod.Rmd"), 
-  #tarchetypes::tar_render(rmd_report_per_areas_O, "manuscript/03a_Results_per-area_oceanic.Rmd"),
-  #tarchetypes::tar_render(rmd_report_per_areas_NO, "manuscript/03b_Results_per-area_NO.Rmd"),
-  #tarchetypes::tar_render(rmd_report_figures_article, "manuscript/04_figures_nd_tables_article.Rmd")
   
 )

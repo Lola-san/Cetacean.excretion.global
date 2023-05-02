@@ -16,7 +16,7 @@
 "15"	"Mediterranean Sea"	"Mn"	"Deep divers"	"Small delphinids"	0
 "16"	"Mediterranean Sea"	"Se"	"Baleen whales"	"Deep divers"	0.8159
 "17"	"Mediterranean Sea"	"Se"	"Baleen whales"	"Small delphinids"	0.0677
-"18"	"Mediterranean Sea"	"Se"	"Deep divers"	"Small delphinids"	2e-04
+"18"	"Mediterranean Sea"	"Se"	"Deep divers"	"Small delphinids"	0.0002
 "19"	"Mediterranean Sea"	"Zn"	"Baleen whales"	"Deep divers"	0.7113
 "20"	"Mediterranean Sea"	"Zn"	"Baleen whales"	"Small delphinids"	0.0372
 "21"	"Mediterranean Sea"	"Zn"	"Deep divers"	"Small delphinids"	0

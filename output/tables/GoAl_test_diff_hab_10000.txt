@@ -2,8 +2,8 @@
 "1"	"Gulf of Alaska"	"N"	"Oceanic waters"	"Neritic waters"	0
 "2"	"Gulf of Alaska"	"P"	"Oceanic waters"	"Neritic waters"	0
 "3"	"Gulf of Alaska"	"Fe"	"Oceanic waters"	"Neritic waters"	0
-"4"	"Gulf of Alaska"	"Cu"	"Oceanic waters"	"Neritic waters"	1e-04
+"4"	"Gulf of Alaska"	"Cu"	"Oceanic waters"	"Neritic waters"	0.0001
 "5"	"Gulf of Alaska"	"Mn"	"Oceanic waters"	"Neritic waters"	0
 "6"	"Gulf of Alaska"	"Se"	"Oceanic waters"	"Neritic waters"	0
-"7"	"Gulf of Alaska"	"Zn"	"Oceanic waters"	"Neritic waters"	1e-04
+"7"	"Gulf of Alaska"	"Zn"	"Oceanic waters"	"Neritic waters"	0.0001
 "8"	"Gulf of Alaska"	"Co"	"Oceanic waters"	"Neritic waters"	0
