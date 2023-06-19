@@ -1668,10 +1668,9 @@ list(
   ######### TABLES
   # supplementary table with statistics for total nutrient release per area 
   tar_target(suppmat1a_areas, supp_table1a_area(list(tot_est_stat_kg_km2_yr_output,
-                                                     tot_est_stat_tns_yr_output 
-  ), 
-  table_fold_output,
-  "Supp-mat1a_areas")),
+                                                     tot_est_stat_tns_yr_output), 
+                                                table_fold_output,
+                                                "Supp-mat1a_areas")),
   # supplementary table with statistics for total nutrient release per habitat
   tar_target(suppmat1b_hab, supp_table1b_hab(list_tib_tons = list(est_stat_hab_tns_yr_NEA_output, 
                                                                   est_stat_hab_tns_yr_CNA_output,
@@ -1959,7 +1958,7 @@ list(
                                                sep = "_"))), 
   
   
-  #################### AFTER FIRST REVIEW ######################################
+  #################### AFTER FIRST ROUND OF REVIEW ######################################
   tar_target(fig_contrib_taxa_rel_NEA_file, 
              compair_rel_abund_biomass_area(model_output_clean, 
                                             taxa_contrib_tot_NEA_output,
@@ -2071,6 +2070,19 @@ list(
                                             "file",
                                             paste("Calif_contrib_taxa", 
                                                   nsim = 1e4, 
-                                                  sep = "_"))) 
+                                                  sep = "_"))), 
+  # for a more synthetic view 
+  tar_target(scatterplot_contrib_taxa_rel_biomass_n, 
+             scatterplot_rel_abund_biomass(model_output_clean, 
+                                           paste("scatterplot_rel_contrib_taxa", 
+                                                 nsim = 1e4, 
+                                                 sep = "_"))), 
+  # individual daily release rate per taxa and nutrient (pb with the log10 scale for Co)
+  tar_target(boxplot_ind_release_rate_taxa, 
+             ind_release_rate_taxa_boxplot(model_output_clean, 
+                                           paste("ind_release_rate_taxa", 
+                                                 nsim = 1e4, 
+                                                 sep = "_")))
+  
   
 )
