@@ -299,75 +299,14 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
 
 ############# relative composition of poop ##############
 
-
-############ For Fig 4 
-#'
-#'
-#'
-#'
-#'
-# function to create boxplot with relative compo of poop
-compo_poop_boxplot <- function(compo_output_tib, 
-                               object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
-                               name_file # should be a character string
-) {
-  
-  
-  compo_output_tib |>
-    ggplot2::ggplot() +
-    ggplot2::geom_boxplot(ggplot2::aes(x = Element, y = Exc_norm, fill = Eco_gp),  
-                          position = ggplot2::position_dodge(.9),
-                          outlier.shape = NA) +
-    ggplot2::scale_fill_manual(values = c("#cf7474ff", "slategray3", "#365579ff")) +
-    ggplot2::xlab("Nutrient") +
-    ggplot2::ylab("Individual nutrient release in mg/kg of \n food ingested (normalized per nutrient)") +
-    ggplot2::theme_classic() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0, hjust = 1, size = 12),
-                   axis.title.x = ggplot2::element_text(face = "bold", size = 14),
-                   axis.text.y = ggplot2::element_text(angle = 0, hjust = 1, size = 12),
-                   axis.title.y = ggplot2::element_text(face = "bold", size = 14),
-                   legend.position = "bottom",
-                   legend.title = ggplot2::element_blank(),
-                   legend.text = ggplot2::element_text(face = "bold", size = 12, 
-                                                       margin = ggplot2::margin(t = 5)))
-  
-  
-  if (object_type == "file") {
-    ggplot2::ggsave(paste0("output/article/", 
-                           name_file, 
-                           ".jpg"), 
-                    scale = 1, 
-                    height = 5, width  = 7)
-  } else {
-    compo_output_tib |>
-      ggplot2::ggplot() +
-      ggplot2::geom_boxplot(ggplot2::aes(x = Element, y = Exc_norm, fill = Eco_gp),  
-                            position = ggplot2::position_dodge(.9),
-                            outlier.shape = NA) +
-      ggplot2::scale_fill_manual(values = c("#cf7474ff", "slategray3", "#365579ff")) +
-      ggplot2::xlab("Nutrient") +
-      ggplot2::ylab("Individual nutrient release in mg/kg of \n food ingested (normalized per nutrient)") +
-      ggplot2::theme_classic() +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0, hjust = 1, size = 12),
-                     axis.title.x = ggplot2::element_text(face = "bold", size = 14),
-                     axis.text.y = ggplot2::element_text(angle = 0, hjust = 1, size = 12),
-                     axis.title.y = ggplot2::element_text(face = "bold", size = 14),
-                     legend.position = "bottom",
-                     legend.title = ggplot2::element_blank(),
-                     legend.text = ggplot2::element_text(face = "bold", size = 12, 
-                                                         margin = ggplot2::margin(t = 5)))
-  }
-}
-
-
-############### For Fig 5 
+############### For Fig 4 
 
 #'
 #'
 #'
 #'
 #'
-# function to create biplot for PCA analysis
+# function to create biplot for PCA analysis 
 compo_poop_PCA_biplot <- function(output_tib, 
                                   name_file # should be a character string
 ) {
@@ -444,41 +383,66 @@ compo_poop_PCA_biplot <- function(output_tib,
                   "Zn (97.5%)" = "97.5_quant_Zn",
                   "Co (2.5%)" = "2.5_quant_Co", 
                   "Co (mean)" = "mean_Co",
-                  "Co (97.5%)" = "97.5_quant_Co")
+                  "Co (97.5%)" = "97.5_quant_Co") 
   
   profile_excretion <- as.data.frame(profile_excretion)
   rownames(profile_excretion) <- profile_excretion$Species
   profile_excretion <- profile_excretion[, -1]
   
   # extract active variables and observations
-  data_act <- profile_excretion[, 2:25]
+  data_act <- profile_excretion[, 1:25]
   
-  # perfom PCA
+  # perform PCA
   res_pca <- FactoMineR::PCA(data_act,
-                             ncp = 5, graph = FALSE)
+                             ncp = 5, 
+                             quali.sup = 1,
+                             graph = FALSE)
   
+  # define color scale for variables (1 color/nutrient) 
+  col_var <- c("N", "N", "N",
+               "P", "P", "P",
+               "Fe", "Fe", "Fe",
+               "Cu", "Cu", "Cu",
+               "Mn", "Mn", "Mn",
+               "Se", "Se", "Se",
+               "Zn", "Zn", "Zn",
+               "Co", "Co", "Co")
+  # plot
   factoextra::fviz_pca_biplot(res_pca, 
                               axes = c(1, 2),
                               # individuals
                               geom.ind = "point",
                               mean.point = FALSE,
-                              col.ind = profile_excretion$Eco_gp,
+                              habillage = 1,
+                              #col.ind = profile_excretion$Eco_gp,
+                              fill.ind = profile_excretion$Eco_gp,
                               addEllipses = TRUE,
-                              palette = c("#cf7474ff", "slategray3", "#365579ff"),
+                              #palette = c("#cf7474ff", "slategray3", "#365579ff"),
                               #variables
-                              geom.var = c("arrow", "text"),
-                              col.var = "black",
+                              geom.var = c("arrow"),
+                              col.var = col_var,
                               select.var = list(cos2 = 0.5),
                               repel = 1,
                               ggtheme = ggplot2::theme_minimal(),
                               title = ggplot2::element_blank()
   ) +
-    ggplot2::scale_color_manual(values = c(`Small delphinids` = "#365579ff", 
-                                           `Deep divers` = "slategray3", 
-                                           `Baleen whales` = "#cf7474ff")) +
+    ggplot2::geom_point(ggplot2::aes(shape = res_pca$call$X$Eco_gp,
+                                     fill = res_pca$call$X$Eco_gp),
+                        size = 2) +
+    ggplot2::scale_fill_manual(values = c(`Small delphinids` = "#365579ff",
+                                          `Deep divers` = "slategray3",
+                                          `Baleen whales` = "#cf7474ff")) +
+    ggplot2::scale_color_manual(values = c("N" = "#1D2645FF",
+                                           "P" = "#B4DAE5FF",
+                                           "Fe" = "#DE7862FF",
+                                           "Cu" = "#5A6F80FF",
+                                           "Mn" = "#D8AF39FF",
+                                           "Se" = "#278B9AFF",
+                                           "Zn" = "#AE93BEFF",
+                                           "Co" = "#E75B64FF")) +
     ggplot2::theme(legend.title = ggplot2::element_blank(), 
                    legend.text = ggplot2::element_text(size = 12, face = "bold"),
-                   legend.position = "bottom",
+                   legend.position = "right",
                    axis.title = ggplot2::element_text(size = 12, face = "bold"), 
                    axis.text = ggplot2::element_text(size = 11), 
                    text = ggplot2::element_text(size = 11))
@@ -489,6 +453,69 @@ compo_poop_PCA_biplot <- function(output_tib,
                   height = 5, width  = 6)
   
 }
+
+
+############ For Fig 5 
+#'
+#'
+#'
+#'
+#'
+# function to create boxplot with relative compo of poop
+compo_poop_boxplot <- function(compo_output_tib, 
+                               object_type, # either "file" if need to be generated in the output folder, or "output" for use in Rmd
+                               name_file # should be a character string
+) {
+  
+  
+  compo_output_tib |>
+    ggplot2::ggplot() +
+    ggplot2::geom_boxplot(ggplot2::aes(x = Element, y = Exc_norm, fill = Eco_gp),  
+                          position = ggplot2::position_dodge(.9),
+                          outlier.shape = NA) +
+    ggplot2::scale_fill_manual(values = c("#cf7474ff", "slategray3", "#365579ff")) +
+    ggplot2::xlab("Nutrient") +
+    ggplot2::ylab("Individual nutrient release in mg/kg of \n food ingested (normalized per nutrient)") +
+    ggplot2::theme_classic() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0, hjust = 1, size = 12),
+                   axis.title.x = ggplot2::element_text(face = "bold", size = 14),
+                   axis.text.y = ggplot2::element_text(angle = 0, hjust = 1, size = 12),
+                   axis.title.y = ggplot2::element_text(face = "bold", size = 14),
+                   legend.position = "bottom",
+                   legend.title = ggplot2::element_blank(),
+                   legend.text = ggplot2::element_text(face = "bold", size = 12, 
+                                                       margin = ggplot2::margin(t = 5)))
+  
+  
+  if (object_type == "file") {
+    ggplot2::ggsave(paste0("output/article/", 
+                           name_file, 
+                           ".jpg"), 
+                    scale = 1, 
+                    height = 5, width  = 7)
+  } else {
+    compo_output_tib |>
+      ggplot2::ggplot() +
+      ggplot2::geom_boxplot(ggplot2::aes(x = Element, y = Exc_norm, fill = Eco_gp),  
+                            position = ggplot2::position_dodge(.9),
+                            outlier.shape = NA) +
+      ggplot2::scale_fill_manual(values = c("#cf7474ff", "slategray3", "#365579ff")) +
+      ggplot2::xlab("Nutrient") +
+      ggplot2::ylab("Individual nutrient release in mg/kg of \n food ingested (normalized per nutrient)") +
+      ggplot2::theme_classic() +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0, hjust = 1, size = 12),
+                     axis.title.x = ggplot2::element_text(face = "bold", size = 14),
+                     axis.text.y = ggplot2::element_text(angle = 0, hjust = 1, size = 12),
+                     axis.title.y = ggplot2::element_text(face = "bold", size = 14),
+                     legend.position = "bottom",
+                     legend.title = ggplot2::element_blank(),
+                     legend.text = ggplot2::element_text(face = "bold", size = 12, 
+                                                         margin = ggplot2::margin(t = 5)))
+  }
+}
+
+
+
 
 
 
@@ -576,19 +603,19 @@ fig_sensitivy_indices_all_taxa_all_nut <- function(sensi_tib,
                                                    name_file) {
   
   figure <- sensi_tib |> 
-    dplyr::mutate(Input = dplyr::case_when(Input == "abundance" ~ "Abun-dance", 
-                                           Input == "mass" ~ "Body mass",
-                                           Input == "beta" ~ "Beta",
-                                           Input == "ndays" ~ "Nb of days of presence",
-                                           Input == "nrj_in_diet" ~ "Mean energy content of diet",
-                                           Input == "nut_in_diet" ~ "Mean nutrient content of diet",
-                                           Input == "assi_rate" ~ "Assimi-lation rate",
-                                           Input == "nut_abs_rate" ~ "Nutrient release rate")) |>
+    dplyr::mutate(Input = dplyr::case_when(Input == "abundance" ~ "A", 
+                                           Input == "mass" ~ "BM",
+                                           Input == "beta" ~ "\u03B2",
+                                           Input == "ndays" ~ "t",
+                                           Input == "nrj_in_diet" ~ "E",
+                                           Input == "nut_in_diet" ~ "x",
+                                           Input == "assi_rate" ~ "AE",
+                                           Input == "nut_abs_rate" ~ "r")) |>
     dplyr::mutate(Input = factor(Input, 
-                                 levels = c("Body mass", "Beta",
-                                            "Mean energy content of diet", "Mean nutrient content of diet",
-                                            "Assimi-lation rate", "Nutrient release rate",  
-                                            "Abun-dance", "Nb of days of presence"))) |>
+                                 levels = c("BM", "\u03B2",
+                                            "E", "x",
+                                            "AE", "r",  
+                                            "A", "t"))) |>
     dplyr::mutate(Nutrient = factor(Nutrient, 
                                     levels = c("N", "P", "Fe", "Cu", 
                                                "Mn", "Se", "Zn", "Co"))) |>
@@ -603,20 +630,20 @@ fig_sensitivy_indices_all_taxa_all_nut <- function(sensi_tib,
     ggplot2::ylab("Sobol sensivity indice") +
     ggplot2::xlab("Model parameter") +
     ggplot2::theme_bw() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(size = 12),
-                   axis.title.x = ggplot2::element_text(face = "bold", size = 14),
-                   axis.text.y = ggplot2::element_text(size = 12),
-                   axis.title.y = ggplot2::element_text(face = "bold", size = 14),
-                   strip.text = ggplot2::element_text(face = "bold", size = 14),
+    ggplot2::theme(axis.text.x = ggplot2::element_text(face = "italic", size = 14),
+                   axis.title.x = ggplot2::element_text(face = "bold", size = 16),
+                   axis.text.y = ggplot2::element_text(size = 14),
+                   axis.title.y = ggplot2::element_text(face = "bold", size = 16),
+                   strip.text = ggplot2::element_text(face = "bold", size = 16),
                    legend.title = ggplot2::element_blank(), 
                    legend.spacing.y = ggplot2::unit(1.5, 'cm'), 
-                   legend.text = ggplot2::element_text(size = 12),
+                   legend.text = ggplot2::element_text(size = 14),
                    legend.position = "bottom")
   
   if (object_type == "file") {
     ggplot2::ggsave(paste0("output/article/", name_file, ".jpg"),
-                    width = 16,
-                    height = 14)
+                    width = 12,
+                    height = 8)
   } else {
     figure
   }

@@ -689,7 +689,7 @@ plot_exc_sst_all_el_log10 <- function(tib_chloro_sst,
       ggplot2::scale_y_continuous(trans = "log10" ) +
       ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                              "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-      ggplot2::ylab("Nutrient excretion (t/km2/yr)") +
+      ggplot2::ylab("Nutrient release (t/km<sup>2</sup>/yr)") +
       ggplot2::xlab("Mean sea surface temperature") +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
                      legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
@@ -746,7 +746,7 @@ plot_exc_sst_all_el <- function(tib_chloro_sst,
     ggplot2::geom_smooth(method = "lm", se = FALSE) +
     ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                            "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-    ggplot2::ylab("Nutrient excretion (t/km2/yr)") +
+    ggplot2::ylab("Nutrient release (t/km<sup>2</sup>/yr)") +
     ggplot2::xlab("Mean sea surface temperature") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
                    legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
@@ -791,7 +791,7 @@ plot_exc_sst_all_el <- function(tib_chloro_sst,
       ggplot2::geom_smooth(method = "lm", se = FALSE) +
       ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                              "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-      ggplot2::ylab("Nutrient excretion (t/km2/yr)") +
+      ggplot2::ylab("Nutrient release (t/km<sup>2</sup>/yr)") +
       ggplot2::xlab("Mean sea surface temperature") +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
                      legend.text = ggplot2::element_text(face = "bold", margin = ggplot2::margin(t = 5)))
@@ -852,7 +852,7 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
     ggplot2::geom_smooth(method = "lm", se = FALSE, size = 2) +
     ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                            "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-    ggplot2::ylab("Normalized Nutrient <br> release (t/km<sup>2</sup>/yr)") +
+    ggplot2::ylab("Normalized nutrient <br> release (t/km<sup>2</sup>/yr)") +
     ggplot2::xlab("Mean sea surface temperature") +
     ggplot2::theme_classic() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(size = 14),
@@ -912,7 +912,7 @@ plot_exc_sst_all_el_norm <- function(tib_chloro_sst,
                            size = 2) +
       ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                              "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-      ggplot2::ylab("Normalized Nutrient <br> release (t/km<sup>2</sup>/yr)") +
+      ggplot2::ylab("Normalized nutrient <br> release (t/km<sup>2</sup>/yr)") +
       ggplot2::xlab("Mean sea surface temperature") +
       ggplot2::theme_classic() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 20, hjust = 1),
@@ -1187,7 +1187,7 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                              size = 2) +
         ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                                "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-        ggplot2::ylab("Normalized Nutrient <br> release (t/km<sup>2</sup>/yr)") +
+        ggplot2::ylab("Normalized nutrient <br> release (t/km<sup>2</sup>/yr)") +
         ggplot2::xlab("Mean chlorophyll concentration (mg/m<sup>3</sup>)") +
         ggplot2::theme_classic() +
         ggplot2::theme(axis.text.x = ggplot2::element_text(size = 14),
@@ -1241,7 +1241,7 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
                              size = 2) +
         ggplot2::scale_color_manual(values = c("#4c413fff", "#5a6f80ff", "#278b9aff", "#e75b64ff", 
                                                "#de7862ff", "#d8af39ff", "#e8c4a2ff", "#6fb382ff")) +
-        ggplot2::ylab("Normalized Nutrient <br> release (t/km<sup>2</sup>/yr)") +
+        ggplot2::ylab("Normalized nutrient <br> release (t/km<sup>2</sup>/yr)") +
         ggplot2::xlab("Mean chlorophyll concentration (mg/m<sup>3</sup>)") +
         ggplot2::theme_classic() +
         ggplot2::theme(axis.text.x = ggplot2::element_text(size = 14),
@@ -1258,7 +1258,7 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
     }
     
  if (object_type == "file") {
-  ggplot2::ggsave(paste0("output/figures/", 
+  ggplot2::ggsave(paste0("output/article/", 
                          name_file, 
                          ".jpg"), scale = 1, 
                   width = 5, 
