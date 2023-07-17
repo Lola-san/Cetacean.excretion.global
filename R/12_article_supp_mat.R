@@ -889,6 +889,145 @@ supp_table3_param_all_param_sp <- function(output_tib,
 }
 
 
+
+
+# Supplementary table with statistics for all model parameters, and all species
+#'
+#'
+#'
+#'
+#'
+#' function to generate supplementary material table with all parameters summary values
+supp_table3_param_all_param_sp_with_sdcv <- function(output_tib,
+                                           name_file) {
+  
+  options(scipen = 999)
+  
+  table <- output_tib |>
+    dplyr::ungroup() |>
+    dplyr::group_by(Species) |>
+    tidyr::unnest(Mass) |>
+    dplyr::summarize(min = min(value),
+                     `2.5_quant` = quantile(value, probs = c(0.025)),
+                     mean = mean(value),
+                     median = median(value),
+                     `97.5_quant` = quantile(value, probs = c(0.975)),
+                     max = max(value), 
+                     sd = round(sd(value), 2), 
+                     cv = round(sd/mean, 2)) |>
+    dplyr::mutate(Parameter = "Body mass", 
+                  Nutrient = NA) |>
+    # next parameters
+    dplyr::bind_rows(output_tib |>
+                       dplyr::ungroup() |>
+                       dplyr::group_by(Species) |>
+                       tidyr::unnest(Beta) |>
+                       dplyr::summarize(min = min(value),
+                                        `2.5_quant` = quantile(value, probs = c(0.025)),
+                                        mean = mean(value),
+                                        median = median(value),
+                                        `97.5_quant` = quantile(value, probs = c(0.975)),
+                                        max = max(value), 
+                                        sd = round(sd(value), 2), 
+                                        cv = round(sd/mean, 2)) |>
+                       dplyr::mutate(Parameter = "Beta", 
+                                     Nutrient = NA),
+                     output_tib |>
+                       dplyr::ungroup() |>
+                       dplyr::group_by(Species) |>
+                       tidyr::unnest(NRJ_diet) |>
+                       dplyr::summarize(min = min(value),
+                                        `2.5_quant` = quantile(value, probs = c(0.025)),
+                                        mean = mean(value),
+                                        median = median(value),
+                                        `97.5_quant` = quantile(value, probs = c(0.975)),
+                                        max = max(value), 
+                                        sd = round(sd(value), 2), 
+                                        cv = round(sd/mean, 2)) |>
+                       dplyr::mutate(Parameter = "Mean diet energy content (mg/kg)", 
+                                     Nutrient = NA),
+                     output_tib |>
+                       dplyr::ungroup() |>
+                       tidyr::unnest(Nut_diet) |>
+                       tidyr::pivot_longer(cols = c(N:Zn), 
+                                           names_to = "Nutrient", 
+                                           values_to = "Mean diet nutrient content (mg/kg)") |>
+                       dplyr::group_by(Species, Nutrient) |>
+                       dplyr::summarize(min = min(`Mean diet nutrient content (mg/kg)`),
+                                        `2.5_quant` = quantile(`Mean diet nutrient content (mg/kg)`, probs = c(0.025)),
+                                        mean = mean(`Mean diet nutrient content (mg/kg)`),
+                                        median = median(`Mean diet nutrient content (mg/kg)`),
+                                        `97.5_quant` = quantile(`Mean diet nutrient content (mg/kg)`, probs = c(0.975)),
+                                        max = max(`Mean diet nutrient content (mg/kg)`), 
+                                        sd = round(sd(`Mean diet nutrient content (mg/kg)`),
+                                                   2), 
+                                        cv = round(sd/mean, 2)) |>
+                       dplyr::mutate(Parameter = "Mean diet nutrient content (mg/kg)"),
+                     output_tib |>
+                       dplyr::ungroup() |>
+                       dplyr::group_by(Species) |>
+                       tidyr::unnest(Indi_data) |>
+                       tidyr::pivot_longer(cols = c(ADMR:`PercentBM`),
+                                           names_to = "Parameter",
+                                           values_to = "value") |>
+                       dplyr::group_by(Species, `Parameter`) |>
+                       dplyr::mutate(Parameter = dplyr::case_when(Parameter == "A_rate" ~ "Assimilation rate",
+                                                                  Parameter == "PercentBM" ~ "% of body mass (daily ration)",
+                                                                  Parameter == "Ration" ~ "Daily ration (kg)",
+                                                                  Parameter == "ADMR" ~ "Average Daily Metabolic Rate (kJ)")) |>
+                       dplyr::summarize(min = min(value),
+                                        `2.5_quant` = quantile(value, probs = c(0.025)),
+                                        mean = mean(value),
+                                        median = median(value),
+                                        `97.5_quant` = quantile(value, probs = c(0.975)),
+                                        max = max(value), 
+                                        sd = round(sd(value), 2), 
+                                        cv = round(sd/mean, 2)) |>
+                       dplyr::mutate(Nutrient = NA) |>
+                       dplyr::arrange(Parameter),
+                     output_tib |>
+                       dplyr::ungroup() |>
+                       tidyr::unnest(conso_nut_ind) |>
+                       tidyr::pivot_longer(cols = c(N:Zn), 
+                                           names_to = "Nutrient", 
+                                           values_to = "ind_nut_ing") |>
+                       dplyr::group_by(Species, Nutrient) |>
+                       dplyr::summarize(min = min(ind_nut_ing),
+                                        `2.5_quant` = quantile(ind_nut_ing, probs = c(0.025)),
+                                        mean = mean(ind_nut_ing),
+                                        median = median(ind_nut_ing),
+                                        `97.5_quant` = quantile(ind_nut_ing, probs = c(0.975)),
+                                        max = max(ind_nut_ing), 
+                                        sd = round(sd(ind_nut_ing), 2), 
+                                        cv = round(sd/mean, 2)) |>
+                       dplyr::mutate(Parameter = "Individual daily amount of nutrient ingested (mg)"),
+                     output_tib |>
+                       dplyr::ungroup() |>
+                       tidyr::unnest(excrete_nut_ind) |>
+                       tidyr::pivot_longer(cols = c(N:Zn), 
+                                           names_to = "Nutrient", 
+                                           values_to = "ind_nut_exc") |>
+                       dplyr::group_by(Species, Nutrient) |>
+                       dplyr::summarize(min = min(ind_nut_exc),
+                                        `2.5_quant` = quantile(ind_nut_exc, probs = c(0.025)),
+                                        mean = mean(ind_nut_exc),
+                                        median = median(ind_nut_exc),
+                                        `97.5_quant` = quantile(ind_nut_exc, probs = c(0.975)),
+                                        max = max(ind_nut_exc), 
+                                        sd = round(sd(ind_nut_exc), 2), 
+                                        cv = round(sd/mean, 2)) |>
+                       dplyr::mutate(Parameter = "Individual daily amount of nutrient released (mg)")
+    )
+  
+  openxlsx::write.xlsx(table,
+                       file =paste0("output/article/", name_file, ".xlsx"))
+  
+  
+}
+
+
+
+
 # Supplementary table with parameters of abundance after pooling of blocks and 
 # computation of mean and CV parameters
 #'

@@ -455,6 +455,8 @@ fig_sensitivy_indices_all_taxa_N|function|e836e98972e4bf1e|||||||||||||||
 fig_sensitivy_indices_BW|function|3cc1ad6e55782d80|||||||||||||||
 fig_sensitivy_indices_DD|function|d92023d71f62a80e|||||||||||||||
 fig_sensitivy_indices_SD|function|87fccb8251515870|||||||||||||||
+fig_SUMMER_taxa_contrib_barplot|stem|caa63f9081322a17|c422a3115c04dec9|cfac920a6f6b33d9|427121621||t19555.515863967s|e4a07f799c897d8d|92|rds|local|vector|||0.75||
+fig_SUMMER_taxa_contrib_stacked_barplot|function|3233a120915d39d3|||||||||||||||
 fig_taxa_contrib_stacked_barplot|function|233c5e0e02072a69|||||||||||||||
 fig_tot_exc_all_areas_facetperel|stem|60c85de45e4d9920|44c9bc74d927254e|de60aa9190344e4d|76099155||t19114.3720350872s|3bd8f66805fd112b|2.2250738585072e-308|rds|local|vector|||0.7||
 fig_tot_exc_all_areas_facetperel_BW|stem|9f0576ce07761b56|da089453f00fd8bf|3be9bd5b4944a63d|-1940732010||t19114.3394792144s|8cbe1afa12de9337|2.2250738585072e-308|rds|local|vector|||1.26||
@@ -609,7 +611,9 @@ supp_table2e_compo_waste|function|e02fdd01dc9ca66c|||||||||||||||
 supp_table3_diets_file|stem|231379b61e86f438|85f584a68ea69964|1e62647be47d7020|-529752386||t19332.4163612277s|057b517d27bb3a65|149896|rds|local|vector|||6.72||
 supp_table3_diets_output|stem|bedc4cfc197cb6b9|ffd04ed2a42dc787|883e8eeddf433c37|-1393831792||t19332.4162819967s|57e42ea523416b5b|4800|rds|local|vector|||11.89||
 supp_table3_param_all_param_sp|function|364ca4703edd26b4|||||||||||||||
+supp_table3_param_all_param_sp_with_sdcv|function|d55000ee0ccfd50d|||||||||||||||
 supp_table3_param_file|stem|23ce69ddf3b9cc23|da72ad404f533d10|1da91b9a77c18963|-987960342||t19341.2434502886s|2bd05a75983af828|216664|rds|local|vector|||72.5||
+supp_table3_param_file_sdcv|stem|7f8d6479a74b908b|1483d18b9615b368|2e9d831cc6dd8eec|-1057567512||t19550.380196828s|4a75c974040cb5df|223998|rds|local|vector|||28.33||
 supp_table3_param_output|stem|18356696c7994311|8f505cff72617f0e|ce0ecb2294f5d65b|1264362319||t19340.6294745435s|2a777b3e3088e580|49270|rds|local|vector|||31.72||
 supp_table4_abund|stem|ef08f77f4f8da794|f32ef0a20d061d34|ef10ccecbf5de42e|2063860553||t19338.6837443733s|ead60991506615ba|150607|rds|local|vector|||1.92||
 supp_table4_abundances_par|function|791a17aa629d40ec|||||||||||||||

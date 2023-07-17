@@ -1663,6 +1663,10 @@ list(
                                                                                       "output", 
                                                                                       "fig_C_in_biomass_tns_gps_areas")),
   
+  ############################# OUTPUTS and figures for SUMMER project only #################
+  tar_target(fig_SUMMER_taxa_contrib_barplot, fig_SUMMER_taxa_contrib_stacked_barplot(taxa_contrib_tot_NEA_output, 
+                                                                                      taxa_contrib_tot_CNA_output, 
+                                                                                      taxa_contrib_tot_Med_output)),
   
   ###################################################### ARTICLE FIGURES AND TABLES ######################################
   ######### TABLES
@@ -1776,6 +1780,9 @@ list(
   # for all elements, in tons/yr
   tar_target(supp_table3_param_file, supp_table3_param_all_param_sp(model_output_clean,  
                                                                     paste("Supp-mat3_model_param_stats", 
+                                                                          nsim = 1e4, sep = "_"))),
+  tar_target(supp_table3_param_file_sdcv, supp_table3_param_all_param_sp_with_sdcv(model_output_clean,  
+                                                                    paste("Supp-mat3_model_param_stats_with_sd_cv", 
                                                                           nsim = 1e4, sep = "_"))),
   tar_target(supp_table4_diets_file, supp_table_diets(data_diets_PG, 
                                                       paste("Supp-mat4_model_diets", 
