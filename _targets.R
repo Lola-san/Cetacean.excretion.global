@@ -236,33 +236,6 @@ list(
                                  abund_sp_REMMOA_largeglobi) |> 
                dplyr::arrange(Code_sp, Species, Geo_area, Eco_area)), 
   
-  #################### for abundances for SUMMER project only (not related to the rest of the analysis) #############
-  tar_target(abund_Bala_phy_SUMMER, build_sp_tib_SUMMER(original_tib_Bala_phy, 
-                                                        "Balaenoptera physalus", 
-                                                        "Bala_phy")),
-  tar_target(abund_Glob_mel_SUMMER, build_sp_tib_SUMMER(original_tib_Glob_mel, 
-                                                        "Globicephala melas", 
-                                                        "Glob_mel")),
-  tar_target(abund_Gram_gri_SUMMER, build_sp_tib_SUMMER(original_tib_Gram_gri, 
-                                                        "Grampus griseus", 
-                                                        "Gram_gri")),
-  tar_target(abund_Phys_mac_SUMMER, build_sp_tib_SUMMER(original_tib_Phys_mac, 
-                                                        "Physeter macrocephalus", 
-                                                        "Phys_mac")),
-  tar_target(abund_Turs_tru_SUMMER, build_sp_tib_SUMMER(original_tib_Turs_tru, 
-                                                        "Tursiops truncatus", 
-                                                        "Turs_tru")),
-  tar_target(abund_Dd_Dc_Sc_SUMMER, build_sp_tib_Dd_Dc_Sc_SUMMER(ratio_full_others)),
-  tar_target(abund_BW_sp_SUMMER, build_sp_tib_BW_SUMMER(ratio_full_REMMOAs, ratio_full_others)),
-  tar_target(abund_sp_all_SUMMER, rbind(abund_Bala_phy_SUMMER, 
-                                        abund_Glob_mel_SUMMER, 
-                                        abund_Gram_gri_SUMMER, 
-                                        abund_Phys_mac_SUMMER, 
-                                        abund_Turs_tru_SUMMER, 
-                                        abund_Dd_Dc_Sc_SUMMER, 
-                                        abund_BW_sp_SUMMER) |> 
-               dplyr::arrange(Code_sp, Species, Geo_area, Eco_area)),
-  
   ##############################################################################
   ###################### add species-specific energetic data ###################
   ################# refers to function of 02_add_energetic_data.R ##############
@@ -1663,10 +1636,6 @@ list(
                                                                                       "output", 
                                                                                       "fig_C_in_biomass_tns_gps_areas")),
   
-  ############################# OUTPUTS and figures for SUMMER project only #################
-  tar_target(fig_SUMMER_taxa_contrib_barplot, fig_SUMMER_taxa_contrib_stacked_barplot(taxa_contrib_tot_NEA_output, 
-                                                                                      taxa_contrib_tot_CNA_output, 
-                                                                                      taxa_contrib_tot_Med_output)),
   
   ###################################################### ARTICLE FIGURES AND TABLES ######################################
   ######### TABLES
@@ -1782,8 +1751,8 @@ list(
                                                                     paste("Supp-mat3_model_param_stats", 
                                                                           nsim = 1e4, sep = "_"))),
   tar_target(supp_table3_param_file_sdcv, supp_table3_param_all_param_sp_with_sdcv(model_output_clean,  
-                                                                    paste("Supp-mat3_model_param_stats_with_sd_cv", 
-                                                                          nsim = 1e4, sep = "_"))),
+                                                                                   paste("Supp-mat3_model_param_stats_with_sd_cv", 
+                                                                                         nsim = 1e4, sep = "_"))),
   tar_target(supp_table4_diets_file, supp_table_diets(data_diets_PG, 
                                                       paste("Supp-mat4_model_diets", 
                                                             nsim = 1e4, sep = "_"))),
@@ -2089,7 +2058,116 @@ list(
              ind_release_rate_taxa_boxplot(model_output_clean, 
                                            paste("ind_release_rate_taxa", 
                                                  nsim = 1e4, 
-                                                 sep = "_")))
+                                                 sep = "_"))),
   
+  ############################## SUMMER PROJECT PART ###########################
+  ########### EUROPEAN PROJECT SUMMER, on oceanic areas around Europe
+  #### (not related to the rest of the analysis) #############
+  
+  ########## 1 - prepare input #############
+  #################### for abundances for SUMMER project only 
+  tar_target(abund_Bala_phy_SUMMER, build_sp_tib_SUMMER(original_tib_Bala_phy, 
+                                                        "Balaenoptera physalus", 
+                                                        "Bala_phy")),
+  tar_target(abund_Glob_mel_SUMMER, build_sp_tib_SUMMER(original_tib_Glob_mel, 
+                                                        "Globicephala melas", 
+                                                        "Glob_mel")),
+  tar_target(abund_Gram_gri_SUMMER, build_sp_tib_SUMMER(original_tib_Gram_gri, 
+                                                        "Grampus griseus", 
+                                                        "Gram_gri")),
+  tar_target(abund_Phys_mac_SUMMER, build_sp_tib_SUMMER(original_tib_Phys_mac, 
+                                                        "Physeter macrocephalus", 
+                                                        "Phys_mac")),
+  tar_target(abund_Turs_tru_SUMMER, build_sp_tib_SUMMER(original_tib_Turs_tru, 
+                                                        "Tursiops truncatus", 
+                                                        "Turs_tru")),
+  # for sp with ratio of abundances
+  tar_target(ratio_ASI_SUMMER, compute_ratio_ASI_SUMMER(data_ASI)),
+  tar_target(ratio_full_SUMMER, bind_ratio_SUMMER(ratio_NEA, 
+                                                         ratio_ASI_SUMMER)), 
+  tar_target(abund_Dd_Dc_Sc_SUMMER, build_sp_tib_Dd_Dc_Sc_SUMMER(ratio_full_SUMMER)),
+  tar_target(abund_BW_sp_SUMMER, build_sp_tib_BW_SUMMER(ratio_full_SUMMER)),
+  tar_target(abund_sp_all_SUMMER, rbind(abund_Bala_phy_SUMMER, 
+                                        abund_Glob_mel_SUMMER, 
+                                        abund_Gram_gri_SUMMER, 
+                                        abund_Phys_mac_SUMMER, 
+                                        abund_Turs_tru_SUMMER, 
+                                        abund_Dd_Dc_Sc_SUMMER, 
+                                        abund_BW_sp_SUMMER) |> 
+               dplyr::arrange(Code_sp, Species, Geo_area, Eco_area) |>
+               dplyr::ungroup()),
+  
+  ##############################################################################
+  ###################### add species-specific energetic data ###################
+  ################# refers to function of 02_add_energetic_data.R ##############
+  tar_target(pop_input_SUMMER, add_nrjtic(abund_sp_all_SUMMER)),
+
+  ############################ define diet per species #########################
+  ################# refers to functions of 03_define_sp_diets.R ################
+  # already done above
+
+  ##############################################################################
+  ########### compute mean nutrient content of diet per species ################
+  ################## refers to functions of 04_nut_in_diets.R ##################
+  # already done above
+
+  ##############################################################################
+  ##################### prepare input tibble of the model ######################
+  ############## refers to functions of 05_prepare_full_input.R ################
+  tar_target(model_input_SUMMER, prepare_input(pop_input_SUMMER,
+                                               diet_nut_input)),
+
+  ##############################################################################
+  ############################### RUN MODEL ####################################
+  ############## refers to functions of 06_run_model.R ################
+  tar_target(model_output_SUMMER, run_model(model_input_SUMMER,
+                                            nsim = 1e4)), #nsim = 1e4 HERE!
+
+  # ##############################################################################
+  # #################### RUN sensitivity analysis ################################
+  # ############## refers to functions of 07_sensitivity_ana.R ###################
+  # # tar_target(sobol_index_all, create_sobol_index_tib(model_input, 
+  # #                                                    model_output, 
+  # #                                                    nsim = 1e4 = 1e4)), #nsim = 1e4 HERE!
+  # tar_target(sobol_index_all_sensi_SUMMER, 
+  #            create_sobol_index_tib_sensi(model_output_SUMMER, 
+  #                                                                nsim = 1e4)), #nsim = 1e4 HERE!
+  
+  ##### OUTPUTS and figures for SUMMER project only #################
+  # format names and order of areas
+  tar_target(model_output_clean_SUMMER, 
+             format_names_SUMMER(model_output_SUMMER)),
+  
+  # consumption outputs
+  tar_target(table_SUMMER_sp_conso_oceanic, 
+             SUMMER_table_conso_sp(model_output_clean_SUMMER)),
+  tar_target(fig_SUMMER_taxa_conso_all_taxa_all_gps, 
+             SUMMER_barplot_conso_gp(model_output_clean_SUMMER)),
+  tar_target(fig_SUMMER_taxa_conso_all_taxa_fewer_groups, 
+             SUMMER_barplot_conso_gp_simplified(model_output_clean_SUMMER)),
+  tar_target(fig_SUMMER_taxa_conso_SD_DD_fewer_groups, 
+             SUMMER_barplot_conso_gp_simplified_SD_DD(model_output_clean_SUMMER)),
+  tar_target(fig_SUMMER_taxa_conso_sp_SD_DD, 
+             SUMMER_barplot_conso_sp_simplified_SD_DD(model_output_clean_SUMMER)),
+  tar_target(fig_SUMMER_taxa_conso_BW_fewer_groups, 
+             SUMMER_barplot_conso_gp_simplified_BW(model_output_clean_SUMMER)),
+  # in kg/yr/km2
+  tar_target(fig_SUMMER_taxa_conso_SD_DD_fewer_groups_dens, 
+             SUMMER_barplot_conso_dens_gp_simplified_SD_DD(model_output_clean_SUMMER)),
+  tar_target(fig_SUMMER_taxa_conso_sp_SD_DD_dens, 
+             SUMMER_barplot_conso_dens_sp_simplified_SD_DD(model_output_clean_SUMMER)),
+  tar_target(fig_SUMMER_taxa_conso_BW_fewer_groups_dens, 
+             SUMMER_barplot_conso_dens_gp_simplified_BW(model_output_clean_SUMMER)),
+  
+  
+  # nutrient release outputs
+  tar_target(fig_SUMMER_taxa_contrib_barplot, 
+             fig_SUMMER_taxa_contrib_stacked_barplot(taxa_contrib_tot_NEA_output, 
+                                                     taxa_contrib_tot_CNA_output, 
+                                                     taxa_contrib_tot_Med_output)),
+  tar_target(fig_SUMMER_taxa_contrib_barplot_oceanic, 
+             fig_SUMMER_taxa_contrib_stacked_barplot_oceanic_only(taxa_contrib_hab_NEA, 
+                                                                  taxa_contrib_hab_CNA, 
+                                                                  taxa_contrib_hab_Med))
   
 )
