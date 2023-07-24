@@ -608,13 +608,325 @@ SUMMER_table_conso_sp <- function(output_tib) {
                      sd = round(sd(value), 0)) |>
     tidyr::pivot_wider(names_from = `Prey group`, 
                        values_from = c(mean, sd), 
-                       names_sep = "_")
+                       names_sep = "_") |>
+    dplyr::bind_rows(output_tib |>
+                       dplyr::filter(Geo_area %in% c("Central North Atlantic", 
+                                                     "Northeast Atlantic", 
+                                                     "Eastern Mediterranean Sea", 
+                                                     "Western Mediterranean Sea"), 
+                                     Eco_area == "oceanic") |>
+                       dplyr::ungroup() |>
+                       dplyr::select(Geo_area, conso_diet) |>
+                       tidyr::unnest(conso_diet) |>
+                       tidyr::pivot_longer(cols = c(`Large demersal energy-lean fish`:Zooplankton), 
+                                           names_to = "Prey group",
+                                           values_to = "value") |>
+                       # change from kg/yr to t/yr
+                       dplyr::mutate(value = value*1e-3) |>
+                       dplyr::group_by(Geo_area, `Prey group`) |>
+                       dplyr::summarize(mean = round(mean(value), 0),
+                                        sd = round(sd(value), 0)) |>
+                       dplyr::mutate(Species = "All species", 
+                                     Eco_gp = "All species") |>
+                       dplyr::select(Geo_area, Eco_gp, Species, `Prey group`, mean, sd) |>
+                       tidyr::pivot_wider(names_from = `Prey group`, 
+                                          values_from = c(mean, sd), 
+                                          names_sep = "_") )  
   
   openxlsx::write.xlsx(table,
                        file =paste0("output/SUMMER/SUMMER_conso_prey_group_oceanic.xlsx"))
   
   
 }
+
+
+# SUMMER table with annual needs in NRJ per species
+#'
+#'
+#'
+#'
+#'
+#' 
+SUMMER_table_needs_sp <- function(output_tib) {
+  
+  options(scipen = 999)
+  
+  table <- output_tib |> # needs in kJ per species per yr in each area
+    dplyr::filter(Geo_area %in% c("Central North Atlantic", 
+                                  "Northeast Atlantic", 
+                                  "Eastern Mediterranean Sea", 
+                                  "Western Mediterranean Sea"), 
+                  Eco_area == "oceanic") |>
+    dplyr::ungroup() |>
+    dplyr::select(Species, Eco_gp, Geo_area, Surf_tot, Needs_pop) |>
+    tidyr::unnest(Needs_pop) |>
+    dplyr::group_by(Geo_area, Surf_tot, Eco_gp, Species) |>
+    dplyr::summarize(mean_kJ_per_yr = round(mean(Needs_pop), 0),
+                     sd = round(sd(Needs_pop), 0)) |>
+    dplyr::bind_rows(output_tib |> # needs in kJ per species per yr in each area
+                       dplyr::filter(Geo_area %in% c("Central North Atlantic", 
+                                                     "Northeast Atlantic", 
+                                                     "Eastern Mediterranean Sea", 
+                                                     "Western Mediterranean Sea"), 
+                                     Eco_area == "oceanic") |>
+                       dplyr::ungroup() |>
+                       dplyr::select(Species, Eco_gp, Geo_area, Surf_tot, Needs_pop) |>
+                       tidyr::unnest(Needs_pop) |>
+                       dplyr::group_by(Geo_area, Surf_tot, Eco_gp) |>
+                       dplyr::summarize(mean_kJ_per_yr = round(mean(Needs_pop), 0),
+                                        sd = round(sd(Needs_pop), 0)) |> 
+                       dplyr::mutate(Species = "All species") |>
+                       dplyr::select(Geo_area, Eco_gp, Species, 
+                                     mean_kJ_per_yr, sd)) 
+    
+  
+  openxlsx::write.xlsx(table,
+                       file =paste0("output/SUMMER/SUMMER_needs_sp.xlsx"))
+  
+  
+}
+
+
+# SUMMER barplot with annual needs in tons per species
+#'
+#'
+#'
+#'
+#'
+#' 
+SUMMER_barplot_needs_sp <- function(output_tib) {
+  
+  #options(scipen = 999)
+  
+  output_tib |> # needs in kJ per species per yr in each area
+    dplyr::filter(Geo_area %in% c("Central North Atlantic", 
+                                  "Northeast Atlantic", 
+                                  "Eastern Mediterranean Sea", 
+                                  "Western Mediterranean Sea"), 
+                  Eco_area == "oceanic") |>
+    dplyr::ungroup() |>
+    dplyr::select(Species, Eco_gp, Geo_area, Needs_pop) |>
+    tidyr::unnest(Needs_pop) |>
+    dplyr::group_by(Geo_area, Species) |>
+    dplyr::summarize(mean_kJ_per_yr = round(mean(Needs_pop), 0),
+                     `10_quant` = round(quantile(Needs_pop, probs = c(0.10)), 
+                                        0), 
+                     `90_quant` = round(quantile(Needs_pop, probs = c(0.90)), 
+                                        0)) |>
+    ggplot2::ggplot() +
+    ggplot2::geom_bar(ggplot2::aes(x = Species, y = mean_kJ_per_yr,
+                                   fill = Species),
+                      stat = "identity", 
+                      size = 2,
+                      position = ggplot2::position_dodge(1), 
+                      alpha = 0.7) +
+    ggplot2::geom_point(ggplot2::aes(x = Species, y = mean_kJ_per_yr, 
+                                     color = Species), 
+                        position = ggplot2::position_dodge(1), 
+                        size = 2) +
+    ggplot2::geom_errorbar(ggplot2::aes(x = Species, 
+                                        ymin = `10_quant`,
+                                        ymax = `90_quant`, 
+                                        color = Species),
+                           position = ggplot2::position_dodge(1), 
+                           width = 0, size = 1) +
+    ggplot2::facet_wrap(~ Geo_area, ncol = 2, scales = "free") +
+    ggplot2::xlab("") +
+    ggplot2::ylab("Annual NRJ needs (in kJ/yr)") +
+    ggplot2::coord_flip() +
+    ggplot2::scale_y_continuous(trans = "log10") +
+    ggplot2::scale_color_manual(values = c("#274637FF", "#4C413FFF", "#5A6F80FF", 
+                                           "#278B9AFF", "#E75B64FF", "#DE7862FF", 
+                                           "#D8AF39FF", "#44A57CFF", "#E8C4A2FF", 
+                                           "#14191FFF", "#1D2645FF", "#AE93BEFF",
+                                           "#403369FF", "#58A449FF", "#B4DAE5FF", 
+                                           "#F0D77BFF", "#4D6D93FF"), 
+                                name = "") +
+    ggplot2::scale_fill_manual(values = c("#274637FF", "#4C413FFF", "#5A6F80FF", 
+                                          "#278B9AFF", "#E75B64FF", "#DE7862FF", 
+                                          "#D8AF39FF", "#44A57CFF", "#E8C4A2FF", 
+                                          "#14191FFF", "#1D2645FF", "#AE93BEFF",
+                                          "#403369FF", "#58A449FF", "#B4DAE5FF", 
+                                          "#F0D77BFF", "#4D6D93FF"), 
+                               name = "") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.position = "right", 
+                   legend.text = ggplot2::element_text(size = 12),
+                   axis.text.x = ggplot2::element_text(size = 12),
+                   axis.text.y = ggplot2::element_text(size = 11), 
+                   axis.title.x = ggplot2::element_text(face = "bold", size = 13),
+                   strip.text =  ggplot2::element_text(face = "bold", size = 13)) 
+  
+  ggplot2::ggsave(paste0("output/SUMMER/SUMMER_needs_sp.jpg"), 
+                  scale = 1, 
+                  width = 11, 
+                  height = 4)
+  
+  
+}
+
+
+# SUMMER barplot with annual needs in tons per group
+#'
+#'
+#'
+#'
+#'
+#' 
+SUMMER_barplot_needs_gp <- function(output_tib) {
+  
+  #options(scipen = 999)
+  
+  output_tib |> # needs in kJ per species per yr in each area
+    dplyr::filter(Geo_area %in% c("Central North Atlantic", 
+                                  "Northeast Atlantic", 
+                                  "Eastern Mediterranean Sea", 
+                                  "Western Mediterranean Sea"), 
+                  Eco_area == "oceanic") |>
+    dplyr::ungroup() |>
+    dplyr::select(Species, Eco_gp, Geo_area, Needs_pop) |>
+    tidyr::unnest(Needs_pop) |>
+    dplyr::group_by(Geo_area, Eco_gp) |>
+    dplyr::summarize(mean_kJ_per_yr = round(mean(Needs_pop), 0),
+                     `10_quant` = round(quantile(Needs_pop, probs = c(0.10)), 
+                                        0), 
+                     `90_quant` = round(quantile(Needs_pop, probs = c(0.90)), 
+                                        0)) |>
+    ggplot2::ggplot() +
+    ggplot2::geom_bar(ggplot2::aes(x = Eco_gp, y = mean_kJ_per_yr,
+                                   fill = Eco_gp),
+                      stat = "identity", 
+                      size = 2,
+                      position = ggplot2::position_dodge(1), 
+                      alpha = 0.7) +
+    ggplot2::geom_point(ggplot2::aes(x = Eco_gp, y = mean_kJ_per_yr, 
+                                     color = Eco_gp), 
+                        position = ggplot2::position_dodge(1), 
+                        size = 2) +
+    ggplot2::geom_errorbar(ggplot2::aes(x = Eco_gp, 
+                                        ymin = `10_quant`,
+                                        ymax = `90_quant`, 
+                                        color = Eco_gp),
+                           position = ggplot2::position_dodge(1), 
+                           width = 0, size = 1) +
+    ggplot2::facet_wrap(~ Geo_area, ncol = 2, scales = "free") +
+    ggplot2::xlab("") +
+    ggplot2::ylab("Annual NRJ needs (in kJ/yr)") +
+    ggplot2::coord_flip() +
+    ggplot2::scale_y_continuous(trans = "log10") +
+    ggplot2::scale_color_manual(values = c(`Small delphinids` = "#365579ff", 
+                                           `Deep divers` = "slategray3", 
+                                           `Baleen whales` = "#cf7474ff"), 
+                                name = "") +
+    ggplot2::scale_fill_manual(values = c(`Small delphinids` = "#365579ff", 
+                                          `Deep divers` = "slategray3", 
+                                          `Baleen whales` = "#cf7474ff"), 
+                               name = "") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.position = "right", 
+                   legend.text = ggplot2::element_text(size = 12),
+                   axis.text.x = ggplot2::element_text(size = 12),
+                   axis.text.y = ggplot2::element_text(size = 11), 
+                   axis.title.x = ggplot2::element_text(face = "bold", size = 13),
+                   strip.text =  ggplot2::element_text(face = "bold", size = 13)) 
+  
+  ggplot2::ggsave(paste0("output/SUMMER/SUMMER_needs_gps.jpg"), 
+                  scale = 1, 
+                  width = 10, 
+                  height = 4)
+  
+  
+}
+
+
+# SUMMER barplot with annual consumption of each prey group per species
+#'
+#'
+#'
+#'
+#'
+# all taxa, all prey groups
+SUMMER_barplot_conso_gp <- function(output_tib) {
+  
+  options(scipen = 999)
+  
+  output_tib |>
+    dplyr::filter(Geo_area %in% c("Central North Atlantic", 
+                                  "Northeast Atlantic", 
+                                  "Eastern Mediterranean Sea", 
+                                  "Western Mediterranean Sea"), 
+                  Eco_area == "oceanic") |>
+    dplyr::ungroup() |>
+    dplyr::select(Eco_gp, Geo_area, conso_diet) |>
+    tidyr::unnest(conso_diet) |>
+    tidyr::pivot_longer(cols = c(`Large demersal energy-lean fish`:Zooplankton), 
+                        names_to = "Prey group",
+                        values_to = "value") |>
+    # change from kg/yr to t/yr
+    dplyr::mutate(value = value*1e-3, 
+    ) |>
+    dplyr::group_by(Geo_area, Eco_gp, `Prey group`) |>
+    dplyr::summarize(mean = round(mean(value), 0),
+                     sd = round(sd(value), 0), 
+                     `2.5_quant` = round(quantile(value, probs = c(0.025)), 
+                                         0), 
+                     `97.5_quant` = round(quantile(value, probs = c(0.975)), 
+                                          0)) |>
+    # change 0 values to 1 so that it doesnot make error with log10 trans
+    dplyr::mutate(mean = dplyr::case_when(mean == 0 ~ 1, 
+                                          TRUE ~ mean), 
+                  `2.5_quant` = dplyr::case_when(`2.5_quant` == 0 ~ 1, 
+                                                 TRUE ~ `2.5_quant`), 
+                  `97.5_quant` = dplyr::case_when(`97.5_quant` == 0 ~ 1, 
+                                                  TRUE ~ `97.5_quant`)) |>
+    ggplot2::ggplot() +
+    ggplot2::geom_bar(ggplot2::aes(x = `Prey group`, y = mean,
+                                   fill = Eco_gp),
+                      stat = "identity", 
+                      size = 2,
+                      position = ggplot2::position_dodge(1), 
+                      alpha = 0.7) +
+    ggplot2::geom_point(ggplot2::aes(x = `Prey group`, y = mean, 
+                                     color = Eco_gp), 
+                        position = ggplot2::position_dodge(1), 
+                        size = 2) +
+    ggplot2::geom_errorbar(ggplot2::aes(x = `Prey group`, 
+                                        ymin = `2.5_quant`,
+                                        ymax = `97.5_quant`, 
+                                        color = Eco_gp),
+                           position = ggplot2::position_dodge(1), 
+                           width = 0, size = 1) +
+    ggplot2::facet_wrap(~ Geo_area, ncol = 2) +
+    ggplot2::xlab("") +
+    ggplot2::ylab("Annual consumption (in t/yr)") +
+    ggplot2::coord_flip() +
+    ggplot2::scale_y_continuous(trans = "log10") +
+    ggplot2::scale_color_manual(values = c(`Small delphinids` = "#365579ff", 
+                                           `Deep divers` = "slategray3", 
+                                           `Baleen whales` = "#cf7474ff"), 
+                                name = "") +
+    ggplot2::scale_fill_manual(values = c(`Small delphinids` = "#365579ff", 
+                                          `Deep divers` = "slategray3", 
+                                          `Baleen whales` = "#cf7474ff"), 
+                               name = "") +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.position = "bottom", 
+                   legend.text = ggplot2::element_text(size = 12),
+                   axis.text.x = ggplot2::element_text(size = 12),
+                   axis.text.y = ggplot2::element_text(size = 11), 
+                   axis.title.x = ggplot2::element_text(face = "bold", size = 13),
+                   strip.text =  ggplot2::element_text(face = "bold", size = 13)) 
+  
+  ggplot2::ggsave(paste0("output/SUMMER/SUMMER_conso_all_taxa_and_prey_gps.jpg"), 
+                  scale = 1, 
+                  width = 11, 
+                  height = 9)
+  
+  
+}
+
+
+
 
 
 # SUMMER barplot with annual consumption of each prey group per species
@@ -810,7 +1122,7 @@ SUMMER_barplot_conso_gp_simplified <- function(output_tib) {
 # SD and DD only, lower the nb of prey groups
 SUMMER_barplot_conso_gp_simplified_SD_DD <- function(output_tib) {
   
-  options(scipen = 999)
+  #options(scipen = 999)
   
   output_tib |>
     dplyr::filter(Geo_area %in% c("Central North Atlantic", 
@@ -911,7 +1223,7 @@ SUMMER_barplot_conso_gp_simplified_SD_DD <- function(output_tib) {
 # fish and ceph
 SUMMER_barplot_conso_sp_simplified_SD_DD <- function(output_tib) {
   
-  options(scipen = 999)
+  #options(scipen = 999)
   
   output_tib |>
     dplyr::filter(Geo_area %in% c("Central North Atlantic", 
@@ -1018,7 +1330,7 @@ SUMMER_barplot_conso_sp_simplified_SD_DD <- function(output_tib) {
 # BW only, lower the nb of prey groups
 SUMMER_barplot_conso_gp_simplified_BW <- function(output_tib) {
   
-  options(scipen = 999)
+  #options(scipen = 999)
   
   output_tib |>
     dplyr::filter(Geo_area %in% c("Central North Atlantic", 
@@ -1027,7 +1339,7 @@ SUMMER_barplot_conso_gp_simplified_BW <- function(output_tib) {
                   Eco_area == "oceanic", 
                   Eco_gp == "Baleen whales") |>
     dplyr::ungroup() |>
-    dplyr::select(Eco_gp, Geo_area, conso_diet) |>
+    dplyr::select(Eco_gp, Geo_area, Species, conso_diet) |>
     tidyr::unnest(conso_diet) |>
     tidyr::pivot_longer(cols = c(`Large demersal energy-lean fish`:Zooplankton), 
                         names_to = "Prey group",
@@ -1047,42 +1359,56 @@ SUMMER_barplot_conso_gp_simplified_BW <- function(output_tib) {
                     `Prey group` == "Crustaceans" ~ "Other crustaceans",
                     TRUE ~ `Prey group`
                   ), 
-                  levels = c("Pelagic fish", "Demersal fish", 
+                  levels = c("Zooplankton", "Demersal fish", 
+                             "Pelagic fish",
                              "Fish undetermined",
                              "Pelagic cephalopods", "Demersal cephalopods",
                              "Cephalopod undetermined", 
-                             "Zooplankton", "Other crustaceans"))) |>
-    dplyr::group_by(Geo_area, Eco_gp, `Prey group`) |>
+                              "Other crustaceans"))) |>
+    dplyr::group_by(Geo_area, Eco_gp, Species, `Prey group`) |>
     dplyr::summarize(mean = round(mean(value), 0),
                      sd = round(sd(value), 0), 
                      `10_quant` = round(quantile(value, probs = c(0.10)), 
                                          0), 
                      `90_quant` = round(quantile(value, probs = c(0.90)), 
                                           0)) |>
-    dplyr::filter(`Prey group` == "Zooplankton") |>
+    dplyr::filter(`Prey group` %in% c("Zooplankton", 
+                                      "Pelagic fish", 
+                                      "Demersal fish")) |>
     ggplot2::ggplot() +
     ggplot2::geom_bar(ggplot2::aes(x = Geo_area, y = mean,
-                                   fill = Eco_gp),
+                                   fill = Species),
                       stat = "identity", 
                       size = 2,
                       position = ggplot2::position_dodge(1), 
                       alpha = 0.7) +
     ggplot2::geom_point(ggplot2::aes(x = Geo_area, y = mean, 
-                                     color = Eco_gp), 
+                                     color = Species), 
                         position = ggplot2::position_dodge(1), 
                         size = 2) +
     ggplot2::geom_errorbar(ggplot2::aes(x = Geo_area, 
                                         ymin = `10_quant`,
                                         ymax = `90_quant`, 
-                                        color = Eco_gp),
+                                        color = Species),
                            position = ggplot2::position_dodge(1), 
                            width = 0, size = 1) +
+    ggplot2::facet_wrap(~ `Prey group`, ncol = 2, 
+                        scales = "free_x") +
     ggplot2::xlab("") +
-    ggplot2::ylab("Annual consumption\nof zooplankton (in t/yr)") +
+    ggplot2::ylab("Annual consumption (in t/yr)") +
     ggplot2::coord_flip() +
-    ggplot2::scale_color_manual(values = c(`Baleen whales` = "#cf7474ff"), 
+   #ggplot2::guides(colour = ggplot2::guide_legend(ncol = 2)) +
+    ggplot2::scale_color_manual(values = c("#D8AF39FF",
+                                           "#58A449FF",
+                                           "#AE93BEFF",
+                                           "#B4DAE5FF",
+                                           "#E75B64FF"), 
                                 name = "") +
-    ggplot2::scale_fill_manual(values = c(`Baleen whales` = "#cf7474ff"), 
+    ggplot2::scale_fill_manual(values = c("#D8AF39FF",
+                                          "#58A449FF",
+                                          "#AE93BEFF",
+                                          "#B4DAE5FF",
+                                          "#E75B64FF"), 
                                name = "") +
     ggplot2::theme_minimal() +
     ggplot2::theme(legend.position = "right", 
@@ -1094,8 +1420,8 @@ SUMMER_barplot_conso_gp_simplified_BW <- function(output_tib) {
   
   ggplot2::ggsave(paste0("output/SUMMER/SUMMER_conso_BW_few_prey_gps.jpg"), 
                   scale = 1, 
-                  width = 7, 
-                  height = 3)
+                  width = 12, 
+                  height = 4)
   
   
 }
@@ -1195,7 +1521,7 @@ SUMMER_barplot_conso_dens_gp_simplified_SD_DD <- function(output_tib) {
                    strip.text =  ggplot2::element_text(face = "bold", size = 13)) 
   
   ggplot2::ggsave(paste0("output/SUMMER/SUMMER_conso_SD_DD_few_prey_gps_dens.jpg"), 
-                  scale = 1, 
+                  scale = 1,
                   width = 12, 
                   height = 5)
   
@@ -1333,7 +1659,7 @@ SUMMER_barplot_conso_dens_gp_simplified_BW <- function(output_tib) {
                   Eco_area == "oceanic", 
                   Eco_gp == "Baleen whales") |>
     dplyr::ungroup() |>
-    dplyr::select(Eco_gp, Geo_area, Surf_tot, conso_diet) |>
+    dplyr::select(Eco_gp, Geo_area, Species, Surf_tot, conso_diet) |>
     tidyr::unnest(conso_diet) |>
     tidyr::pivot_longer(cols = c(`Large demersal energy-lean fish`:Zooplankton), 
                         names_to = "Prey group",
@@ -1354,42 +1680,54 @@ SUMMER_barplot_conso_dens_gp_simplified_BW <- function(output_tib) {
                     `Prey group` == "Crustaceans" ~ "Other crustaceans",
                     TRUE ~ `Prey group`
                   ), 
-                  levels = c("Pelagic fish", "Demersal fish", 
+                  levels = c("Zooplankton", "Demersal fish", "Pelagic fish", 
                              "Fish undetermined",
                              "Pelagic cephalopods", "Demersal cephalopods",
                              "Cephalopod undetermined", 
-                             "Zooplankton", "Other crustaceans"))) |>
-    dplyr::group_by(Geo_area, Eco_gp, `Prey group`) |>
+                             "Other crustaceans"))) |>
+    dplyr::group_by(Geo_area, Eco_gp, Species, `Prey group`) |>
     dplyr::summarize(mean = round(mean(value_dens), 0),
                      sd = round(sd(value_dens), 0), 
                      `10_quant` = round(quantile(value_dens, probs = c(0.10)), 
                                          0), 
                      `90_quant` = round(quantile(value_dens, probs = c(0.90)), 
                                           0)) |>
-    dplyr::filter(`Prey group` == "Zooplankton") |>
+    dplyr::filter(`Prey group` %in% c("Zooplankton", 
+                                      "Pelagic fish", 
+                                      "Demersal fish"))  |>
     ggplot2::ggplot() +
     ggplot2::geom_bar(ggplot2::aes(x = Geo_area, y = mean,
-                                   fill = Eco_gp),
+                                   fill = Species),
                       stat = "identity", 
                       size = 2,
                       position = ggplot2::position_dodge(1), 
                       alpha = 0.7) +
     ggplot2::geom_point(ggplot2::aes(x = Geo_area, y = mean, 
-                                     color = Eco_gp), 
+                                     color = Species), 
                         position = ggplot2::position_dodge(1), 
                         size = 2) +
     ggplot2::geom_errorbar(ggplot2::aes(x = Geo_area, 
                                         ymin = `10_quant`,
                                         ymax = `90_quant`, 
-                                        color = Eco_gp),
+                                        color = Species),
                            position = ggplot2::position_dodge(1), 
                            width = 0, size = 1) +
     ggplot2::xlab("") +
-    ggplot2::ylab("Annual consumption\nof zooplankton (in kg/yr/km2)") +
+    ggplot2::ylab("Annual consumption (in kg/yr/km2)") +
+    ggplot2::facet_wrap(~ `Prey group`, scales = "free_x", 
+                        ncol = 2) +
     ggplot2::coord_flip() +
-    ggplot2::scale_color_manual(values = c(`Baleen whales` = "#cf7474ff"), 
+    ggplot2::scale_color_manual(values = c("#D8AF39FF",
+                                           "#58A449FF",
+                                           "#AE93BEFF",
+                                           "#B4DAE5FF",
+                                           "#E75B64FF"), 
                                 name = "") +
-    ggplot2::scale_fill_manual(values = c(`Baleen whales` = "#cf7474ff"), 
+    ggplot2::scale_fill_manual(values = c("#D8AF39FF",
+                                          "#58A449FF",
+                                          "#AE93BEFF",
+                                          "#B4DAE5FF",
+                                          "#E75B64FF"), 
                                name = "") +
     ggplot2::theme_minimal() +
     ggplot2::theme(legend.position = "right", 
@@ -1401,8 +1739,8 @@ SUMMER_barplot_conso_dens_gp_simplified_BW <- function(output_tib) {
   
   ggplot2::ggsave(paste0("output/SUMMER/SUMMER_conso_BW_few_prey_gps_dens.jpg"), 
                   scale = 1, 
-                  width = 7, 
-                  height = 3)
+                  width = 10, 
+                  height = 4)
   
   
 }
