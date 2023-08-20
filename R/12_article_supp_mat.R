@@ -43,14 +43,14 @@ supp_table1a_area <- function(list_tib, # list containing two tibbles that are t
     dplyr::left_join(table_fold) |>
     dplyr::mutate(unit = "kg/km2/yr") |>
     dplyr::rename("Mean French Polynesia" = min_all_mean, 
-                  "Fold-change ratio (Fig 2)" = fold) |>
+                  "Fold-change ratio (Fig 1)" = fold) |>
     dplyr::select(-max_all_mean) |>
     
     # next parameters
     dplyr::bind_rows(list_tib[[2]] |>
                        dplyr::mutate(unit = "tons/yr", 
                                      "Mean French Polynesia" = NA,
-                                     "Fold-change ratio (Fig 2)" = NA) 
+                                     "Fold-change ratio (Fig 1)" = NA) 
     ) |> 
     dplyr::rename(Area = Geo_area, 
                   Nutrient = Element) |>

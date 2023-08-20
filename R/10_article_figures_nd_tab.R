@@ -297,6 +297,93 @@ fig_neritic_vs_oceanic_diff <- function(output_tib,
   
 }
 
+
+
+
+#'
+#'
+#'
+#'
+#'
+# source data file for figure 3
+source_data_fig3 <- function(output_tib) # should be a character string) 
+{
+  
+  table <- output_tib |>
+    # keep only areas with both neritic and oceanic waters
+    dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",  
+                                    "New Caledonia", "Hawaii",  
+                                    "Wallis & Futuna",
+                                    "French Polynesia"))) |>
+    dplyr::group_by(Geo_area, Eco_area) |>
+    dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                     sum = list(sum_tibb(excrete_nut))) |>
+    tidyr::unnest(sum) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                        names_to = "Nutrient", 
+                        values_to = "Excretion") |> 
+    dplyr::mutate(Nutrient = factor(Nutrient, 
+                                   levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                              "Se", "Zn", "Co", "As")), 
+                  Excretion = Excretion*1e3/Surf, # from tons to kg/km2
+                  Geo_area = factor(Geo_area, 
+                                    levels = c("Gulf of Alaska", "Central North Atlantic", "Northeast Atlantic", 
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia"))
+    ) |>
+    dplyr::left_join(output_tib |>
+                       # keep only areas with both neritic and oceanic waters
+                       dplyr::filter(!(Geo_area %in% c("California current", "Gulf of Mexico",  
+                                                       "New Caledonia", "Hawaii",  
+                                                       "Wallis & Futuna",
+                                                       "French Polynesia"))) |>
+                       dplyr::group_by(Geo_area, Eco_area) |>
+                       dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                        sum = list(sum_tibb(excrete_nut))) |>
+                       tidyr::unnest(sum) |>
+                       tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                           names_to = "Nutrient", 
+                                           values_to = "Excretion") |> 
+                       dplyr::mutate(Nutrient = factor(Nutrient, 
+                                                      levels = c("N", "P", "Fe", "Cu", "Mn", 
+                                                                 "Se", "Zn", "Co", "As")), 
+                                     Excretion = Excretion*1e3/Surf, # from tons to kg/km2
+                                     Geo_area = factor(Geo_area, 
+                                                       levels = c("Gulf of Alaska", "Central North Atlantic", "Northeast Atlantic", 
+                                                                  "Northwest Atlantic", "California current", 
+                                                                  "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                                                  "New Caledonia", "Hawaii",  
+                                                                  "French Guyana", "Wallis & Futuna", "French Polynesia"))
+                       )  |>
+                       dplyr::group_by(Geo_area, Nutrient) |>
+                       dplyr::summarize(min_area = min(Excretion), 
+                                        `2.5_quant` = quantile(Excretion, probs = c(0.025)),
+                                        mean_area = mean(Excretion), 
+                                        `97.5_quant` = quantile(Excretion, probs = c(0.975)),
+                                        max_area = max(Excretion))) |>
+    # select only values between the lowest and highest quantiles as extreme values tend 
+    # to shred the standardized release values 
+    dplyr::filter(Excretion > `2.5_quant`, Excretion < `97.5_quant` ) |>
+    dplyr::mutate(ex_norm = (Excretion - `2.5_quant`)/(`97.5_quant` - `2.5_quant`)) |> # normalize between zero and 1 per area
+    dplyr::group_by(Geo_area, Eco_area, Nutrient) |>
+    dplyr::summarize(mean_hab = mean(ex_norm)) |>
+    dplyr::group_by(Geo_area, Nutrient) |>
+    tidyr::pivot_wider(names_from = Eco_area,
+                       values_from = mean_hab) |>
+    dplyr::mutate("Difference oceanic - neritic" = (oceanic - shelf)) |> 
+    dplyr::filter(Nutrient != "As") |>
+    dplyr::select(c(Geo_area, Nutrient, `Difference oceanic - neritic`)) |>
+    dplyr::rename(Area = Geo_area)
+  
+  openxlsx::write.xlsx(table,
+                       file =paste0("output/article/source_data_Fig3.xlsx"))
+
+  
+}
+
+
 ############# relative composition of poop ##############
 
 ############### For Fig 4 
@@ -451,6 +538,119 @@ compo_poop_PCA_biplot <- function(output_tib,
                          ".jpg"), 
                   scale = 1, 
                   height = 5, width  = 6)
+  
+}
+
+
+#'
+#'
+#'
+#'
+#'
+# data output of PCA used as input for figure 4 
+source_data_fig4 <- function(output_tib
+) {
+  
+  profile_excretion <- output_tib |>
+    dplyr::ungroup() |>
+    dplyr::select(c(Eco_gp, Species, Indi_data, excrete_nut_ind, Mass)) 
+  
+  
+  # select only one line per species (as there is many lines for all the places each species occurs)
+  profile_excretion <- profile_excretion[c(1, 9, 13, 15, 19, 
+                                           31, 32, 33, 40, 
+                                           42, 51, 58, 73, 
+                                           76, 80, 92, 96, 
+                                           100, 106, 107, 108, 
+                                           115, 129, 136, 146, 
+                                           149, 152, 168, 176, 
+                                           177, 179, 186, 190, 
+                                           191, 199, 201, 208,
+                                           225),]
+  
+  
+  profile_excretion <- profile_excretion |>
+    dplyr::group_by(Eco_gp) |>
+    dplyr::mutate(excrete_ind_perkg_food = seq_along(excrete_nut_ind) |>
+                    purrr::map(~ purrr::pluck(excrete_nut_ind, .)/purrr::pluck(Indi_data, ., "Ration"))) |>
+    dplyr::select(-c(Indi_data, excrete_nut_ind, Mass)) |>
+    tidyr::unnest(excrete_ind_perkg_food) |>
+    tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn),
+                        names_to = "Element",
+                        values_to = "Excretion_ind") |>
+    dplyr::mutate(Element = factor(Element,
+                                   levels = c("N", "P", "Fe", "Cu", "Mn",
+                                              "Se", "Zn", "Co", "As"))) |>
+    dplyr::filter(Element != "As") |>
+    dplyr::group_by(Species, Eco_gp, Element) |>
+    dplyr::summarize(min = min(Excretion_ind), 
+                     `2.5_quant` = quantile(Excretion_ind, probs = c(0.025)), 
+                     mean = mean(Excretion_ind), 
+                     `97.5_quant` = quantile(Excretion_ind, probs = c(0.975)), 
+                     max = max(Excretion_ind)) |>
+    tidyr::pivot_wider(names_from = Element,
+                       values_from = c(min, `2.5_quant`, 
+                                       mean, 
+                                       `97.5_quant`, max)) |>
+    dplyr::select(c("2.5_quant_N", mean_N, "97.5_quant_N", 
+                    "2.5_quant_P", mean_P, "97.5_quant_P", 
+                    "2.5_quant_Fe", mean_Fe, "97.5_quant_Fe", 
+                    "2.5_quant_Cu", mean_Cu, "97.5_quant_Cu", 
+                    "2.5_quant_Mn", mean_Mn, "97.5_quant_Mn", 
+                    "2.5_quant_Se", mean_Se, "97.5_quant_Se", 
+                    "2.5_quant_Zn", mean_Zn, "97.5_quant_Zn", 
+                    "2.5_quant_Co", mean_Co, "97.5_quant_Co")) |>
+    dplyr::rename("N (2.5%)" = "2.5_quant_N", 
+                  "N (mean)" = "mean_N",
+                  "N (97.5%)" = "97.5_quant_N", 
+                  "P (2.5%)" = "2.5_quant_P", 
+                  "P (mean)" = "mean_P",
+                  "P (97.5%)" = "97.5_quant_P",
+                  "Fe (2.5%)" = "2.5_quant_Fe", 
+                  "Fe (mean)" = "mean_Fe",
+                  "Fe (97.5%)" = "97.5_quant_Fe",
+                  "Cu (2.5%)" = "2.5_quant_Cu", 
+                  "Cu (mean)" = "mean_Cu",
+                  "Cu (97.5%)" = "97.5_quant_Cu", 
+                  "Mn (2.5%)" = "2.5_quant_Mn", 
+                  "Mn (mean)" = "mean_Mn",
+                  "Mn (97.5%)" = "97.5_quant_Mn",
+                  "Se (2.5%)" = "2.5_quant_Se", 
+                  "Se (mean)" = "mean_Se",
+                  "Se (97.5%)" = "97.5_quant_Se",
+                  "Zn (2.5%)" = "2.5_quant_Zn", 
+                  "Zn (mean)" = "mean_Zn",
+                  "Zn (97.5%)" = "97.5_quant_Zn",
+                  "Co (2.5%)" = "2.5_quant_Co", 
+                  "Co (mean)" = "mean_Co",
+                  "Co (97.5%)" = "97.5_quant_Co") 
+  
+  profile_excretion <- as.data.frame(profile_excretion)
+  rownames(profile_excretion) <- profile_excretion$Species
+  profile_excretion <- profile_excretion[, -1]
+  
+  # extract active variables and observations
+  data_act <- profile_excretion[, 1:25]
+  
+  # perform PCA
+  res_pca <- FactoMineR::PCA(data_act,
+                             ncp = 5, 
+                             quali.sup = 1,
+                             graph = FALSE)
+  
+
+  ind_coord <- tibble::as_tibble(factoextra::get_pca_ind(res_pca)$coord[,1:2]) |>
+    dplyr::mutate("PCA Individuals" = rownames(factoextra::get_pca_ind(res_pca)$coord))
+  
+  openxlsx::write.xlsx(ind_coord,
+                       file =paste0("output/article/source_data_Fig4a.xlsx"))
+  
+  
+  var_coord <- tibble::as_tibble(factoextra::get_pca_var(res_pca)$coord[,1:2]) |>
+    dplyr::mutate("PCA Variables" = rownames(factoextra::get_pca_var(res_pca)$coord))
+  
+  openxlsx::write.xlsx(var_coord,
+                       file =paste0("output/article/source_data_Fig4b.xlsx"))
   
 }
 
@@ -647,4 +847,57 @@ fig_sensitivy_indices_all_taxa_all_nut <- function(sensi_tib,
   } else {
     figure
   }
+}
+
+
+
+#'
+#'
+#'
+#'
+#' function to plot results of sensitivity analysis for all three taxa
+source_data_fig7 <- function(sensi_tib) {
+  
+  table <- sensi_tib |> 
+    dplyr::mutate(Geo_area = factor(dplyr::case_when(Geo_area == "GoAlaska" ~ "Gulf of Alaska",
+                                              Geo_area == "GoMexico" ~ "Gulf of Mexico",
+                                              Geo_area == "Med" ~ "Mediterranean Sea",
+                                              Geo_area == "NAtlantic" ~ "Central North Atlantic",
+                                              Geo_area == "NEAtlantic" ~ "Northeast Atlantic",
+                                              Geo_area == "NWAtlantic" ~ "Northwest Atlantic",
+                                              Geo_area == "Pacific_Calif_current" ~ "California current",
+                                              Geo_area == "Pacific_FPoly" ~ "French Polynesia",
+                                              Geo_area == "Pacific_Hawai" ~ "Hawaii",
+                                              Geo_area == "Pacific_NCal" ~ "New Caledonia",
+                                              Geo_area == "Pacific_WFu" ~ "Wallis & Futuna",
+                                              Geo_area == "Indian" ~ "West Indian ocean",
+                                              Geo_area == "Guyana" ~ "French Guyana",
+                                              Geo_area == "Antilles" ~ "French Antilles",
+                                              TRUE ~ Geo_area), 
+                                    levels = c("Central North Atlantic", "Northeast Atlantic", "Gulf of Alaska", 
+                                               "Northwest Atlantic", "California current", 
+                                               "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                               "New Caledonia", "Hawaii",  
+                                               "French Guyana", "Wallis & Futuna", "French Polynesia")), 
+                  Input = factor(dplyr::case_when(Input == "abundance" ~ "A", 
+                                           Input == "mass" ~ "BM",
+                                           Input == "beta" ~ "\u03B2",
+                                           Input == "ndays" ~ "t",
+                                           Input == "nrj_in_diet" ~ "E",
+                                           Input == "nut_in_diet" ~ "x",
+                                           Input == "assi_rate" ~ "AE",
+                                           Input == "nut_abs_rate" ~ "r"), 
+                                 levels = c("BM", "\u03B2",
+                                            "E", "x",
+                                            "AE", "r",  
+                                            "A", "t")), 
+                  Nutrient = factor(Nutrient, 
+                                    levels = c("N", "P", "Fe", "Cu", 
+                                               "Mn", "Se", "Zn", "Co"))) |>
+    dplyr::rename(Area = Geo_area, 
+                  Habitat = Eco_area) |>
+    dplyr::select(c(Species, Area, Habitat, Nutrient, Input, Sensitivity, original))
+  
+  openxlsx::write.xlsx(table,
+                       file =paste0("output/article/source_data_Fig7.xlsx"))
 }

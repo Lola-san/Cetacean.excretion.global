@@ -1774,6 +1774,13 @@ list(
                                                                     nsim = 1e4,
                                                                     sep = "_"))),
   
+  # 'Source data' files for fig 2 and 4
+  tar_target(table_source_data_fig2, source_data_fig2(chloro_sst_tib,
+                                                         model_output_clean)),
+  tar_target(table_source_data_fig3, source_data_fig3(model_output_clean)),
+  tar_target(table_source_data_fig4, source_data_fig4(model_output_clean)),
+  tar_target(table_source_data_fig7, source_data_fig7(sobol_index_all_sensi)),
+  
   ######### FIGURES
   ######### area per area - figures for figures of the article to use in Inkscape
   tar_target(fig_contrib_taxa_stackbar_NEA_file, 

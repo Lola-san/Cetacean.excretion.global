@@ -1272,6 +1272,56 @@ plot_exc_chloro_all_el_norm <- function(tib_chloro_sst,
 #'
 #'
 #'
+#'
+#'
+# function to plot elemental excretion vs chloro with normalized excretion data, so with no transformation of the y axis again
+source_data_fig2 <- function(tib_chloro_sst, 
+                                        output_tib
+) {
+  
+  
+  table <- tib_chloro_sst |>
+      dplyr::left_join(output_tib |>
+                         dplyr::group_by(Geo_area) |>
+                         dplyr::summarise(Surf = sum(unique(Surf_tot)), 
+                                          sum = list(sum_tibb(excrete_nut))) |>
+                         tidyr::unnest(sum) |>
+                         tidyr::pivot_longer(cols = c(N, P, As, Co, Cu, Fe, Mn, Se, Zn), 
+                                             names_to = "Nutrient", 
+                                             values_to = "Excretion") |> 
+                         dplyr::filter(Nutrient != "As") |> 
+                         dplyr::mutate(Nutrient = factor(Nutrient, 
+                                                        levels = c("Fe", "Co", "Mn", "P",
+                                                                   "Zn", "N", "Se", "Cu")), 
+                                       Excretion = Excretion/Surf
+                         )  |>
+                         # normalize excretion data 
+                         dplyr::group_by(Nutrient) |>
+                         dplyr::mutate(Excretion = (Excretion - min(Excretion))/(max(Excretion) - min(Excretion))) |>
+                         dplyr::group_by(Geo_area, Nutrient) |>
+                         dplyr::summarize(mean_norm_release = mean(Excretion))) |>
+      dplyr::mutate(Geo_area = factor(Geo_area, 
+                                      levels = c("Northeast Atlantic", "Central North Atlantic", "Gulf of Alaska",
+                                                 "Northwest Atlantic", "California current", 
+                                                 "Mediterranean Sea", "West Indian ocean", "Gulf of Mexico", "French Antilles", 
+                                                 "New Caledonia", "Hawaii",  
+                                                 "French Guyana", "Wallis & Futuna", "French Polynesia"))) |>
+    dplyr::select(Geo_area, Nutrient, mean_sst, mean_chloro, mean_norm_release) |>
+    dplyr::rename(Area = Geo_area, 
+                  "SST (Celcius degrees)" = mean_sst, 
+                  "Mean surface chlorophyll concentration (mg/m3)" = mean_chloro) |>
+    tidyr::pivot_wider(names_from = Nutrient, 
+                       values_from = mean_norm_release)
+
+  openxlsx::write.xlsx(table,
+                       file =paste0("output/article/source_data_Fig2.xlsx"))
+}
+
+
+#'
+#'
+#'
+#'
 #' function to run models of relation between sst and chloro and normalized excretion values (norm per element)
 run_models_norm <- function(tib_chloro_sst, 
                             output_tib,
