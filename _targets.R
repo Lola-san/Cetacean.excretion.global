@@ -5,7 +5,7 @@
 # December 2021
 # _targets.R
 #
-# Script decomposing with all steps of the analysis with target
+# Script decomposing all steps (and objects) of the analysis with target
 ################################################################################
 
 library("targets")
