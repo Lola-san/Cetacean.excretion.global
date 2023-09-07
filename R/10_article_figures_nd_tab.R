@@ -400,7 +400,12 @@ compo_poop_PCA_biplot <- function(output_tib,
   
   profile_excretion <- output_tib |>
     dplyr::ungroup() |>
-    dplyr::select(c(Eco_gp, Species, Indi_data, excrete_nut_ind, Mass)) 
+    dplyr::select(c(Eco_gp, Species, Indi_data, excrete_nut_ind, Mass)) |>
+  dplyr::mutate(Eco_gp = factor(dplyr::case_when(Eco_gp == "Small delphinids" ~ "Small cetaceans", 
+                                                 TRUE ~ Eco_gp), 
+                                levels = c("Baleen whales", 
+                                           "Deep divers", 
+                                           "Small cetaceans")))
   
   
   # select only one line per species (as there is many lines for all the places each species occurs)
@@ -516,7 +521,7 @@ compo_poop_PCA_biplot <- function(output_tib,
     ggplot2::geom_point(ggplot2::aes(shape = res_pca$call$X$Eco_gp,
                                      fill = res_pca$call$X$Eco_gp),
                         size = 2) +
-    ggplot2::scale_fill_manual(values = c(`Small delphinids` = "#365579ff",
+    ggplot2::scale_fill_manual(values = c(`Small cetaceans` = "#365579ff",
                                           `Deep divers` = "slategray3",
                                           `Baleen whales` = "#cf7474ff")) +
     ggplot2::scale_color_manual(values = c("N" = "#1D2645FF",
@@ -669,11 +674,19 @@ compo_poop_boxplot <- function(compo_output_tib,
   
   
   compo_output_tib |>
+    dplyr::mutate(Eco_gp = factor(dplyr::case_when(Eco_gp == "Small delphinids" ~ "Small cetaceans", 
+                                                   TRUE ~ Eco_gp), 
+                                  levels = c("Baleen whales", 
+                                             "Deep divers", 
+                                             "Small cetaceans"))) |>
+    dplyr::filter(Element != "As") |>
     ggplot2::ggplot() +
     ggplot2::geom_boxplot(ggplot2::aes(x = Element, y = Exc_norm, fill = Eco_gp),  
                           position = ggplot2::position_dodge(.9),
                           outlier.shape = NA) +
-    ggplot2::scale_fill_manual(values = c("#cf7474ff", "slategray3", "#365579ff")) +
+    ggplot2::scale_fill_manual(values = c("Baleen whales" = "#cf7474ff", 
+                                          "Deep divers" = "slategray3",
+                                          "Small cetaceans" = "#365579ff")) +
     ggplot2::xlab("Nutrient") +
     ggplot2::ylab("Individual nutrient release in mg/kg of \n food ingested (normalized per nutrient)") +
     ggplot2::theme_classic() +
@@ -695,11 +708,18 @@ compo_poop_boxplot <- function(compo_output_tib,
                     height = 5, width  = 7)
   } else {
     compo_output_tib |>
+      dplyr::mutate(Eco_gp = factor(dplyr::case_when(Eco_gp == "Small delphinids" ~ "Small cetaceans", 
+                                                     TRUE ~ Eco_gp), 
+                                    levels = c("Baleen whales", 
+                                               "Deep divers", 
+                                               "Small cetaceans"))) |>
       ggplot2::ggplot() +
       ggplot2::geom_boxplot(ggplot2::aes(x = Element, y = Exc_norm, fill = Eco_gp),  
                             position = ggplot2::position_dodge(.9),
                             outlier.shape = NA) +
-      ggplot2::scale_fill_manual(values = c("#cf7474ff", "slategray3", "#365579ff")) +
+      ggplot2::scale_fill_manual(values = c("Baleen whales" = "#cf7474ff", 
+                                            "Deep divers" = "slategray3",
+                                            "Small cetaceans" = "#365579ff")) +
       ggplot2::xlab("Nutrient") +
       ggplot2::ylab("Individual nutrient release in mg/kg of \n food ingested (normalized per nutrient)") +
       ggplot2::theme_classic() +
