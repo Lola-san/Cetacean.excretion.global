@@ -4,7 +4,7 @@ nutrient cycling and carbon storage. In this chapter, we estimate total amounts 
 nutrients released by cetacean communities in several places around the globe. 
 
 This project is associated to the article Gilbert et al. 2023, Nat. Comm.
-https:doi.org/10.1038/s41467-023-41532-y
+(https:doi.org/10.1038/s41467-023-41532-y)
 It is made available under the terms of the Creative Commons Attribution 4.0 licence.
 
 It contains all the data and code needed to reproduce to full analysis.
