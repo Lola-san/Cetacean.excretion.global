@@ -1,0 +1,48 @@
+---
+title: "Cetacean prey consumption in the Mediterranean Sea"
+author: "Lola Gilbert"
+date: "2024-01-31"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Input parameters
+
+```{r, include = FALSE}
+pop_input_med <- targets::tar_read(pop_input) |>
+  dplyr::filter(Geo_area == "Med") |>
+  dplyr::select(-c(Code_sp, Geo_area, Surf_tot))
+
+```
+
+We selected all species for which abundance estimates were available in the Mediterranean Sea, using results of the ASI. It includes 8 species: striped dolphins, common dolphins, bottlenose dolphins, Risso's dolphins, pilot whales, Cuvier's beaked whales, sperm whales and fin whales. 
+
+We split the area between neritic and oceanic waters, which implied to aggregate abundance estimates from different blocks, with some impacts on the coefficient of variation, i.e. it may result in an underestimation of CVs for our aggregated blocks. These differences are due to some covariance terms existing between blocks, as the detection function is common over blocks. They may vary between species depending on how much the variance result from the detection function, group size and encounter rate, because for example there may be some group size correction factor which may or may not vary over blocks depending on species.
+
+For striped and common dolphins, we used:
+
+* abundance estimates provided for each species separately
+* abundance estimates for striped or common dolphins (small dolphins), and split these between the two species using the number of observations with confirmed identification in each block
+
+For body mass and beta for these species, we used values in Table 1 of Spitz et al. (2018) as mean values.
+
+```{r}
+pop_input_med
+
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

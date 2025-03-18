@@ -73,7 +73,6 @@ create_tab_C_in_bio <- function(output_tib,
 #'
 # 
 create_fig_C_per_area_tons <- function(output_tib,
-                                  object_type, # either "output" or "file" 
                                   name_file 
                                   ) {
   table <- output_tib |>
@@ -106,7 +105,9 @@ create_fig_C_per_area_tons <- function(output_tib,
     ggplot2::xlab("Area") +
     ggplot2::ylab("C in cetacean biomass (in tons/yr)") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 40, hjust = 1))
-  
+  ggplot2::ggsave(paste0("output/carbon/", name_file, ".jpg"),
+                  width = 8,
+                  height = 5)
 }
 
 
@@ -116,7 +117,6 @@ create_fig_C_per_area_tons <- function(output_tib,
 #'
 # 
 create_fig_C_per_area_tons_per_km2 <- function(output_tib,
-                                       object_type, # either "output" or "file" 
                                        name_file 
 ) {
   table <- output_tib |>
@@ -154,7 +154,9 @@ create_fig_C_per_area_tons_per_km2 <- function(output_tib,
     ggplot2::xlab("Area") +
     ggplot2::ylab("C in cetacean biomass (in tons/km2)") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 40, hjust = 1))
-  
+  ggplot2::ggsave(paste0("output/carbon/", name_file, ".jpg"),
+                  width = 8,
+                  height = 5)
 }
 
 
@@ -164,7 +166,6 @@ create_fig_C_per_area_tons_per_km2 <- function(output_tib,
 #'
 #
 create_fig_C_per_taxa_tot <- function(output_tib,
-                                      object_type, # either "output" or "file" 
                                       name_file 
 ) {
   output_tib |>
@@ -191,7 +192,9 @@ create_fig_C_per_taxa_tot <- function(output_tib,
     ggplot2::xlab("Ecological group") +
     ggplot2::ylab("C in cetacean biomass (in tons") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 40, hjust = 1))
-  
+  ggplot2::ggsave(paste0("output/carbon/", name_file, ".jpg"),
+                  width = 8,
+                  height = 5)
 }
 
 #'
@@ -199,8 +202,7 @@ create_fig_C_per_taxa_tot <- function(output_tib,
 #'
 #'
 #'
-create_fig_C_per_taxa_per_area <- function(output_tib,
-                                           object_type, # either "output" or "file" 
+create_fig_C_per_taxa_per_area <- function(output_tib, 
                                            name_file) {
   
   output_tib |>
@@ -229,5 +231,7 @@ create_fig_C_per_taxa_per_area <- function(output_tib,
     ggplot2::xlab("Ecological group") +
     ggplot2::ylab("C in cetacean biomass (in tons)") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 40, hjust = 1))
-  
+  ggplot2::ggsave(paste0("output/carbon/", name_file, ".jpg"),
+                  width = 8,
+                  height = 5)
 }

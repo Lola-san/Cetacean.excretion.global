@@ -1178,10 +1178,8 @@ supp_table_diets <- function(clean_diet_tib,
                                         `Crustaceans` = mean(`Crustaceans`), 
                                         `Zooplankton` = mean(`Zooplankton`), 
                                         Sources = stringr::str_c(Source, collapse = ", ")) |>
-                       tidyr::nest(mean_diet = c(`Large demersal energy-lean fish`:`Zooplankton`)) |>
-                       dplyr::mutate(waters = "all") |> 
-                       dplyr::select(Code_sp, Species, waters, mean_diet, Sources) |>
-                       dplyr::mutate(Type_sources = "quantitative", 
+                       dplyr::mutate(waters = "all", 
+                                     Type_sources = "quantitative", 
                                      Copied_from_other_sp = "no", 
                                      other_sp_code = NA),
                      tibble::tribble(~ Code_sp, ~ Species, ~ Eco_area, 
